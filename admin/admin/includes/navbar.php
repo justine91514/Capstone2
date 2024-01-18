@@ -29,7 +29,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="add_category.php">Add Category</a>
             <a class="collapse-item" href="add_product_type.php">Product Type</a>
-            <a class="collapse-item" href="">Stocks Available</a>
+            <a class="collapse-item" href="product.php">Stocks Available</a>
             <a class="collapse-item" href="">Expired Products</a>
             <a class="collapse-item" href="">Buffer Stocks</a>
         </div>
