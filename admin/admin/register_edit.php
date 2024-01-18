@@ -49,8 +49,6 @@ if (isset($_POST['edit_btn'])) {
             </div>
 
 
-
-
             <a href="register.php" class="btn btn-danger"> CANCEL</a>
             <button type="submit" name="updatebtn" class="btn btn-primary"> Update </button>
         </form> <!-- Moved the form tag closing here -->

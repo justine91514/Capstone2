@@ -56,6 +56,43 @@ if(isset($_POST['updatebtn']))
     }
 }
 
+if (isset($_POST['updatecategorybtn'])) {
+    $id = $_POST['edit_id'];
+    $category = $_POST['edit_category'];
+
+    $query = "UPDATE category_list SET category_name='$category' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) 
+    {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: add_category.php');
+    } 
+    else 
+    {
+        $_SESSION['status'] = "Your data is not Updated";
+        header('Location: add_category.php');
+    }
+}
+
+if (isset($_POST['updatetypebtn'])) {
+    $id = $_POST['edit_id'];
+    $category = $_POST['edit_type'];
+
+    $query = "UPDATE product_type_list SET type_name='$category' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) 
+    {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: add_product_type.php');
+    } 
+    else 
+    {
+        $_SESSION['status'] = "Your data is not Updated";
+        header('Location: add_product_type.php');
+    }
+}
 
 
 if(isset($_POST['delete_btn']))
@@ -98,6 +135,59 @@ if(isset($_POST['login_btn']))
         header('Location: login.php');
     }
 }
+
+
+
+//this code is for add_category.php
+if(isset($_POST['categorybtn']))
+{
+    $category_name = $_POST['category_name'];
+   
+    if($category_name)
+    {
+        $query = "INSERT INTO category_list (category_name) VALUES ('$category_name')";
+        $query_run = mysqli_query($connection, $query);
+    
+        if($query_run)
+        {
+            $_SESSION['success'] = "Category Added";
+            header('Location: add_category.php');
+        }
+        else
+        {
+            $_SESSION['status'] = "Category NOT Added";
+            header('Location: add_category.php');
+        }
+    }
+}
+//this code is for product_type_list.php
+if(isset($_POST['typebtn']))
+{
+    $type_name = $_POST['type_name'];
+   
+    if($type_name)
+    {
+        $query = "INSERT INTO product_type_list (type_name) VALUES ('$type_name')";
+        $query_run = mysqli_query($connection, $query);
+    
+        if($query_run)
+        {
+            $_SESSION['success'] = "Product Type Added";
+            header('Location: add_product_type.php');
+        }
+        else
+        {
+            $_SESSION['status'] = "Product Type NOT Added";
+            header('Location: add_product_type.php');
+        }
+    }
+}
+
+
+
+
+
+
 
 
 if(isset($_POST['logout_btn']))
