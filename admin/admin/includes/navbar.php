@@ -29,7 +29,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="add_category.php">Add Category</a>
             <a class="collapse-item" href="add_product_type.php">Product Type</a>
-            <a class="collapse-item" href="product.php">Stocks Available</a>
+            <a class="collapse-item" href="product.php">Create Product</a>
             <a class="collapse-item" href="">Expired Products</a>
             <a class="collapse-item" href="">Buffer Stocks</a>
         </div>
@@ -38,14 +38,14 @@
 
 <!-- Nav Item - Utilities Collapse Menu -->
 <li class="nav-item active">
-    <a class="nav-link" href="register.php">
+    <a class="nav-link" href="#">
         <i class="fas fa-fw fa-chart-area"></i>
         <span>Sales Report</span></a>
 </li>
 
 <!-- Nav Item - Utilities Collapse Menu -->
 <li class="nav-item active">
-    <a class="nav-link" href="register.php">
+    <a class="nav-link" href="#">
         <i class="fas fa-fw fa-wrench"></i>
         <span>Transaction History</span></a>
 </li>
@@ -60,7 +60,7 @@
 <li class="nav-item active">
     <a class="nav-link" href="register.php">
         <i class="fas fa-fw fa-wrench"></i>
-        <span>Settings</span></a>
+        <span>User Management</span></a>
 </li>
 
 <!-- Divider -->

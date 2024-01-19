@@ -188,6 +188,36 @@ if(isset($_POST['typebtn']))
 
 
 
+if (isset($_POST['add_prod_btn'])) {
+    $product_name = $_POST['prod_name'];
+    $category_name = $_POST['categories']; // Corrected variable name
+    $type = $_POST['type'];
+    $measurement = $_POST['measurement'];
+    $price = $_POST['price'];
+    $prescription = $_POST['prescription'];
+
+    // Check if $category_name is not empty
+    if ($category_name) {
+        // Corrected query and parameter binding
+        $query = "INSERT INTO product_list (prod_name, category_name, type, measurement, price, prescription) VALUES ('$product_name', '$category_name', '$type', '$measurement', '$price', '$prescription')";
+        $query_run = mysqli_query($connection, $query);
+
+        if ($query_run)
+        {
+            $_SESSION['success'] = "Product Added"; // Updated success message
+            header('Location: product.php'); // Updated redirection
+        } 
+        else 
+        {
+            $_SESSION['status'] = "Product NOT Added"; // Updated error message
+            header('Location: product.php'); // Updated redirection
+        }
+    }
+}
+
+
+
+
 
 
 if(isset($_POST['logout_btn']))

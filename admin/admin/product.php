@@ -17,28 +17,28 @@ include('includes/navbar.php');
             <form action="code.php" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
+                        <label> Product Name </label>
+                        <input type="text" name="category_name" class="form-control" placeholder="Input Product Name" required />
+                    </div>
+                    <div class="form-group">
                         <label> Category </label>
                         <input type="text" name="category_name" class="form-control" placeholder="Select Category" required />
                     </div>
                     <div class="form-group">
-                        <label> Type </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Select Type" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Product Name </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Enter Product Name" required />
+                        <label> Product Type </label>
+                        <input type="text" name="category_name" class="form-control" placeholder="Select Product Type" required />
                     </div>
                     <div class="form-group">
                         <label> Measurement </label>
                         <input type="text" name="category_name" class="form-control" placeholder="Enter Measurement" required />
                     </div>
                     <div class="form-group">
-                        <label> Description </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="" required />
+                        <label> Price </label>
+                        <input type="text" name="category_name" class="form-control" placeholder="Enter Price" required />
                     </div>
                     <div class="form-group">
-                        <label> Description </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Enter Price" required />
+                        <label> Prescription </label>
+                        <input type="text" name="category_name" class="form-control" placeholder="dapat pa check box ito" required />
                     </div>
 
                     
@@ -46,7 +46,7 @@ include('includes/navbar.php');
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" name="categorybtn" class="btn btn-primary">Save</button>
+                    <button type="submit" name="add_prod_btn" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -93,18 +93,21 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
             <?php
                 $connection = mysqli_connect("localhost","root","","dbdaluyon");
 
-                $query = "SELECT * FROM category_list";
+                $query = "SELECT * FROM product_list";
                 $query_run = mysqli_query ($connection, $query);
             ?>
 
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <th> ID </th>
-                        <th> </th>
+                        <th> Product Name </th>
+                        <th> Category </th>
                         <th> Type </th>
+                        <th> Measurement </th>
                         <th> Price </th>
-                        <th> EDIT </th>
-                        <th> DELETE </th>
+                        <th> Prescrpition </th>
+                        <th> Edit </th>
+                        <th> Delete </th>
                     </thead>
                     <tbody>
                     <?php
@@ -115,10 +118,15 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             ?>    
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
-                            <td> <?php echo $row['category_name']; ?></td>
+                            <td> <?php echo $row['prod_name']; ?></td>
+                            <td> <?php echo $row['categories']; ?></td>
+                            <td> <?php echo $row['type']; ?></td>
+                            <td> <?php echo $row['measurement']; ?></td>
+                            <td> <?php echo $row['price']; ?></td>
+                            <td> <?php echo $row['prescription']; ?></td>
                             
                             <td> 
-                                <form action="category_edit.php" method="post">
+                                <form action="#" method="post">
                                     <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
                                     <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
                                 </form>
