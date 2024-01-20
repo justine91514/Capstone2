@@ -96,7 +96,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             <td> <?php echo $row['category_name']; ?></td>
                             
                             <td> 
-                                <form action="category_edit.php" method="post">
+                                <form action="edit_category.php" method="post">
                                     <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
                                     <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
                                 </form>
@@ -104,7 +104,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                <button type="submit" name="delete_btn" class="btn btn-danger">DELETE</button>
+                                <button type="submit" name="delete_category_btn" class="btn btn-danger">DELETE</button>
                                 </form>
                             </td>
                         </tr>

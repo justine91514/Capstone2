@@ -1,5 +1,5 @@
 <?php
-include('security.php');
+include('dbconfig.php');
 
 $connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
 
@@ -33,7 +33,8 @@ if(isset($_POST['registerbtn']))
         header('Location: register.php');
     }
 }
-
+// ####################################################################
+// UPDATE BUTTONS
 if(isset($_POST['updatebtn']))
 {
     $id = $_POST['edit_id'];
@@ -75,11 +76,33 @@ if (isset($_POST['updatecategorybtn'])) {
     }
 }
 
-if (isset($_POST['updatetypebtn'])) {
-    $id = $_POST['edit_id'];
-    $category = $_POST['edit_type'];
+if (isset($_POST['updateproductbtn'])) {
+    $id = $_POST['edit_id']; // Assuming you have an 'edit_id' field in your form
+    $prod_name = $_POST['prod_name'];
+    $categories = $_POST['categories']; // Corrected variable name
+    $type = $_POST['type'];
+    $measurement = $_POST['measurement'];
+    $price = $_POST['price'];
+    $prescription = isset($_POST['prescription']) ? 1 : 0;
 
-    $query = "UPDATE product_type_list SET type_name='$category' WHERE id='$id'";
+    // Corrected query and parameter binding
+    $query = "UPDATE product_list SET prod_name='$prod_name', categories='$categories', type='$type', measurement='$measurement', price='$price', prescription='$prescription' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: product.php');
+    } else {
+        $_SESSION['status'] = "Your data is not updated";
+        header('Location: product.php');
+    }
+}
+
+if (isset($_POST['update_type_btn'])) {
+    $id = $_POST['edit_id'];
+    $type = $_POST['edit_type'];
+
+    $query = "UPDATE product_type_list SET type_name='$type' WHERE id='$id'";
     $query_run = mysqli_query($connection, $query);
 
     if ($query_run) 
@@ -93,6 +116,33 @@ if (isset($_POST['updatetypebtn'])) {
         header('Location: add_product_type.php');
     }
 }
+
+
+
+if (isset($_POST['update_stocks_btn'])) {
+    $id = $_POST['edit_id'];
+    $product_stock_name = $_POST['product_stock_name'];
+    $expiry_date = $_POST['expiry_date']; // Corrected variable name
+    $quantity = $_POST['quantity'];
+    $price = $_POST['price'];
+
+    // Corrected query and parameter binding
+    $query = "UPDATE add_stock_list SET product_stock_name='$product_stock_name', expiry_date='$expiry_date', quantity='$quantity', price='$price' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: add_stocks.php');
+    } else {
+        $_SESSION['status'] = "Your data is not updated";
+        header('Location: add_stocks.php');
+    }
+}
+
+// ####################################################################
+// UPDATE BUTTONS
+
+
 
 
 if(isset($_POST['delete_btn']))
@@ -187,19 +237,20 @@ if(isset($_POST['typebtn']))
 
 
 
-
+// ####################################################################
+// ADD BUTTONS
 if (isset($_POST['add_prod_btn'])) {
     $product_name = $_POST['prod_name'];
-    $category_name = $_POST['categories']; // Corrected variable name
+    $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
     $measurement = $_POST['measurement'];
     $price = $_POST['price'];
-    $prescription = $_POST['prescription'];
+    $prescription = isset($_POST['prescription']) ? 1 : 0;
 
     // Check if $category_name is not empty
-    if ($category_name) {
+    if ($categories) {
         // Corrected query and parameter binding
-        $query = "INSERT INTO product_list (prod_name, category_name, type, measurement, price, prescription) VALUES ('$product_name', '$category_name', '$type', '$measurement', '$price', '$prescription')";
+        $query = "INSERT INTO product_list (prod_name, categories, type, measurement, price, prescription) VALUES ('$product_name', '$categories', '$type', '$measurement', '$price', '$prescription')";
         $query_run = mysqli_query($connection, $query);
 
         if ($query_run)
@@ -216,6 +267,123 @@ if (isset($_POST['add_prod_btn'])) {
 }
 
 
+if (isset($_POST['add_stock_btn'])) {
+    $product_stock_name = $_POST['product_stock_name'];
+    $expiry_date = $_POST['expiry_date']; // Corrected variable name
+    $quantity = $_POST['quantity'];
+    $price = $_POST['price'];
+
+    // Check if $category_name is not empty
+    if ($product_stock_name) {
+        // Corrected query and parameter binding
+        $query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, price) VALUES ('$product_stock_name', '$expiry_date', ' $quantity', '$price')";
+        $query_run = mysqli_query($connection, $query);
+
+        if ($query_run)
+        {
+            $_SESSION['success'] = "Product Added"; // Updated success message
+            header('Location: add_stocks.php'); // Updated redirection
+        } 
+        else 
+        {
+            $_SESSION['status'] = "Product NOT Added"; // Updated error message
+            header('Location: add_stocks.php'); // Updated redirection
+        }
+    }
+}
+// ADD BUTTONS
+// ####################################################################
+
+
+
+
+
+
+
+
+// ####################################################################
+// DELETE BUTTONS
+if(isset($_POST['delete_prod_btn']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM product_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: product.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: product.php');
+    }
+}
+
+
+if(isset($_POST['delete_category_btn']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM category_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: add_category.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: add_category.php');
+    }
+}
+
+
+if(isset($_POST['delete_product_type']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM product_type_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: add_product_type.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: add_product_type.php');
+    }
+}
+
+
+if(isset($_POST['delete_stock_btn']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM add_stock_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: add_stocks.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: add_stocks.php');
+    }
+}
+
+// DELETE BUTTONS
+// ####################################################################
 
 
 

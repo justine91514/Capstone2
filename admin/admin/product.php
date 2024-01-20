@@ -2,6 +2,7 @@
 session_start();
 include('includes/header.php');
 include('includes/navbar.php');
+
 ?>
 
 <!-- Modal -->
@@ -15,40 +16,57 @@ include('includes/navbar.php');
                 </button>
             </div>
             <form action="code.php" method="POST">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label> Product Name </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Input Product Name" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Category </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Select Category" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Product Type </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Select Product Type" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Measurement </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Enter Measurement" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Price </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="Enter Price" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Prescription </label>
-                        <input type="text" name="category_name" class="form-control" placeholder="dapat pa check box ito" required />
-                    </div>
-
-                    
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" name="add_prod_btn" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" name="prod_name" class="form-control" placeholder="Input Product Name" required />
+        </div>
+        <div class="form-group">
+        <label>Category</label>
+        <select name="categories" class="form-control" required>
+            <option value="" disabled selected>Select Category</option>
+            <?php
+            $connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+            $query = "SELECT * FROM category_list";
+            $query_run = mysqli_query($connection, $query);
+            while ($row = mysqli_fetch_assoc($query_run)) {
+                echo "<option value='" . $row['category_name'] . "'>" . $row['category_name'] . "</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Product Type</label>
+        <select name="type" class="form-control" required>
+            <option value="" disabled selected>Select Product Type</option>
+            <?php
+            $connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+            $query = "SELECT * FROM product_type_list";
+            $query_run = mysqli_query($connection, $query);
+            while ($row = mysqli_fetch_assoc($query_run)) {
+                echo "<option value='" . $row['type_name'] . "'>" . $row['type_name'] . "</option>";
+            }
+            ?>
+        </select>
+    </div>
+        <div class="form-group">
+            <label>Measurement</label>
+            <input type="text" name="measurement" class="form-control" placeholder="Enter Measurement" required />
+        </div>
+        
+        <div class="form-group">
+    <label>Prescription</label>
+    <div class="form-check">
+        <input type="checkbox" name="prescription" class="form-check-input" id="prescriptionCheckbox" />
+        <label class="form-check-label" for="prescriptionCheckbox">Prescription required</label>
+    </div>
+</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" name="add_prod_btn" class="btn btn-primary">Save</button>
+    </div>
+</form>
         </div>
     </div>
 </div>
@@ -104,7 +122,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                         <th> Category </th>
                         <th> Type </th>
                         <th> Measurement </th>
-                        <th> Price </th>
+                        
                         <th> Prescrpition </th>
                         <th> Edit </th>
                         <th> Delete </th>
@@ -122,11 +140,11 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             <td> <?php echo $row['categories']; ?></td>
                             <td> <?php echo $row['type']; ?></td>
                             <td> <?php echo $row['measurement']; ?></td>
-                            <td> <?php echo $row['price']; ?></td>
-                            <td> <?php echo $row['prescription']; ?></td>
+                            <td><?php echo ($row['prescription'] == 1) ? 'Yes' : 'No'; ?></td>
+
                             
                             <td> 
-                                <form action="#" method="post">
+                                <form action="edit_product.php" method="post">
                                     <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
                                     <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
                                 </form>
@@ -134,7 +152,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                <button type="submit" name="delete_btn" class="btn btn-danger">DELETE</button>
+                                <button type="submit" name="delete_prod_btn" class="btn btn-danger">DELETE</button>
                                 </form>
                             </td>
                         </tr>

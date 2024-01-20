@@ -30,9 +30,9 @@ if (isset($_POST['edit_btn'])) {
                 <label> Product Type </label>
                 <input type="text" name="edit_type" value="<?php echo $row['type_name'] ?>" class="form-control" placeholder="Enter Type" required />
             </div>
-            <a href="add_category.php" class="btn btn-danger"> CANCEL</a>
+            <a href="add_product_type.php" class="btn btn-danger"> CANCEL</a>
             <!-- updatecategorybtn is in the code.php -->
-            <button type="submit" name="updatetypebtn" class="btn btn-primary"> Update </button>
+            <button type="submit" name="update_type_btn" class="btn btn-primary"> Update </button>
         </form> 
 <?php
     }
