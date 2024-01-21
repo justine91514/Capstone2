@@ -32,12 +32,12 @@ if (isset($_POST['edit_btn'])) {
             </div>
             <div class="form-group">
                 <label> Expiry Date </label>
-                <div class="input-group date" data-provide="datepicker">
-                    <input type="text" name="expiry_date" value="<?php echo $row['expiry_date']; ?>" class="form-control" placeholder="Select Expiry Date" required />
+                
+                <input type="date" name="expiry_date" value="<?php echo $row['expiry_date']; ?>" class="form-control" placeholder="Select Expiry Date" required />
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
                     </div>
-                </div>
+               
             </div>
             <div class="form-group">
                 <label> Quantity</label>

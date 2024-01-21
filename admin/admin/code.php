@@ -82,11 +82,10 @@ if (isset($_POST['updateproductbtn'])) {
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
     $measurement = $_POST['measurement'];
-    $price = $_POST['price'];
     $prescription = isset($_POST['prescription']) ? 1 : 0;
 
     // Corrected query and parameter binding
-    $query = "UPDATE product_list SET prod_name='$prod_name', categories='$categories', type='$type', measurement='$measurement', price='$price', prescription='$prescription' WHERE id='$id'";
+    $query = "UPDATE product_list SET prod_name='$prod_name', categories='$categories', type='$type', measurement='$measurement', prescription='$prescription' WHERE id='$id'";
     $query_run = mysqli_query($connection, $query);
 
     if ($query_run) {
@@ -244,13 +243,13 @@ if (isset($_POST['add_prod_btn'])) {
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
     $measurement = $_POST['measurement'];
-    $price = $_POST['price'];
+   
     $prescription = isset($_POST['prescription']) ? 1 : 0;
 
     // Check if $category_name is not empty
     if ($categories) {
         // Corrected query and parameter binding
-        $query = "INSERT INTO product_list (prod_name, categories, type, measurement, price, prescription) VALUES ('$product_name', '$categories', '$type', '$measurement', '$price', '$prescription')";
+        $query = "INSERT INTO product_list (prod_name, categories, type, measurement, prescription) VALUES ('$product_name', '$categories', '$type', '$measurement', '$prescription')";
         $query_run = mysqli_query($connection, $query);
 
         if ($query_run)
@@ -291,6 +290,37 @@ if (isset($_POST['add_stock_btn'])) {
         }
     }
 }
+
+
+if (isset($_POST['add_buffer_stock_btn'])) {
+    // Assuming $connection is already established
+
+    $buffer_stock_name = $_POST['buffer_stock_name'];
+    $expiry_date = $_POST['expiry_date'];
+    $quantity = $_POST['quantity'];
+    $price = $_POST['price'];
+
+    // Check if $buffer_stock_name is not empty
+    if (!empty($buffer_stock_name)) {
+        // Corrected query and parameter binding
+        $query = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, price) VALUES ('$buffer_stock_name', '$expiry_date', '$quantity', '$price')";
+        $query_run = mysqli_query($connection, $query);
+
+        if ($query_run) {
+            $_SESSION['success'] = "Product Added";
+        } else {
+            $_SESSION['status'] = "Product NOT Added";
+        }
+
+        // Updated redirection
+        header('Location: buffer_stock.php');
+        exit; // Ensure script stops execution after redirection
+    }
+}
+
+
+
+
 // ADD BUTTONS
 // ####################################################################
 
@@ -382,7 +412,94 @@ if(isset($_POST['delete_stock_btn']))
     }
 }
 
+if(isset($_POST['delete_buffer_stock_btn']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM buffer_stock_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: buffer_stock.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: buffer_stock.php');
+    }
+}
 // DELETE BUTTONS
+// ####################################################################
+
+
+// MOVE BUTTONS
+// ####################################################################
+if(isset($_POST['move_stock_btn'])) {
+    $moveStockId = $_POST['move_id'];
+
+    $query = "SELECT * FROM add_stock_list WHERE id = $moveStockId";
+    $result = mysqli_query($connection, $query);
+
+    if(mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+
+        $insertQuery = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, price) VALUES (
+            '" . $row['product_stock_name'] . "',
+            '" . $row['expiry_date'] . "',
+            '" . $row['quantity'] . "',
+            '" . $row['price'] . "'
+        )";
+
+        if(mysqli_query($connection, $insertQuery)) {
+            $deleteQuery = "DELETE FROM add_stock_list WHERE id = $moveStockId";
+            mysqli_query($connection, $deleteQuery);
+
+            header("Location: add_stocks.php");
+            exit();
+        } else {
+            $_SESSION['status'] = "Error while moving stock to buffer.";
+        }
+    } else {
+        $_SESSION['status'] = "Stock not found.";
+    }
+}
+
+
+
+
+if(isset($_POST['move_buffer_stock_btn'])) {
+    $moveBufferStockId = $_POST['move_id'];
+
+    $query = "SELECT * FROM buffer_stock_list WHERE id = $moveBufferStockId";
+    $result = mysqli_query($connection, $query);
+
+    if(mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+
+        $insertQuery = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, price) VALUES (
+            '" . $row['buffer_stock_name'] . "',
+            '" . $row['expiry_date'] . "',
+            '" . $row['quantity'] . "',
+            '" . $row['price'] . "'
+        )";
+
+        if(mysqli_query($connection, $insertQuery)) {
+            $deleteQuery = "DELETE FROM buffer_stock_list WHERE id = $moveBufferStockId";
+            mysqli_query($connection, $deleteQuery);
+
+            header("Location: buffer_stock.php");
+            exit();
+        } else {
+            $_SESSION['status'] = "Error while moving stock to buffer.";
+        }
+    } else {
+        $_SESSION['status'] = "Stock not found.";
+    }
+}
+
+// MOVE BUTTONS
 // ####################################################################
 
 

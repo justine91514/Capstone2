@@ -32,7 +32,7 @@
             <a class="collapse-item" href="product.php">Create Product</a>
             <a class="collapse-item" href="">Expired Products</a>
             <a class="collapse-item" href="add_stocks.php">Add Stocks</a>
-            <a class="collapse-item" href="">Buffer Stocks</a>
+            <a class="collapse-item" href="buffer_stock.php">Buffer Stocks</a>
         </div>
     </div>
 </li>

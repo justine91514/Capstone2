@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Buffer Stock</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="modal-body">
     <div class="form-group">
     <label>Product Name</label>
-    <select name="product_stock_name" class="form-control" required>
+    <select name="buffer_stock_name" class="form-control" required>
         <?php
         foreach ($productNames as $productName) {
             $selected = ($selectedProduct == $productName) ? 'selected' : '';
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" name="add_stock_btn" class="btn btn-primary">Save</button>
+            <button type="submit" name="add_buffer_stock_btn" class="btn btn-primary">Save</button>
         </div>
     </form>
         </div>
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile">
-                    Add Stock
+                    Add Buffer Stock
                 </button>
             </h6>
         </div>
@@ -108,7 +108,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
             <?php
                 $connection = mysqli_connect("localhost","root","","dbdaluyon");
 
-                $query = "SELECT * FROM add_stock_list";
+                $query = "SELECT * FROM buffer_stock_list";
                 $query_run = mysqli_query ($connection, $query);
             ?>
 
@@ -121,7 +121,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                         <th> Price </th>
                         <th> Edit </th>
                         <th> Delete </th>
-                        <th> Move To Buffer </th>
+                        <th> Move To Main </th>
                     </thead>
                     <tbody>
                     <?php
@@ -132,7 +132,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             ?>    
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
-                            <td> <?php echo $row['product_stock_name']; ?></td>
+                            <td> <?php echo $row['buffer_stock_name']; ?></td>
                             <td> <?php echo $row['expiry_date']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
@@ -146,13 +146,13 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                <button type="submit" name="delete_stock_btn" class="btn btn-danger">DELETE</button>
+                                <button type="submit" name="delete_buffer_stock_btn" class="btn btn-danger">DELETE</button>
                                 </form>
                             </td>
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="move_id" value="<?php echo $row['id'];?>">
-                                    <button type="submit" name="move_stock_btn" class="btn btn-danger">MOVE</button>
+                                    <button type="submit" name="move_buffer_stock_btn" class="btn btn-danger">MOVE</button>
                                 </form>
                             </td>
                         </tr>
