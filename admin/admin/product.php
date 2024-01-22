@@ -84,28 +84,6 @@ include('includes/navbar.php');
         </div>
         <div class="card-body">
 
-
-<!-- this code is for the admin profile added (makikita sa code.php)-->
-<?php
-if(isset($_SESSION['success']) && $_SESSION['success'] !='') 
-{
-    echo '<h2 class="bg-primary text-white">' .$_SESSION['success'].'</h2>';
-    unset($_SESSION['success']);
-}
-?>
-<!-- this code is for the admin profile added  -->
-
-<!-- this code is for the Password and confirm password does not match (makikita sa code.php)-->
-<?php
-if(isset($_SESSION['status']) && $_SESSION['status'] !='') 
-{
-    echo '<h2 class="bg-danger text-white">' .$_SESSION['status'].'</h2>';
-    unset($_SESSION['status']);
-}
-?>
-<!-- this code is for the Password and confirm password does not match (makikita sa code.php)-->
-
-
             <div class="table-responsive">
 
             <?php

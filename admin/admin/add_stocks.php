@@ -38,8 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <select name="product_stock_name" class="form-control" required>
         <?php
         foreach ($productNames as $productName) {
+            $query = "SELECT * FROM product_list WHERE prod_name='$productName'";
+            $query_run = mysqli_query($connection, $query);
+            $productInfo = mysqli_fetch_assoc($query_run);
+            $measurement = $productInfo['measurement'];
             $selected = ($selectedProduct == $productName) ? 'selected' : '';
-            echo "<option value='$productName' $selected>$productName</option>";
+            echo "<option value='$productName' data-measurement='$measurement' $selected>
+                      $productName - <span style='font-size: 80%;'>$measurement</span>
+                  </option>";
         }
         ?>
     </select>
@@ -81,35 +87,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="card-body">
 
-
-<!-- this code is for the admin profile added (makikita sa code.php)-->
-<?php
-if(isset($_SESSION['success']) && $_SESSION['success'] !='') 
-{
-    echo '<h2 class="bg-primary text-white">' .$_SESSION['success'].'</h2>';
-    unset($_SESSION['success']);
-}
-?>
-<!-- this code is for the admin profile added  -->
-
-<!-- this code is for the Password and confirm password does not match (makikita sa code.php)-->
-<?php
-if(isset($_SESSION['status']) && $_SESSION['status'] !='') 
-{
-    echo '<h2 class="bg-danger text-white">' .$_SESSION['status'].'</h2>';
-    unset($_SESSION['status']);
-}
-?>
-<!-- this code is for the Password and confirm password does not match (makikita sa code.php)-->
-
-
             <div class="table-responsive">
 
             <?php
                 $connection = mysqli_connect("localhost","root","","dbdaluyon");
 
-                $query = "SELECT * FROM add_stock_list";
-                $query_run = mysqli_query ($connection, $query);
+                $query = "SELECT add_stock_list.*, product_list.measurement 
+              FROM add_stock_list
+              JOIN product_list ON add_stock_list.product_stock_name = product_list.prod_name";
+    $query_run = mysqli_query($connection, $query);
             ?>
 
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -132,7 +118,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             ?>    
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
-                            <td> <?php echo $row['product_stock_name']; ?></td>
+                            <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
                             <td> <?php echo $row['expiry_date']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>
                             <td> <?php echo $row['price']; ?></td>

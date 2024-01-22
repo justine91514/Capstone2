@@ -138,6 +138,27 @@ if (isset($_POST['update_stocks_btn'])) {
     }
 }
 
+if (isset($_POST['update_buffer_stock_btn'])) {
+    $id = $_POST['edit_id'];
+    $buffer_stock_name = $_POST['buffer_stock_name'];
+    $expiry_date = $_POST['expiry_date']; // Corrected variable name
+    $quantity = $_POST['quantity'];
+    $price = $_POST['price'];
+
+    // Corrected query and parameter binding
+    $query = "UPDATE buffer_stock_list SET buffer_stock_name='$buffer_stock_name', expiry_date='$expiry_date', quantity='$quantity', price='$price' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: buffer_stock.php');
+    } else {
+        $_SESSION['status'] = "Your data is not updated";
+        header('Location: buffer_stock.php');
+    }
+}
+
+
 // ####################################################################
 // UPDATE BUTTONS
 
