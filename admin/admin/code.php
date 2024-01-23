@@ -289,28 +289,41 @@ if (isset($_POST['add_prod_btn'])) {
 
 if (isset($_POST['add_stock_btn'])) {
     $product_stock_name = $_POST['product_stock_name'];
-    $expiry_date = $_POST['expiry_date']; // Corrected variable name
+    $expiry_date = $_POST['expiry_date'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
 
-    // Check if $category_name is not empty
-    if ($product_stock_name) {
-        // Corrected query and parameter binding
-        $query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, price) VALUES ('$product_stock_name', '$expiry_date', ' $quantity', '$price')";
-        $query_run = mysqli_query($connection, $query);
+    // Check if entry with the same product name already exists
+    $check_query = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_stock_name'";
+    $check_query_run = mysqli_query($connection, $check_query);
 
-        if ($query_run)
-        {
-            $_SESSION['success'] = "Product Added"; // Updated success message
-            header('Location: add_stocks.php'); // Updated redirection
-        } 
-        else 
-        {
-            $_SESSION['status'] = "Product NOT Added"; // Updated error message
-            header('Location: add_stocks.php'); // Updated redirection
+    if (mysqli_num_rows($check_query_run) > 0) {
+        // Entry exists, check expiry date
+        $existing_row = mysqli_fetch_assoc($check_query_run);
+        $existing_expiry_date = $existing_row['expiry_date'];
+
+        if ($existing_expiry_date == $expiry_date) {
+            // Expiry dates match, update only the "Stocks Available" column
+            $new_quantity = $existing_row['quantity'] + $quantity;
+
+            // Update only the "Stocks Available" column in the add_stock_list table
+            $update_query = "UPDATE add_stock_list SET quantity=$new_quantity WHERE product_stock_name='$product_stock_name' AND expiry_date='$expiry_date'";
+            mysqli_query($connection, $update_query);
+        } else {
+            // Expiry dates are different, insert a new entry
+            $insert_query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, price) VALUES ('$product_stock_name', '$expiry_date', $quantity, $price)";
+            mysqli_query($connection, $insert_query);
         }
+    } else {
+        // Entry doesn't exist, insert a new entry
+        $insert_query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, price) VALUES ('$product_stock_name', '$expiry_date', $quantity, $price)";
+        mysqli_query($connection, $insert_query);
     }
+
+    // Redirect to the add_stocks.php page
+    header("Location: add_stocks.php");
 }
+
 
 
 if (isset($_POST['add_buffer_stock_btn'])) {

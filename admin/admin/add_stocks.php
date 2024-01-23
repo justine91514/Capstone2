@@ -93,9 +93,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $connection = mysqli_connect("localhost","root","","dbdaluyon");
 
                 $query = "SELECT add_stock_list.*, product_list.measurement 
-              FROM add_stock_list
-              JOIN product_list ON add_stock_list.product_stock_name = product_list.prod_name";
-    $query_run = mysqli_query($connection, $query);
+                FROM add_stock_list
+                JOIN product_list ON add_stock_list.product_stock_name = product_list.prod_name";
+                $query_run = mysqli_query($connection, $query);
             ?>
 
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -104,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th> Product Name </th>
                         <th> Expiry Date </th>
                         <th> Quantity </th>
+                        <th> Stocks Available </th>
                         <th> Price </th>
                         <th> Edit </th>
                         <th> Delete </th>
@@ -120,8 +121,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
                             <td> <?php echo $row['expiry_date']; ?></td>
-                            <td> <?php echo $row['quantity']; ?></td>
+                            <td>
+                                <span class="quantity"><?php echo $row['quantity']; ?></span>
+                            </td>
+                            <td>
+                                <span class="stocks-available"><?php echo $row['quantity']; ?></span>
+                            </td>
+                            
                             <td> <?php echo $row['price']; ?></td>
+                            
                             
                             <td> 
                                 <form action="edit_stock_product.php" method="post">
