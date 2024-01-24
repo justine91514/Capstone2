@@ -17,8 +17,12 @@ include('includes/navbar.php');
             <form action="code.php" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label> Username </label>
-                        <input type="text" name="username" class="form-control" placeholder="Enter Username" required />
+                        <label> Firstname </label>
+                        <input type="text" name="first_name" class="form-control" placeholder="Enter Firstname" required />
+                    </div>
+                    <div class="form-group">
+                        <label> Lastname </label>
+                        <input type="text" name="last_name" class="form-control" placeholder="Enter Lastname" required />
                     </div>
                     <div class="form-group">
                         <label> Email </label>
@@ -92,7 +96,8 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <th> ID </th>
-                        <th> Username </th>
+                        <th> Firstname </th>
+                        <th> Lastname </th>
                         <th> Email</th>
                         <th> Password</th>
                         <th> Usertype</th>
@@ -108,7 +113,8 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             ?>    
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
-                            <td> <?php echo $row['username']; ?></td>
+                            <td> <?php echo $row['first_name']; ?></td>
+                            <td> <?php echo $row['last_name']; ?></td>
                             <td> <?php echo $row['email']; ?></td>
                             <td> <?php echo $row['password']; ?></td>
                             <td> <?php echo $row['usertype']; ?></td>

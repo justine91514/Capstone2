@@ -104,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th> Product Name </th>
                         <th> Expiry Date </th>
                         <th> Quantity </th>
+                        <th> Buffer Stocks Available </th>
                         <th> Price </th>
                         <th> Edit </th>
                         <th> Delete </th>
@@ -121,6 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td> <?php echo $row['buffer_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
                             <td> <?php echo $row['expiry_date']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>
+                            <td> <?php echo $row['buffer_stocks_available']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
                             
                             <td> 

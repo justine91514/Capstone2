@@ -5,7 +5,8 @@ $connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
 
 if(isset($_POST['registerbtn']))
 {
-    $username = $_POST['username'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $cpassword = $_POST['confirmpassword'];
@@ -13,7 +14,7 @@ if(isset($_POST['registerbtn']))
 
     if($password === $cpassword)
     {
-        $query = "INSERT INTO register (username, email, password,usertype) VALUES ('$username', '$email', '$password','$usertype')";
+        $query = "INSERT INTO register (first_name, last_name, email, password,usertype) VALUES ('$first_name','$last_name', '$email', '$password','$usertype')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
@@ -38,13 +39,17 @@ if(isset($_POST['registerbtn']))
 if(isset($_POST['updatebtn']))
 {
     $id = $_POST['edit_id'];
-    $username = $_POST['edit_username'];
+    $first_name = $_POST['edit_firstname'];
+    $last_name = $_POST['edit_lastname']; // Fix the typo here
     $email = $_POST['edit_email'];
     $password = $_POST['edit_password'];
-    $usertypeupdate= $_POST['update_usertype'];
+    $usertypeupdate = $_POST['update_usertype'];
 
-    $query = "UPDATE register SET username='$username', email='$email', password='$password', usertype='$usertypeupdate' WHERE id='$id' ";
+    // Use the correct variable names in the query
+    $query = "UPDATE register SET first_name='$first_name', last_name='$last_name', email='$email', password='$password', usertype='$usertypeupdate' WHERE id='$id' ";
+
     $query_run = mysqli_query($connection, $query);
+    
     if($query_run)
     {
         $_SESSION['success'] = "Your data is updated";
@@ -52,7 +57,7 @@ if(isset($_POST['updatebtn']))
     }
     else
     {
-        $_SESSION['status'] = "Your data is not Updated";
+        $_SESSION['status'] = "Your data is not updated"; // Fix the typo here
         header('Location: register.php');
     }
 }
@@ -118,42 +123,97 @@ if (isset($_POST['update_type_btn'])) {
 
 
 
+
+
 if (isset($_POST['update_stocks_btn'])) {
-    $id = $_POST['edit_id'];
-    $product_stock_name = $_POST['product_stock_name'];
-    $expiry_date = $_POST['expiry_date']; // Corrected variable name
-    $quantity = $_POST['quantity'];
+    $edit_id = $_POST['edit_id'];
+    $expiry_date = $_POST['expiry_date'];
+    $new_quantity = $_POST['quantity'];
     $price = $_POST['price'];
 
-    // Corrected query and parameter binding
-    $query = "UPDATE add_stock_list SET product_stock_name='$product_stock_name', expiry_date='$expiry_date', quantity='$quantity', price='$price' WHERE id='$id'";
+    // Retrieve the original quantity and product name
+    $query = "SELECT * FROM add_stock_list WHERE id='$edit_id'";
     $query_run = mysqli_query($connection, $query);
+    $row = mysqli_fetch_assoc($query_run);
+    $original_quantity = $row['quantity'];
+    $product_name = $row['product_stock_name'];
 
-    if ($query_run) {
-        $_SESSION['success'] = "Your data is updated";
+    // Determine the change in quantity
+    $quantity_change = $new_quantity - $original_quantity;
+
+    // Retrieve all rows with the same product name
+    $query_same_product = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_name'";
+    $query_run_same_product = mysqli_query($connection, $query_same_product);
+
+    // Apply the change in quantity to rows with the same product name
+    while ($row_same_product = mysqli_fetch_assoc($query_run_same_product)) {
+        $current_stock = $row_same_product['stocks_available'];
+        $new_stocks = $current_stock + $quantity_change;
+        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
+
+        $id_same_product = $row_same_product['id'];
+        $updateQuerySameProduct = "UPDATE add_stock_list SET stocks_available='$new_stocks' WHERE id='$id_same_product'";
+        mysqli_query($connection, $updateQuerySameProduct);
+    }
+
+    // Update the edited row with the new values
+    $updateQuery = "UPDATE add_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price' WHERE id='$edit_id'";
+    mysqli_query($connection, $updateQuery);
+
+    if ($updateQuery) {
+        $_SESSION['success'] = "Stocks Updated";
         header('Location: add_stocks.php');
     } else {
-        $_SESSION['status'] = "Your data is not updated";
+        $_SESSION['status'] = "Stocks NOT Updated";
         header('Location: add_stocks.php');
     }
 }
 
+
+
+
+
+
 if (isset($_POST['update_buffer_stock_btn'])) {
-    $id = $_POST['edit_id'];
-    $buffer_stock_name = $_POST['buffer_stock_name'];
-    $expiry_date = $_POST['expiry_date']; // Corrected variable name
-    $quantity = $_POST['quantity'];
+    $edit_id = $_POST['edit_id'];
+    $expiry_date = $_POST['expiry_date'];
+    $new_quantity = $_POST['quantity'];
     $price = $_POST['price'];
 
-    // Corrected query and parameter binding
-    $query = "UPDATE buffer_stock_list SET buffer_stock_name='$buffer_stock_name', expiry_date='$expiry_date', quantity='$quantity', price='$price' WHERE id='$id'";
+    // Retrieve the original quantity
+    $query = "SELECT * FROM buffer_stock_list WHERE id='$edit_id'";
     $query_run = mysqli_query($connection, $query);
+    $row = mysqli_fetch_assoc($query_run);
+    $original_quantity = $row['quantity'];
 
-    if ($query_run) {
-        $_SESSION['success'] = "Your data is updated";
+    // Determine the change in quantity
+    $quantity_change = $new_quantity - $original_quantity;
+
+    // Retrieve all rows in the table with the same product name
+    $product_name = $row['buffer_stock_name'];
+    $query_all_rows = "SELECT * FROM buffer_stock_list WHERE buffer_stock_name='$product_name'";
+    $query_run_all_rows = mysqli_query($connection, $query_all_rows);
+
+    // Apply the change in quantity to all rows
+    while ($row_all_rows = mysqli_fetch_assoc($query_run_all_rows)) {
+        $current_stock = $row_all_rows['buffer_stocks_available'];
+        $new_stocks = $current_stock + $quantity_change;
+        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
+
+        $id = $row_all_rows['id'];
+        $updateQuerySameProduct = "UPDATE buffer_stock_list SET buffer_stocks_available='$new_stocks' WHERE id='$id'";
+        mysqli_query($connection, $updateQuerySameProduct);
+    }
+
+    // Update the edited row with the new values
+    $updateQuery = "UPDATE buffer_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price' WHERE id='$edit_id'";
+    mysqli_query($connection, $updateQuery);
+
+    if ($updateQuery) {
+        $_SESSION['success'] = "Buffer Stock Updated";
         header('Location: buffer_stock.php');
     } else {
-        $_SESSION['status'] = "Your data is not updated";
+        $_SESSION['status'] = "Buffer Stock NOT Updated";
         header('Location: buffer_stock.php');
     }
 }
@@ -286,11 +346,44 @@ if (isset($_POST['add_prod_btn'])) {
     }
 }
 
-
 if (isset($_POST['add_stock_btn'])) {
     $product_stock_name = $_POST['product_stock_name'];
     $expiry_date = $_POST['expiry_date'];
     $quantity = $_POST['quantity'];
+    $price = $_POST['price'];
+
+    // Retrieve the current stocks_available value
+    $query = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_stock_name'";
+    $query_run = mysqli_query($connection, $query);
+    $row = mysqli_fetch_assoc($query_run);
+    $currentStocks = $row['stocks_available'];
+
+    // Calculate the new stocks_available value
+    $newStocks = $quantity + $currentStocks ; 
+
+    // Update the database with the new value
+    $updateQuery = "UPDATE add_stock_list SET stocks_available=$newStocks WHERE product_stock_name='$product_stock_name'";
+    mysqli_query($connection, $updateQuery);
+
+    // Continue with the rest of your code to insert the new stock information into the database
+    $query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price) VALUES ('$product_stock_name', '$expiry_date', '$quantity', '$newStocks','$price')";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) {
+        $_SESSION['success'] = "Product Added";
+        header('Location: add_stocks.php');
+    } else {
+        $_SESSION['status'] = "Product NOT Added";
+        header('Location: add_stocks.php');
+    }
+}
+
+
+/*if (isset($_POST['add_stock_btn'])) {
+    $product_stock_name = $_POST['product_stock_name'];
+    $expiry_date = $_POST['expiry_date'];
+    $quantity = $_POST['quantity'];
+    
     $price = $_POST['price'];
 
     // Check if entry with the same product name already exists
@@ -322,36 +415,41 @@ if (isset($_POST['add_stock_btn'])) {
 
     // Redirect to the add_stocks.php page
     header("Location: add_stocks.php");
-}
+}*/
 
 
 
 if (isset($_POST['add_buffer_stock_btn'])) {
-    // Assuming $connection is already established
-
     $buffer_stock_name = $_POST['buffer_stock_name'];
     $expiry_date = $_POST['expiry_date'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
 
-    // Check if $buffer_stock_name is not empty
-    if (!empty($buffer_stock_name)) {
-        // Corrected query and parameter binding
-        $query = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, price) VALUES ('$buffer_stock_name', '$expiry_date', '$quantity', '$price')";
-        $query_run = mysqli_query($connection, $query);
+    // Retrieve the current stocks_available value
+    $query = "SELECT * FROM buffer_stock_list WHERE buffer_stock_name='$buffer_stock_name'";
+    $query_run = mysqli_query($connection, $query);
+    $row = mysqli_fetch_assoc($query_run);
+    $currentStocks = $row['buffer_stocks_available'];
 
-        if ($query_run) {
-            $_SESSION['success'] = "Product Added";
-        } else {
-            $_SESSION['status'] = "Product NOT Added";
-        }
+    // Calculate the new stocks_available value
+    $newStocks = $quantity + $currentStocks ; 
 
-        // Updated redirection
+    // Update the database with the new value
+    $updateQuery = "UPDATE buffer_stock_list SET buffer_stocks_available=$newStocks WHERE buffer_stock_name='$buffer_stock_name'";
+    mysqli_query($connection, $updateQuery);
+
+    // Continue with the rest of your code to insert the new stock information into the database
+    $query = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, buffer_stocks_available, price) VALUES ('$buffer_stock_name', '$expiry_date', '$quantity', '$newStocks','$price')";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) {
+        $_SESSION['success'] = "Product Added";
         header('Location: buffer_stock.php');
-        exit; // Ensure script stops execution after redirection
+    } else {
+        $_SESSION['status'] = "Product NOT Added";
+        header('Location: buffer_stock.php');
     }
 }
-
 
 
 
@@ -427,40 +525,84 @@ if(isset($_POST['delete_product_type']))
 }
 
 
-if(isset($_POST['delete_stock_btn']))
-{
-    $id = $_POST['delete_id'];
+if (isset($_POST['delete_stock_btn'])) {
+    $delete_id = $_POST['delete_id'];
 
-    $query = "DELETE FROM add_stock_list WHERE id='$id'";
-    $query_run = mysqli_query($connection, $query);
+    // Retrieve the row to be deleted
+    $query_row_to_delete = "SELECT * FROM add_stock_list WHERE id='$delete_id'";
+    $query_run_row_to_delete = mysqli_query($connection, $query_row_to_delete);
+    $row_to_delete = mysqli_fetch_assoc($query_run_row_to_delete);
 
-    if($query_run)
-    {
-        $_SESSION['success'] = "Your data is Deleted";
-        header('Location: add_stocks.php');
+    // Retrieve the product name and quantity of the row to be deleted
+    $product_name_to_delete = $row_to_delete['product_stock_name'];
+    $quantity_to_delete = $row_to_delete['quantity'];
+
+    // Retrieve all rows with the same product name
+    $query_same_product = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_name_to_delete'";
+    $query_run_same_product = mysqli_query($connection, $query_same_product);
+
+    // Apply the decrease in quantity to rows with the same product name
+    while ($row_same_product = mysqli_fetch_assoc($query_run_same_product)) {
+        $current_stock = $row_same_product['stocks_available'];
+        $new_stocks = $current_stock - $quantity_to_delete;
+        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
+
+        $id_same_product = $row_same_product['id'];
+        $updateQuerySameProduct = "UPDATE add_stock_list SET stocks_available='$new_stocks' WHERE id='$id_same_product'";
+        mysqli_query($connection, $updateQuerySameProduct);
     }
-    else
-    {
-        $_SESSION['status'] = "Your data is Not Deleted";
+
+    // Delete the row
+    $deleteQuery = "DELETE FROM add_stock_list WHERE id='$delete_id'";
+    mysqli_query($connection, $deleteQuery);
+
+    if ($deleteQuery) {
+        $_SESSION['success'] = "Stock Deleted";
+        header('Location: add_stocks.php');
+    } else {
+        $_SESSION['status'] = "Stock NOT Deleted";
         header('Location: add_stocks.php');
     }
 }
 
-if(isset($_POST['delete_buffer_stock_btn']))
-{
-    $id = $_POST['delete_id'];
 
-    $query = "DELETE FROM buffer_stock_list WHERE id='$id'";
-    $query_run = mysqli_query($connection, $query);
 
-    if($query_run)
-    {
-        $_SESSION['success'] = "Your data is Deleted";
-        header('Location: buffer_stock.php');
+if (isset($_POST['delete_buffer_stock_btn'])) {
+    $delete_id = $_POST['delete_id'];
+
+    // Retrieve the row to be deleted
+    $query_row_to_delete = "SELECT * FROM buffer_stock_list WHERE id='$delete_id'";
+    $query_run_row_to_delete = mysqli_query($connection, $query_row_to_delete);
+    $row_to_delete = mysqli_fetch_assoc($query_run_row_to_delete);
+
+    // Retrieve the product name and quantity of the row to be deleted
+    $product_name_to_delete = $row_to_delete['buffer_stock_name'];
+    $quantity_to_delete = $row_to_delete['quantity'];
+
+    // Retrieve all rows with the same product name
+    $query_same_product = "SELECT * FROM buffer_stock_list WHERE buffer_stock_name='$product_name_to_delete'";
+    $query_run_same_product = mysqli_query($connection, $query_same_product);
+
+    // Apply the decrease in quantity to rows with the same product name
+    while ($row_same_product = mysqli_fetch_assoc($query_run_same_product)) {
+        $current_stock = $row_same_product['buffer_stocks_available'];
+        $new_stocks = $current_stock - $quantity_to_delete;
+        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
+
+        $id_same_product = $row_same_product['id'];
+        $updateQuerySameProduct = "UPDATE buffer_stock_list SET buffer_stocks_available='$new_stocks' WHERE id='$id_same_product'";
+        mysqli_query($connection, $updateQuerySameProduct);
     }
-    else
-    {
-        $_SESSION['status'] = "Your data is Not Deleted";
+
+    // Delete the row
+    $deleteQuery = "DELETE FROM buffer_stock_list WHERE id='$delete_id'";
+    mysqli_query($connection, $deleteQuery);
+
+    if ($deleteQuery) {
+        $_SESSION['success'] = "Buffer Stock Deleted";
+        header('Location: buffer_stock.php');
+    } else {
+        $_SESSION['status'] = "Buffer Stock NOT Deleted";
         header('Location: buffer_stock.php');
     }
 }
@@ -470,68 +612,119 @@ if(isset($_POST['delete_buffer_stock_btn']))
 
 // MOVE BUTTONS
 // ####################################################################
-if(isset($_POST['move_stock_btn'])) {
-    $moveStockId = $_POST['move_id'];
+// Move Stock Button
+if (isset($_POST['move_stock_btn'])) {
+    $move_id = $_POST['move_id'];
 
-    $query = "SELECT * FROM add_stock_list WHERE id = $moveStockId";
-    $result = mysqli_query($connection, $query);
+    // Retrieve the row to be moved
+    $query_row_to_move = "SELECT * FROM add_stock_list WHERE id='$move_id'";
+    $query_run_row_to_move = mysqli_query($connection, $query_row_to_move);
+    $row_to_move = mysqli_fetch_assoc($query_run_row_to_move);
 
-    if(mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
+    // Retrieve the product name and quantity of the row to be moved
+    $product_name_to_move = $row_to_move['product_stock_name'];
+    $quantity_to_move = $row_to_move['quantity'];
 
-        $insertQuery = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, price) VALUES (
-            '" . $row['product_stock_name'] . "',
-            '" . $row['expiry_date'] . "',
-            '" . $row['quantity'] . "',
-            '" . $row['price'] . "'
-        )";
+    // Retrieve all rows with the same product name in add_stock_list
+    $query_same_product_add_stock = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_name_to_move'";
+    $query_run_same_product_add_stock = mysqli_query($connection, $query_same_product_add_stock);
+    $new_stocks = 0;
+    // Apply the decrease in quantity to rows with the same product name in add_stock_list
+    while ($row_same_product_add_stock = mysqli_fetch_assoc($query_run_same_product_add_stock)) {
+        $current_stock = $row_same_product_add_stock['stocks_available'];
+        $new_stocks = $current_stock - $quantity_to_move;
+        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
 
-        if(mysqli_query($connection, $insertQuery)) {
-            $deleteQuery = "DELETE FROM add_stock_list WHERE id = $moveStockId";
-            mysqli_query($connection, $deleteQuery);
+        $id_same_product_add_stock = $row_same_product_add_stock['id'];
+        $updateQuerySameProductAddStock = "UPDATE add_stock_list SET stocks_available='$new_stocks' WHERE id='$id_same_product_add_stock'";
+        mysqli_query($connection, $updateQuerySameProductAddStock);
+    }
 
-            header("Location: add_stocks.php");
-            exit();
-        } else {
-            $_SESSION['status'] = "Error while moving stock to buffer.";
-        }
+    // Move the row from add_stock_list to buffer_stock_list
+    $insertQueryBufferStock = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, buffer_stocks_available, price)
+                                VALUES ('$product_name_to_move', '{$row_to_move['expiry_date']}', '$quantity_to_move', '$new_stocks', '{$row_to_move['price']}')";
+
+    // Note: We use $new_stocks here to set buffer_stocks_available
+
+    $deleteQueryAddStock = "DELETE FROM add_stock_list WHERE id='$move_id'";
+
+    mysqli_query($connection, $insertQueryBufferStock);
+    mysqli_query($connection, $deleteQueryAddStock);
+
+    if ($insertQueryBufferStock && $deleteQueryAddStock) {
+        $_SESSION['success'] = "Stock Moved to Buffer Stock";
+        header('Location: add_stocks.php');
     } else {
-        $_SESSION['status'] = "Stock not found.";
+        $_SESSION['status'] = "Stock NOT Moved";
+        header('Location: add_stocks.php');
     }
 }
 
 
 
 
-if(isset($_POST['move_buffer_stock_btn'])) {
-    $moveBufferStockId = $_POST['move_id'];
 
-    $query = "SELECT * FROM buffer_stock_list WHERE id = $moveBufferStockId";
-    $result = mysqli_query($connection, $query);
+// Move Buffer Stock Button
+// Move Buffer Stock Button
+// Move Buffer Stock Button
+if (isset($_POST['move_buffer_stock_btn'])) {
+    $move_id = $_POST['move_id'];
 
-    if(mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
+    // Retrieve the row to be moved
+    $query_row_to_move = "SELECT * FROM buffer_stock_list WHERE id='$move_id'";
+    $query_run_row_to_move = mysqli_query($connection, $query_row_to_move);
+    $row_to_move = mysqli_fetch_assoc($query_run_row_to_move);
 
-        $insertQuery = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, price) VALUES (
-            '" . $row['buffer_stock_name'] . "',
-            '" . $row['expiry_date'] . "',
-            '" . $row['quantity'] . "',
-            '" . $row['price'] . "'
-        )";
+    // Retrieve the product name and quantity of the row to be moved
+    $product_name_to_move = $row_to_move['buffer_stock_name'];
+    $quantity_to_move = $row_to_move['quantity'];
 
-        if(mysqli_query($connection, $insertQuery)) {
-            $deleteQuery = "DELETE FROM buffer_stock_list WHERE id = $moveBufferStockId";
-            mysqli_query($connection, $deleteQuery);
+    // Retrieve all rows with the same product name in buffer_stock_list
+    $query_same_product_buffer_stock = "SELECT * FROM buffer_stock_list WHERE buffer_stock_name='$product_name_to_move'";
+    $query_run_same_product_buffer_stock = mysqli_query($connection, $query_same_product_buffer_stock);
+    $new_stocks = 0;
+    // Apply the decrease in quantity to rows with the same product name in buffer_stock_list
+    while ($row_same_product_buffer_stock = mysqli_fetch_assoc($query_run_same_product_buffer_stock)) {
+        $current_stock = $row_same_product_buffer_stock['buffer_stocks_available'];
+        $new_stocks = $current_stock - $quantity_to_move;
+        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
 
-            header("Location: buffer_stock.php");
-            exit();
-        } else {
-            $_SESSION['status'] = "Error while moving stock to buffer.";
-        }
+        $id_same_product_buffer_stock = $row_same_product_buffer_stock['id'];
+        $updateQuerySameProductBufferStock = "UPDATE buffer_stock_list SET buffer_stocks_available='$new_stocks' WHERE id='$id_same_product_buffer_stock'";
+        mysqli_query($connection, $updateQuerySameProductBufferStock);
+    }
+
+    // Retrieve the current stocks_available value in add_stock_list
+    $query_stocks_available = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_name_to_move'";
+    $query_run_stocks_available = mysqli_query($connection, $query_stocks_available);
+    $row_stocks_available = mysqli_fetch_assoc($query_run_stocks_available);
+    $current_stocks_available = $row_stocks_available['stocks_available'];
+
+    // Calculate the new stocks_available value in add_stock_list
+    $new_stocks_available = $current_stocks_available + $quantity_to_move;
+
+    // Update the add_stock_list table with the new stocks_available value
+    $updateQueryAddStock = "UPDATE add_stock_list SET stocks_available='$new_stocks_available' WHERE product_stock_name='$product_name_to_move'";
+    mysqli_query($connection, $updateQueryAddStock);
+
+    // Move the row from buffer_stock_list to add_stock_list
+    $insertQueryAddStock = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price)
+                            VALUES ('$product_name_to_move', '{$row_to_move['expiry_date']}', '$quantity_to_move', '$new_stocks_available', '{$row_to_move['price']}')";
+    $deleteQueryBufferStock = "DELETE FROM buffer_stock_list WHERE id='$move_id'";
+
+    mysqli_query($connection, $insertQueryAddStock);
+    mysqli_query($connection, $deleteQueryBufferStock);
+
+    if ($insertQueryAddStock && $deleteQueryBufferStock) {
+        $_SESSION['success'] = "Buffer Stock Moved to Main Stock";
+        header('Location: buffer_stock.php');
     } else {
-        $_SESSION['status'] = "Stock not found.";
+        $_SESSION['status'] = "Buffer Stock NOT Moved";
+        header('Location: buffer_stock.php');
     }
 }
+
+
 
 // MOVE BUTTONS
 // ####################################################################

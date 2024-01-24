@@ -29,8 +29,12 @@ if (isset($_POST['edit_btn'])) {
 
             <input type="hidden" name="edit_id" value="<?php echo $row['id'] ?>">
             <div class="form-group">
-                <label> Username </label>
-                <input type="text" name="edit_username" value="<?php echo $row['username'] ?>" class="form-control" placeholder="Enter Username" required />
+                <label> Firstname </label>
+                <input type="text" name="edit_firstname" value="<?php echo $row['first_name'] ?>" class="form-control" placeholder="Enter Firstname" required />
+            </div>
+            <div class="form-group">
+                <label> Lastname </label>
+                <input type="text" name="edit_lastname" value="<?php echo $row['last_name'] ?>" class="form-control" placeholder="Enter Lastname" required />
             </div>
             <div class="form-group">
                 <label> Email </label>
