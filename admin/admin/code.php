@@ -1,7 +1,7 @@
 <?php
 include('dbconfig.php');
 
-$connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+$connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 
 if(isset($_POST['registerbtn']))
 {
@@ -525,45 +525,6 @@ if(isset($_POST['delete_product_type']))
 }
 
 
-if (isset($_POST['delete_stock_btn'])) {
-    $delete_id = $_POST['delete_id'];
-
-    // Retrieve the row to be deleted
-    $query_row_to_delete = "SELECT * FROM add_stock_list WHERE id='$delete_id'";
-    $query_run_row_to_delete = mysqli_query($connection, $query_row_to_delete);
-    $row_to_delete = mysqli_fetch_assoc($query_run_row_to_delete);
-
-    // Retrieve the product name and quantity of the row to be deleted
-    $product_name_to_delete = $row_to_delete['product_stock_name'];
-    $quantity_to_delete = $row_to_delete['quantity'];
-
-    // Retrieve all rows with the same product name
-    $query_same_product = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_name_to_delete'";
-    $query_run_same_product = mysqli_query($connection, $query_same_product);
-
-    // Apply the decrease in quantity to rows with the same product name
-    while ($row_same_product = mysqli_fetch_assoc($query_run_same_product)) {
-        $current_stock = $row_same_product['stocks_available'];
-        $new_stocks = $current_stock - $quantity_to_delete;
-        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
-
-        $id_same_product = $row_same_product['id'];
-        $updateQuerySameProduct = "UPDATE add_stock_list SET stocks_available='$new_stocks' WHERE id='$id_same_product'";
-        mysqli_query($connection, $updateQuerySameProduct);
-    }
-
-    // Delete the row
-    $deleteQuery = "DELETE FROM add_stock_list WHERE id='$delete_id'";
-    mysqli_query($connection, $deleteQuery);
-
-    if ($deleteQuery) {
-        $_SESSION['success'] = "Stock Deleted";
-        header('Location: add_stocks.php');
-    } else {
-        $_SESSION['status'] = "Stock NOT Deleted";
-        header('Location: add_stocks.php');
-    }
-}
 
 
 
@@ -604,6 +565,27 @@ if (isset($_POST['delete_buffer_stock_btn'])) {
     } else {
         $_SESSION['status'] = "Buffer Stock NOT Deleted";
         header('Location: buffer_stock.php');
+    }
+}
+
+
+if (isset($_POST['move_to_archive_btn'])) {
+    $move_id = $_POST['move_id'];
+
+    // Move the data to the archive table
+    $move_query = "INSERT INTO archive_list SELECT * FROM add_stock_list WHERE id = $move_id";
+    $move_result = mysqli_query($connection, $move_query);
+
+    if ($move_result) {
+        // Delete the data from the buffer stock table
+        $delete_query = "DELETE FROM add_stock_list WHERE id = $move_id";
+        mysqli_query($connection, $delete_query);
+
+        $_SESSION['success'] = "Data moved to archive successfully!";
+        header('Location: add_stocks.php');
+    } else {
+        $_SESSION['error'] = "Failed to move data to archive!";
+        header('Location: add_stocks.php');
     }
 }
 // DELETE BUTTONS

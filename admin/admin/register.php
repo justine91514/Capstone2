@@ -1,7 +1,7 @@
 <?php 
 session_start();
 include('includes/header.php');
-include('includes/navbar.php');
+include('includes/navbar2.php');
 ?>
 
 <!-- Modal -->
@@ -17,11 +17,15 @@ include('includes/navbar.php');
             <form action="code.php" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label> Firstname </label>
+                        <label> First Name </label>
                         <input type="text" name="first_name" class="form-control" placeholder="Enter Firstname" required />
                     </div>
                     <div class="form-group">
-                        <label> Lastname </label>
+                        <label> Middle Name </label>
+                        <input type="text" name="mid_name" class="form-control" placeholder="Enter Middle Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label> Last Name </label>
                         <input type="text" name="last_name" class="form-control" placeholder="Enter Lastname" required />
                     </div>
                     <div class="form-group">
@@ -87,7 +91,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
             <div class="table-responsive">
 
             <?php
-                $connection = mysqli_connect("localhost","root","","dbdaluyon");
+                $connection = mysqli_connect("localhost","root","","dbpharmacy");
 
                 $query = "SELECT * FROM register";
                 $query_run = mysqli_query ($connection, $query);
@@ -97,6 +101,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                     <thead>
                         <th> ID </th>
                         <th> Firstname </th>
+                        <th> Middle Name </th>
                         <th> Lastname </th>
                         <th> Email</th>
                         <th> Password</th>
@@ -114,6 +119,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['first_name']; ?></td>
+                            <td> <?php echo $row['mid_name']; ?></td>
                             <td> <?php echo $row['last_name']; ?></td>
                             <td> <?php echo $row['email']; ?></td>
                             <td> <?php echo $row['password']; ?></td>

@@ -1,7 +1,7 @@
 <?php 
 session_start();
 include('includes/header.php');
-include('includes/navbar.php');
+include('includes/navbar2.php');
 
 ?>
 
@@ -26,7 +26,7 @@ include('includes/navbar.php');
         <select name="categories" class="form-control" required>
             <option value="" disabled selected>Select Category</option>
             <?php
-            $connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+            $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
             $query = "SELECT * FROM category_list";
             $query_run = mysqli_query($connection, $query);
             while ($row = mysqli_fetch_assoc($query_run)) {
@@ -40,7 +40,7 @@ include('includes/navbar.php');
         <select name="type" class="form-control" required>
             <option value="" disabled selected>Select Product Type</option>
             <?php
-            $connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+            $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
             $query = "SELECT * FROM product_type_list";
             $query_run = mysqli_query($connection, $query);
             while ($row = mysqli_fetch_assoc($query_run)) {
@@ -87,7 +87,7 @@ include('includes/navbar.php');
             <div class="table-responsive">
 
             <?php
-                $connection = mysqli_connect("localhost","root","","dbdaluyon");
+                $connection = mysqli_connect("localhost","root","","dbpharmacy");
 
                 $query = "SELECT * FROM product_list";
                 $query_run = mysqli_query ($connection, $query);

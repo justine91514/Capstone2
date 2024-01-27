@@ -1,7 +1,7 @@
 <?php 
 session_start();
 include('includes/header.php');
-include('includes/navbar.php');
+include('includes/navbar2.php');
 ?>
 
 <!-- Modal -->
@@ -71,7 +71,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
             <div class="table-responsive">
 
             <?php
-                $connection = mysqli_connect("localhost","root","","dbdaluyon");
+                $connection = mysqli_connect("localhost","root","","dbpharmacy");
 
                 $query = "SELECT * FROM category_list";
                 $query_run = mysqli_query ($connection, $query);

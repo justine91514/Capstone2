@@ -79,11 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- DataTables Example -->
     <div class="card shadow nb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile">
-                    Add Buffer Stock
-                </button>
-            </h6>
+            <h1>Archive</h1>
         </div>
         <div class="card-body">
 
@@ -106,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th> Quantity </th>
                         <th> Buffer Stocks Available </th>
                         <th> Price </th>
-                        <th> Edit </th>
+                       
                         <th> Delete </th>
                         <th> Move To Main </th>
                     </thead>
@@ -125,22 +121,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td> <?php echo $row['buffer_stocks_available']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
                             
-                            <td> 
-                                <form action="edit_buffer_stock_product.php" method="post">
-                                    <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
-                                    <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
-                                </form>
-                            </td>
+                           
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                <button type="submit" name="delete_buffer_stock_btn" class="btn btn-danger">DELETE</button>
+                                <button type="submit" name="permanent_delete_btn" class="btn btn-danger">DELETE</button>
                                 </form>
                             </td>
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="move_id" value="<?php echo $row['id'];?>">
-                                    <button type="submit" name="move_buffer_stock_btn" class="btn btn-danger">MOVE</button>
+                                    <button type="submit" name="restore_btn" class="btn btn-danger">MOVE</button>
                                 </form>
                             </td>
                         </tr>

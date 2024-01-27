@@ -1,7 +1,7 @@
 <?php 
 session_start();
 include('includes/header.php');
-include('includes/navbar.php');
+include('includes/navbar2.php');
 ?>
 
 
@@ -16,7 +16,7 @@ include('includes/navbar.php');
             <div class="card-body">
             <?php
 
-$connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+$connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 if (isset($_POST['edit_btn'])) {
     $id = $_POST['edit_id'];
 
@@ -29,11 +29,15 @@ if (isset($_POST['edit_btn'])) {
 
             <input type="hidden" name="edit_id" value="<?php echo $row['id'] ?>">
             <div class="form-group">
-                <label> Firstname </label>
+                <label> First Name </label>
                 <input type="text" name="edit_firstname" value="<?php echo $row['first_name'] ?>" class="form-control" placeholder="Enter Firstname" required />
             </div>
             <div class="form-group">
-                <label> Lastname </label>
+                <label> Middle Name </label>
+                <input type="text" name="edit_mid_name" value="<?php echo $row['mid_name'] ?>" class="form-control" placeholder="Enter Middle Name" required />
+            </div>
+            <div class="form-group">
+                <label> Last Name </label>
                 <input type="text" name="edit_lastname" value="<?php echo $row['last_name'] ?>" class="form-control" placeholder="Enter Lastname" required />
             </div>
             <div class="form-group">

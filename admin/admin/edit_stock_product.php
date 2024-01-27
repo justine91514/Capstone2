@@ -1,9 +1,9 @@
 <?php
 session_start();
 include('includes/header.php');
-include('includes/navbar.php');
+include('includes/navbar2.php');
 
-$connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+$connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 
 if (isset($_POST['edit_btn'])) {
     $id = $_POST['edit_id'];

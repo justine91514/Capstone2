@@ -1,9 +1,9 @@
 <?php 
 session_start();
 include('includes/header.php');
-include('includes/navbar.php');
+include('includes/navbar2.php');
 
-$connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+$connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 $query = "SELECT prod_name FROM product_list";
 $query_run = mysqli_query($connection, $query);
 $productNames = array();
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="card-body">
             <div class="table-responsive">
                 <?php
-                $connection = mysqli_connect("localhost","root","","dbdaluyon");
+                $connection = mysqli_connect("localhost","root","","dbpharmacy");
                 $query = "SELECT add_stock_list.*, product_list.measurement 
                 FROM add_stock_list
                 JOIN product_list ON add_stock_list.product_stock_name = product_list.prod_name";
@@ -93,8 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th> Stocks Available </th>
                         <th> Price </th>
                         <th> Edit </th>
-                        <th> Delete </th>
-                        <th> Move To Buffer </th>
+                        
+                        <th> Move To Archive </th>
                     </thead>
                     <tbody>
                         <?php
@@ -118,14 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </td>
                                     <td> 
                                         <form action="code.php" method="POST">
-                                            <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                            <button type="submit" name="delete_stock_btn" class="btn btn-danger">DELETE</button>
-                                        </form>
-                                    </td>
-                                    <td> 
-                                        <form action="code.php" method="POST">
                                             <input type="hidden" name="move_id" value="<?php echo $row['id'];?>">
-                                            <button type="submit" name="move_stock_btn" class="btn btn-danger">MOVE</button>
+                                            <button type="submit" name="move_to_archive_btn" class="btn btn-danger">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
