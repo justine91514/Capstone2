@@ -75,7 +75,7 @@ include('includes/navbar2.php');
                                     </td>
                                     <td>
                                         <form action="code.php" method="POST">
-                                            <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
+                                            <input type="hidden" name="restore_id" value="<?php echo $row['id']; ?>">
                                             <button type="submit" name="restore_btn" class="btn btn-danger">Restore</button>
                                         </form>
                                     </td>

@@ -457,6 +457,47 @@ if (isset($_POST['add_buffer_stock_btn'])) {
 // ####################################################################
 
 
+// RESTORE BUTTONS
+// ####################################################################
+if (isset($_POST['restore_btn'])) {
+    $restore_id = $_POST['restore_id'];
+
+    // Get information about the record to be restored
+    $get_info_query = "SELECT * FROM archive_list WHERE id = $restore_id";
+    $get_info_result = mysqli_query($connection, $get_info_query);
+
+    if ($get_info_result) {
+        $row = mysqli_fetch_assoc($get_info_result);
+
+        // Check if 'product_name' key exists in $row
+        $product_name = isset($row['product_name']) ? $row['product_name'] : '';
+
+        // Restore the data to the add_stock_list table
+        $restore_query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price)
+                          VALUES ('$product_name', '{$row['expiry_date']}', {$row['quantity']}, {$row['quantity']}, {$row['price']})";
+        mysqli_query($connection, $restore_query);
+
+        // Update the stocks_available in add_stock_list
+        $update_stocks_query = "UPDATE add_stock_list SET stocks_available = stocks_available - {$row['quantity']} WHERE product_stock_name = '$product_name'";
+        mysqli_query($connection, $update_stocks_query);
+
+        // Delete the data from the archive_list table
+        $delete_query = "DELETE FROM archive_list WHERE id = $restore_id";
+        mysqli_query($connection, $delete_query);
+
+        $_SESSION['success'] = "Data restored successfully!";
+        header('Location: archive.php');
+    } else {
+        $_SESSION['error'] = "Record not found!";
+        header('Location: archive.php');
+    }
+}
+
+
+// ####################################################################
+// RESTORE BUTTONS
+
+
 
 
 
@@ -544,48 +585,27 @@ if(isset($_POST['permanent_delete_btn']))
 }
 
 
+if(isset($_POST['permanent_delete_expired_btn']))
+{
+    $id = $_POST['delete_id'];
 
+    $query = "DELETE FROM expired_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
 
-
-if (isset($_POST['delete_buffer_stock_btn'])) {
-    $delete_id = $_POST['delete_id'];
-
-    // Retrieve the row to be deleted
-    $query_row_to_delete = "SELECT * FROM buffer_stock_list WHERE id='$delete_id'";
-    $query_run_row_to_delete = mysqli_query($connection, $query_row_to_delete);
-    $row_to_delete = mysqli_fetch_assoc($query_run_row_to_delete);
-
-    // Retrieve the product name and quantity of the row to be deleted
-    $product_name_to_delete = $row_to_delete['buffer_stock_name'];
-    $quantity_to_delete = $row_to_delete['quantity'];
-
-    // Retrieve all rows with the same product name
-    $query_same_product = "SELECT * FROM buffer_stock_list WHERE buffer_stock_name='$product_name_to_delete'";
-    $query_run_same_product = mysqli_query($connection, $query_same_product);
-
-    // Apply the decrease in quantity to rows with the same product name
-    while ($row_same_product = mysqli_fetch_assoc($query_run_same_product)) {
-        $current_stock = $row_same_product['buffer_stocks_available'];
-        $new_stocks = $current_stock - $quantity_to_delete;
-        $new_stocks = max(0, $new_stocks); // Make sure stocks don't go negative
-
-        $id_same_product = $row_same_product['id'];
-        $updateQuerySameProduct = "UPDATE buffer_stock_list SET buffer_stocks_available='$new_stocks' WHERE id='$id_same_product'";
-        mysqli_query($connection, $updateQuerySameProduct);
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: expired_products.php');
     }
-
-    // Delete the row
-    $deleteQuery = "DELETE FROM buffer_stock_list WHERE id='$delete_id'";
-    mysqli_query($connection, $deleteQuery);
-
-    if ($deleteQuery) {
-        $_SESSION['success'] = "Buffer Stock Deleted";
-        header('Location: buffer_stock.php');
-    } else {
-        $_SESSION['status'] = "Buffer Stock NOT Deleted";
-        header('Location: buffer_stock.php');
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: expired_products.php');
     }
 }
+
+
+
 
 
 if (isset($_POST['move_to_archive_btn'])) {
@@ -598,32 +618,59 @@ if (isset($_POST['move_to_archive_btn'])) {
     if ($get_info_result && mysqli_num_rows($get_info_result) > 0) {
         $row = mysqli_fetch_assoc($get_info_result);
 
-        // Move the data to the archive table
+        // Move the data to the archive_list table
         $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price)
-                       SELECT product_stock_name, expiry_date, quantity, stocks_available, price
-                       FROM add_stock_list WHERE id = $move_id";
-        $move_result = mysqli_query($connection, $move_query);
+                       VALUES ('{$row['product_stock_name']}', '{$row['expiry_date']}', {$row['quantity']}, {$row['stocks_available']}, {$row['price']})";
+        mysqli_query($connection, $move_query);
 
-        if ($move_result) {
-            // Update the stocks_available in product_list
-            $update_stocks_query = "UPDATE add_stock_list SET stocks_available = stocks_available - {$row['quantity']} WHERE product_stock_name = '{$row['product_stock_name']}'";
-            mysqli_query($connection, $update_stocks_query);
+        // Update the stocks_available in add_stock_list
+        $update_stocks_query = "UPDATE add_stock_list SET stocks_available = stocks_available - {$row['quantity']} WHERE product_stock_name = '{$row['product_stock_name']}'";
+        mysqli_query($connection, $update_stocks_query);
 
-            // Delete the data from the buffer stock table
-            $delete_query = "DELETE FROM add_stock_list WHERE id = $move_id";
-            mysqli_query($connection, $delete_query);
+        // Delete the data from the add_stock_list table
+        $delete_query = "DELETE FROM add_stock_list WHERE id = $move_id";
+        mysqli_query($connection, $delete_query);
 
-            $_SESSION['success'] = "Data moved to archive successfully!";
-            header('Location: add_stocks.php');
-        } else {
-            $_SESSION['error'] = "Failed to move data to archive!";
-            header('Location: add_stocks.php');
-        }
+        $_SESSION['success'] = "Data moved to archive successfully!";
+        header('Location: add_stocks.php');
     } else {
         $_SESSION['error'] = "Record not found!";
         header('Location: add_stocks.php');
     }
 }
+
+
+if (isset($_POST['move_buffer_to_archive_btn'])) {
+    $move_id = $_POST['move_id'];
+
+    // Get information about the record to be moved
+    $get_info_query = "SELECT * FROM buffer_stock_list WHERE id = $move_id";
+    $get_info_result = mysqli_query($connection, $get_info_query);
+
+    if ($get_info_result && mysqli_num_rows($get_info_result) > 0) {
+        $row = mysqli_fetch_assoc($get_info_result);
+
+        // Move the data to the archive_list table
+        $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price)
+                       VALUES ('{$row['buffer_stock_name']}', '{$row['expiry_date']}', {$row['quantity']}, {$row['buffer_stocks_available']}, {$row['price']})";
+        mysqli_query($connection, $move_query);
+
+        // Update the stocks_available in buffer_stock_list
+        $update_stocks_query = "UPDATE buffer_stock_list SET buffer_stocks_available = buffer_stocks_available - {$row['quantity']} WHERE buffer_stock_name = '{$row['buffer_stock_name']}'";
+        mysqli_query($connection, $update_stocks_query);
+
+        // Delete the data from the add_stock_list table
+        $delete_query = "DELETE FROM buffer_stock_list WHERE id = $move_id";
+        mysqli_query($connection, $delete_query);
+
+        $_SESSION['success'] = "Data moved to archive successfully!";
+        header('Location: buffer_stock.php');
+    } else {
+        $_SESSION['error'] = "Record not found!";
+        header('Location: buffer_stock.php');
+    }
+}
+
 
 
 // DELETE BUTTONS

@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th> Buffer Stocks Available </th>
                         <th> Price </th>
                         <th> Edit </th>
-                        <th> Delete </th>
+                        <th> Move to Archive </th>
                         <th> Move To Main </th>
                     </thead>
                     <tbody>
@@ -128,19 +128,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td> 
                                 <form action="edit_buffer_stock_product.php" method="post">
                                     <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
-                                    <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
-                                </form>
-                            </td>
-                            <td> 
-                                <form action="code.php" method="POST">
-                                    <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                <button type="submit" name="delete_buffer_stock_btn" class="btn btn-danger">DELETE</button>
+                                    <button type="submit" name="edit_btn" class="btn btn-success">Edit</button>
                                 </form>
                             </td>
                             <td> 
                                 <form action="code.php" method="POST">
                                     <input type="hidden" name="move_id" value="<?php echo $row['id'];?>">
-                                    <button type="submit" name="move_buffer_stock_btn" class="btn btn-danger">MOVE</button>
+                                <button type="submit" name="move_buffer_to_archive_btn" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                            <td> 
+                                <form action="code.php" method="POST">
+                                    <input type="hidden" name="move_id" value="<?php echo $row['id'];?>">
+                                    <button type="submit" name="move_buffer_stock_btn" class="btn btn-danger">Move</button>
                                 </form>
                             </td>
                         </tr>

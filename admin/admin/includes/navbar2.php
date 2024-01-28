@@ -66,7 +66,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="add_stocks.php" onclick="toggleTab('inventory-tab')">Add Stocks</a>
                 <a class="collapse-item" href="buffer_stock.php" onclick="toggleTab('inventory-tab')">Buffer Stock</a>
-                <a class="collapse-item" href="#" onclick="toggleTab('inventory-tab')">Expired Products</a>
+                <a class="collapse-item" href="expired_products.php" onclick="toggleTab('inventory-tab')">Expired Products</a>
             </div>
         </div>
     </li>

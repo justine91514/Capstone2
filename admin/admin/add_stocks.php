@@ -14,6 +14,15 @@ while ($row = mysqli_fetch_assoc($query_run)) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $selectedProduct = $_POST['product_stock_name'];
 }
+
+$update_stocks_query = "UPDATE add_stock_list a
+                        JOIN (
+                            SELECT product_stock_name, SUM(quantity) as total_quantity
+                            FROM add_stock_list
+                            GROUP BY product_stock_name
+                        ) t ON a.product_stock_name = t.product_stock_name
+                        SET a.stocks_available = t.total_quantity";
+mysqli_query($connection, $update_stocks_query);
 ?>
 
 <div class="modal fade" id="addadminprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
