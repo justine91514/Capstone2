@@ -93,7 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th> Stocks Available </th>
                         <th> Price </th>
                         <th> Edit </th>
-                        
                         <th> Move To Archive </th>
                     </thead>
                     <tbody>

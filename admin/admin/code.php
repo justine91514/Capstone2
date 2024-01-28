@@ -524,6 +524,25 @@ if(isset($_POST['delete_product_type']))
     }
 }
 
+if(isset($_POST['permanent_delete_btn']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM archive_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: archive.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: archive.php');
+    }
+}
+
 
 
 
@@ -572,22 +591,41 @@ if (isset($_POST['delete_buffer_stock_btn'])) {
 if (isset($_POST['move_to_archive_btn'])) {
     $move_id = $_POST['move_id'];
 
-    // Move the data to the archive table
-    $move_query = "INSERT INTO archive_list SELECT * FROM add_stock_list WHERE id = $move_id";
-    $move_result = mysqli_query($connection, $move_query);
+    // Get information about the record to be moved
+    $get_info_query = "SELECT * FROM add_stock_list WHERE id = $move_id";
+    $get_info_result = mysqli_query($connection, $get_info_query);
 
-    if ($move_result) {
-        // Delete the data from the buffer stock table
-        $delete_query = "DELETE FROM add_stock_list WHERE id = $move_id";
-        mysqli_query($connection, $delete_query);
+    if ($get_info_result && mysqli_num_rows($get_info_result) > 0) {
+        $row = mysqli_fetch_assoc($get_info_result);
 
-        $_SESSION['success'] = "Data moved to archive successfully!";
-        header('Location: add_stocks.php');
+        // Move the data to the archive table
+        $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price)
+                       SELECT product_stock_name, expiry_date, quantity, stocks_available, price
+                       FROM add_stock_list WHERE id = $move_id";
+        $move_result = mysqli_query($connection, $move_query);
+
+        if ($move_result) {
+            // Update the stocks_available in product_list
+            $update_stocks_query = "UPDATE add_stock_list SET stocks_available = stocks_available - {$row['quantity']} WHERE product_stock_name = '{$row['product_stock_name']}'";
+            mysqli_query($connection, $update_stocks_query);
+
+            // Delete the data from the buffer stock table
+            $delete_query = "DELETE FROM add_stock_list WHERE id = $move_id";
+            mysqli_query($connection, $delete_query);
+
+            $_SESSION['success'] = "Data moved to archive successfully!";
+            header('Location: add_stocks.php');
+        } else {
+            $_SESSION['error'] = "Failed to move data to archive!";
+            header('Location: add_stocks.php');
+        }
     } else {
-        $_SESSION['error'] = "Failed to move data to archive!";
+        $_SESSION['error'] = "Record not found!";
         header('Location: add_stocks.php');
     }
 }
+
+
 // DELETE BUTTONS
 // ####################################################################
 
