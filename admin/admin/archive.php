@@ -1,4 +1,29 @@
 <?php
+function getStatusColor($expiryDate)
+{
+    $currentDate = date('Y-m-d');
+    $expiryDateObj = new DateTime($expiryDate);
+    $currentDateObj = new DateTime($currentDate);
+
+    if ($expiryDateObj < $currentDateObj) {
+        // Expired (red)
+        return 'red';
+    } else {
+        $daysDifference = $currentDateObj->diff($expiryDateObj)->days;
+
+        if ($daysDifference <= 7) {
+            // Expiring within a week (orange)
+            return 'orange';
+        } else {
+            // Still valid (green)
+            return 'green';
+        }
+    }
+}
+
+?>
+
+<?php
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
@@ -43,10 +68,11 @@ include('includes/navbar2.php');
                     <thead>
                         <th>ID</th>
                         <th>Product Name</th>
-                        <th>Expiry Date</th>
+                        
                         <th>Quantity</th>
                         <th>Stocks Available</th>
                         <th>Price</th>
+                        <th>Expiry Date</th>
                         <th>Permanently Delete</th>
                         <th>Restore Data</th>
                     </thead>
@@ -63,10 +89,23 @@ include('includes/navbar2.php');
                                             <?php echo $row['measurement']; ?>
                                         </span>
                                     </td>
-                                    <td><?php echo $row['expiry_date']; ?></td>
+                                   
                                     <td><?php echo $row['quantity']; ?></td>
                                     <td><?php echo $row['stocks_available']; ?></td>
                                     <td><?php echo $row['price']; ?></td>
+                                    <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'> 
+        <?php 
+            echo $row['expiry_date']; 
+            // Add Font Awesome icons based on expiration status
+            if (getStatusColor($row['expiry_date']) == 'red') {
+                echo ' <i class="fas fa-exclamation-circle" style="color: red;"></i>';
+            } elseif (getStatusColor($row['expiry_date']) == 'orange') {
+                echo ' <i class="fas fa-exclamation-triangle" style="color: orange;"></i>';
+            } elseif (getStatusColor($row['expiry_date']) == 'green') {
+                echo ' <i class="fas fa-check-circle" style="color: green;"></i>';
+            }
+        ?>
+    </td>     
                                     <td>
                                         <form action="code.php" method="POST">
                                             <input type="hidden" name="delete_id" value="<?php echo $row['id']; ?>">
