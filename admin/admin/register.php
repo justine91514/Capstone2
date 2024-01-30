@@ -40,7 +40,13 @@ include('includes/navbar2.php');
                         <label> Confirm Password </label>
                         <input type="password" name="confirmpassword" class="form-control" placeholder="Confirm Password" required />
                     </div>
-                    <input type="hidden" name="usertype" value="admin">
+                    <div class="form-group">
+                                    <label> Usertype </label>
+                                    <select name="usertype" class="form-control">
+                                        <option value="admin">Admin</option>
+                                        <option value="pharmacy_assistant">Pharmacy Assistant</option>
+                                    </select>
+                                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
