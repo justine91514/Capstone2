@@ -6,6 +6,7 @@ $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 if(isset($_POST['registerbtn']))
 {
     $first_name = $_POST['first_name'];
+    $mid_name = $_POST['mid_name'];
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -14,7 +15,7 @@ if(isset($_POST['registerbtn']))
 
     if($password === $cpassword)
     {
-        $query = "INSERT INTO register (first_name, last_name, email, password,usertype) VALUES ('$first_name','$last_name', '$email', '$password','$usertype')";
+        $query = "INSERT INTO register (first_name, mid_name, last_name, email, password,usertype) VALUES ('$first_name',' $mid_name', '$last_name', '$email', '$password','$usertype')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
@@ -40,13 +41,14 @@ if(isset($_POST['updatebtn']))
 {
     $id = $_POST['edit_id'];
     $first_name = $_POST['edit_firstname'];
+    $mid_name = $_POST['edit_mid_name'];
     $last_name = $_POST['edit_lastname']; // Fix the typo here
     $email = $_POST['edit_email'];
     $password = $_POST['edit_password'];
     $usertypeupdate = $_POST['update_usertype'];
 
     // Use the correct variable names in the query
-    $query = "UPDATE register SET first_name='$first_name', last_name='$last_name', email='$email', password='$password', usertype='$usertypeupdate' WHERE id='$id' ";
+    $query = "UPDATE register SET first_name='$first_name', mid_name='$mid_name' ,last_name='$last_name', email='$email', password='$password', usertype='$usertypeupdate' WHERE id='$id' ";
 
     $query_run = mysqli_query($connection, $query);
     

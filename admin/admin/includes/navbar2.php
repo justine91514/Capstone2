@@ -74,7 +74,7 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item" id="sales-report-tab">
-        <a class="nav-link" href="register.php" onclick="toggleTab('sales-report-tab')">
+        <a class="nav-link" href="#" onclick="toggleTab('sales-report-tab')">
             <i class="fas fa-fw fa-chart-area" style="color: black;"></i>
             <span style="color: black;">Sales Report</span>
         </a>
@@ -83,7 +83,7 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item" id="transaction-history-tab">
-        <a class="nav-link" href="register.php" onclick="toggleTab('transaction-history-tab')">
+        <a class="nav-link" href="#" onclick="toggleTab('transaction-history-tab')">
             <i class="fas fa-history" style="color: black;"></i>
             <span style="color: black;">Transaction History</span>
         </a>

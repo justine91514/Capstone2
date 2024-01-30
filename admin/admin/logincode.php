@@ -1,7 +1,7 @@
 <?php
 include('security.php');
 
-$connection = mysqli_connect("localhost", "root", "", "dbdaluyon");
+$connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 
 if(isset($_POST['login_btn']))
 {
