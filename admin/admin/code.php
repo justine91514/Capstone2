@@ -45,10 +45,11 @@ if(isset($_POST['updatebtn']))
     $last_name = $_POST['edit_lastname']; // Fix the typo here
     $email = $_POST['edit_email'];
     $password = $_POST['edit_password'];
+    $branch = $_POST['branch'];
     $usertypeupdate = $_POST['update_usertype'];
 
     // Use the correct variable names in the query
-    $query = "UPDATE register SET first_name='$first_name', mid_name='$mid_name' ,last_name='$last_name', email='$email', password='$password', usertype='$usertypeupdate' WHERE id='$id' ";
+    $query = "UPDATE register SET first_name='$first_name', mid_name='$mid_name' ,last_name='$last_name', email='$email', password='$password', usertype='$usertypeupdate', branch='$branch' WHERE id='$id' ";
 
     $query_run = mysqli_query($connection, $query);
     
@@ -132,6 +133,7 @@ if (isset($_POST['update_stocks_btn'])) {
     $expiry_date = $_POST['expiry_date'];
     $new_quantity = $_POST['quantity'];
     $price = $_POST['price'];
+    $branch = $_POST['branch'];
 
     // Retrieve the original quantity and product name
     $query = "SELECT * FROM add_stock_list WHERE id='$edit_id'";
@@ -159,7 +161,7 @@ if (isset($_POST['update_stocks_btn'])) {
     }
 
     // Update the edited row with the new values
-    $updateQuery = "UPDATE add_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price' WHERE id='$edit_id'";
+    $updateQuery = "UPDATE add_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price', branch='$branch' WHERE id='$edit_id'";
     mysqli_query($connection, $updateQuery);
 
     if ($updateQuery) {
@@ -181,6 +183,7 @@ if (isset($_POST['update_buffer_stock_btn'])) {
     $expiry_date = $_POST['expiry_date'];
     $new_quantity = $_POST['quantity'];
     $price = $_POST['price'];
+    $branch = $_POST['branch'];
 
     // Retrieve the original quantity
     $query = "SELECT * FROM buffer_stock_list WHERE id='$edit_id'";
@@ -208,7 +211,7 @@ if (isset($_POST['update_buffer_stock_btn'])) {
     }
 
     // Update the edited row with the new values
-    $updateQuery = "UPDATE buffer_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price' WHERE id='$edit_id'";
+    $updateQuery = "UPDATE buffer_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price', branch'$branch' WHERE id='$edit_id'";
     mysqli_query($connection, $updateQuery);
 
     if ($updateQuery) {
@@ -353,6 +356,7 @@ if (isset($_POST['add_stock_btn'])) {
     $expiry_date = $_POST['expiry_date'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
+    $branch = $_POST['branch'];
 
     // Retrieve the current stocks_available value
     $query = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_stock_name'";
@@ -368,7 +372,7 @@ if (isset($_POST['add_stock_btn'])) {
     mysqli_query($connection, $updateQuery);
 
     // Continue with the rest of your code to insert the new stock information into the database
-    $query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price) VALUES ('$product_stock_name', '$expiry_date', '$quantity', '$newStocks','$price')";
+    $query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price, branch) VALUES ('$product_stock_name', '$expiry_date', '$quantity', '$newStocks','$price', '$branch')";
     $query_run = mysqli_query($connection, $query);
 
     if ($query_run) {
@@ -426,6 +430,7 @@ if (isset($_POST['add_buffer_stock_btn'])) {
     $expiry_date = $_POST['expiry_date'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
+    $branch = $_POST['branch'];
 
     // Retrieve the current stocks_available value
     $query = "SELECT * FROM buffer_stock_list WHERE buffer_stock_name='$buffer_stock_name'";
@@ -441,7 +446,7 @@ if (isset($_POST['add_buffer_stock_btn'])) {
     mysqli_query($connection, $updateQuery);
 
     // Continue with the rest of your code to insert the new stock information into the database
-    $query = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, buffer_stocks_available, price) VALUES ('$buffer_stock_name', '$expiry_date', '$quantity', '$newStocks','$price')";
+    $query = "INSERT INTO buffer_stock_list (buffer_stock_name, expiry_date, quantity, buffer_stocks_available, price, branch) VALUES ('$buffer_stock_name', '$expiry_date', '$quantity', '$newStocks','$price','$branch')";
     $query_run = mysqli_query($connection, $query);
 
     if ($query_run) {
@@ -475,9 +480,10 @@ if (isset($_POST['restore_btn'])) {
         $product_name = isset($row['product_name']) ? $row['product_name'] : '';
 
         // Restore the data to the add_stock_list table
-        $restore_query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price)
-                          VALUES ('$product_name', '{$row['expiry_date']}', {$row['quantity']}, {$row['quantity']}, {$row['price']})";
+        $restore_query = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price, branch)
+        VALUES ('$product_name', '{$row['expiry_date']}', {$row['quantity']}, {$row['quantity']}, {$row['price']}, '{$row['branch']}')";
         mysqli_query($connection, $restore_query);
+
 
         // Update the stocks_available in add_stock_list
         $update_stocks_query = "UPDATE add_stock_list SET stocks_available = stocks_available - {$row['quantity']} WHERE product_stock_name = '$product_name'";
@@ -621,8 +627,9 @@ if (isset($_POST['move_to_archive_btn'])) {
         $row = mysqli_fetch_assoc($get_info_result);
 
         // Move the data to the archive_list table
-        $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price)
-                       VALUES ('{$row['product_stock_name']}', '{$row['expiry_date']}', {$row['quantity']}, {$row['stocks_available']}, {$row['price']})";
+        $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price, branch)
+               VALUES ('{$row['product_stock_name']}', '{$row['expiry_date']}', {$row['quantity']}, {$row['stocks_available']}, {$row['price']}, '{$row['branch']}')";
+
         mysqli_query($connection, $move_query);
 
         // Update the stocks_available in add_stock_list
@@ -653,9 +660,10 @@ if (isset($_POST['move_buffer_to_archive_btn'])) {
         $row = mysqli_fetch_assoc($get_info_result);
 
         // Move the data to the archive_list table
-        $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price)
-                       VALUES ('{$row['buffer_stock_name']}', '{$row['expiry_date']}', {$row['quantity']}, {$row['buffer_stocks_available']}, {$row['price']})";
+        $move_query = "INSERT INTO archive_list (product_name, expiry_date, quantity, stocks_available, price, branch)
+               VALUES ('{$row['buffer_stock_name']}', '{$row['expiry_date']}', {$row['quantity']}, {$row['buffer_stocks_available']}, {$row['price']}, '{$row['branch']}')";
         mysqli_query($connection, $move_query);
+
 
         // Update the stocks_available in buffer_stock_list
         $update_stocks_query = "UPDATE buffer_stock_list SET buffer_stocks_available = buffer_stocks_available - {$row['quantity']} WHERE buffer_stock_name = '{$row['buffer_stock_name']}'";
@@ -777,8 +785,9 @@ if (isset($_POST['move_buffer_stock_btn'])) {
     mysqli_query($connection, $updateQueryAddStock);
 
     // Move the row from buffer_stock_list to add_stock_list
-    $insertQueryAddStock = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price)
-                            VALUES ('$product_name_to_move', '{$row_to_move['expiry_date']}', '$quantity_to_move', '$new_stocks_available', '{$row_to_move['price']}')";
+    $insertQueryAddStock = "INSERT INTO add_stock_list (product_stock_name, expiry_date, quantity, stocks_available, price, branch)
+    VALUES ('$product_name_to_move', '{$row_to_move['expiry_date']}', '$quantity_to_move', '$new_stocks_available', '{$row_to_move['price']}', '{$row_to_move['branch']}')";
+
     $deleteQueryBufferStock = "DELETE FROM buffer_stock_list WHERE id='$move_id'";
 
     mysqli_query($connection, $insertQueryAddStock);

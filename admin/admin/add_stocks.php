@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks</title>
+</head>
+
+</html>
+
 <?php
 function getStatusColor($expiryDate)
 {
@@ -99,10 +109,19 @@ mysqli_query($connection, $update_stocks_query);
                         <input type="text" name="price" class="form-control" placeholder="Enter Price" required />
                     </div>
                     <div class="form-group">
-                    <label>Expiry Date</label>
-                    <input type="date" name="expiry_date" class="form-control" placeholder="Select Expiry Date" required 
-                        min="<?php echo date('Y-m-d'); ?>" />
-                </div>
+                        <label> Branch </label>
+                    <select name="branch" class="form-control" required>
+                        <option value="" disabled selected>Select Branch</option>
+                        <option value="Cell Med">Cell Med</option>
+                        <option value="3G Med">3G Med</option>
+                        <option value="Boom Care">Boom Care</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="date" name="expiry_date" class="form-control" placeholder="Select Expiry Date" required 
+                            min="<?php echo date('Y-m-d'); ?>" />
+                    </div>
 
                 </div>
                 <div class="modal-footer">
@@ -139,6 +158,7 @@ mysqli_query($connection, $update_stocks_query);
                         <th> Quantity </th>
                         <th> Stocks Available </th>
                         <th> Price </th>
+                        <th> Branch </th>
                         <th> Expiry Date </th>
                         <th> Edit </th>
                         <th> Move To Archive </th>
@@ -155,7 +175,8 @@ mysqli_query($connection, $update_stocks_query);
     <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
     <td> <?php echo $row['quantity']; ?></td>
     <td> <?php echo $row['stocks_available']; ?></td>
-    <td> <?php echo $row['price']; ?></td>     
+    <td> <?php echo $row['price']; ?></td>   
+    <td> <?php echo $row['branch']; ?></td> 
     <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'> 
         <?php 
             echo $row['expiry_date']; 

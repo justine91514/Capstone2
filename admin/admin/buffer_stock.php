@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffer Stocks</title>
+</head>
+</html>
+
 <?php
 function getStatusColor($expiryDate)
 {
@@ -98,6 +107,15 @@ mysqli_query($connection, $update_stocks_query);
             <input type="text" name="price" class="form-control" placeholder="Enter Price" required />
         </div>
         <div class="form-group">
+                        <label> Branch </label>
+                    <select name="branch" class="form-control" required>
+                        <option value="" disabled selected>Select Branch</option>
+                        <option value="Cell Med">Cell Med</option>
+                        <option value="3G Med">3G Med</option>
+                        <option value="Boom Care">Boom Care</option>
+                    </select>
+                    </div>
+        <div class="form-group">
                         <label>Expiry Date</label>
                         <input type="date" name="expiry_date" class="form-control" placeholder="Select Expiry Date" required 
                             min="<?php echo date('Y-m-d'); ?>" />
@@ -145,6 +163,7 @@ mysqli_query($connection, $update_stocks_query);
                         <th> Quantity </th>
                         <th> Buffer Stocks Available </th>
                         <th> Price </th>
+                        <th> Branch </th>
                         <th> Expiry Date </th>
                         <th> Edit </th>
                         <th> Move to Archive </th>
@@ -163,19 +182,20 @@ mysqli_query($connection, $update_stocks_query);
                             <td> <?php echo $row['quantity']; ?></td>
                             <td> <?php echo $row['buffer_stocks_available']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
+                            <td> <?php echo $row['branch']; ?></td>
                             <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'> 
-        <?php 
-            echo $row['expiry_date']; 
-            // Add Font Awesome icons based on expiration status
-            if (getStatusColor($row['expiry_date']) == 'red') {
-                echo ' <i class="fas fa-exclamation-circle" style="color: red;"></i>';
-            } elseif (getStatusColor($row['expiry_date']) == 'orange') {
-                echo ' <i class="fas fa-exclamation-triangle" style="color: orange;"></i>';
-            } elseif (getStatusColor($row['expiry_date']) == 'green') {
-                echo ' <i class="fas fa-check-circle" style="color: green;"></i>';
-            }
-        ?>
-    </td>            
+                                <?php 
+                                    echo $row['expiry_date']; 
+                                    // Add Font Awesome icons based on expiration status
+                                    if (getStatusColor($row['expiry_date']) == 'red') {
+                                        echo ' <i class="fas fa-exclamation-circle" style="color: red;"></i>';
+                                    } elseif (getStatusColor($row['expiry_date']) == 'orange') {
+                                        echo ' <i class="fas fa-exclamation-triangle" style="color: orange;"></i>';
+                                    } elseif (getStatusColor($row['expiry_date']) == 'green') {
+                                        echo ' <i class="fas fa-check-circle" style="color: green;"></i>';
+                                    }
+                                ?>
+                            </td>            
                             
                             <td> 
                                 <form action="edit_buffer_stock_product.php" method="post">

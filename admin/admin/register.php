@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Account</title>
+</head>
+</html>
 <?php 
 session_start();
 include('includes/header.php');
@@ -9,7 +17,7 @@ include('includes/navbar2.php');
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Create Account</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -41,12 +49,22 @@ include('includes/navbar2.php');
                         <input type="password" name="confirmpassword" class="form-control" placeholder="Confirm Password" required />
                     </div>
                     <div class="form-group">
-                                    <label> Usertype </label>
-                                    <select name="usertype" class="form-control">
-                                        <option value="admin">Admin</option>
-                                        <option value="pharmacy_assistant">Pharmacy Assistant</option>
-                                    </select>
-                                </div>
+                        <label> Branch </label>
+                        <select name="branch" class="form-control" required>
+                            <option value="" disabled selected>Select Branch</option>
+                            <option value="Cell Med">Cell Med</option>
+                            <option value="3G Med">3G Med</option>
+                            <option value="Boom Care">Boom Care</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label> Usertype </label>
+                        <select name="usertype" class="form-control">
+                            <option value="" disabled selected>Select Usertype</option>
+                            <option value="admin">Admin</option>
+                            <option value="pharmacy_assistant">Pharmacy Assistant</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -60,9 +78,9 @@ include('includes/navbar2.php');
 <div class="container-fluid">
     <div class="card shadow nb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Admin Profile
+            <h6 class="m-0 font-weight-bold text-primary">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile">
-                    Add Admin Profile
+                    Add User Account
                 </button>
             </h6>
         </div>
@@ -95,6 +113,7 @@ include('includes/navbar2.php');
                         <th> Lastname </th>
                         <th> Email</th>
                         <th> Password</th>
+                        <th> Branch</th>
                         <th> Usertype</th>
                         <th> EDIT </th>
                         <th> DELETE </th>
@@ -113,7 +132,9 @@ include('includes/navbar2.php');
                             <td> <?php echo $row['last_name']; ?></td>
                             <td> <?php echo $row['email']; ?></td>
                             <td> <?php echo $row['password']; ?></td>
+                            <td> <?php echo $row['branch']; ?></td>
                             <td> <?php echo $row['usertype']; ?></td>
+                            
                             <td> 
                                 <form action="register_edit.php" method="post">
                                     <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">

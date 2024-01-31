@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Buffer Stock</title>
+</head>
+</html>
 <?php 
 session_start();
 include('includes/header.php');
@@ -30,13 +38,6 @@ include('includes/navbar2.php');
                             <input type="text" name="buffer_stock_name" value="<?php echo $row['buffer_stock_name'] ?>" class="form-control" placeholder="Enter Category" readonly required />
                         </div>
                         <div class="form-group">
-                            <label>Expiry Date</label>
-                            <input type="date" name="expiry_date" value="<?php echo $row['expiry_date']; ?>" class="form-control" placeholder="Select Expiry Date" required />
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label>Quantity</label>
                             <input type="text" name="quantity" value="<?php echo $row['quantity'] ?>" class="form-control" placeholder="Enter Category" required />
                         </div>
@@ -44,7 +45,21 @@ include('includes/navbar2.php');
                             <label>Price</label>
                             <input type="text" name="price" value="<?php echo $row['price'] ?>" class="form-control" placeholder="Enter Category" required />
                         </div>
-
+                        <div class="form-group">
+                            <label> Branch </label>
+                        <select name="branch" class="form-control" required>
+                            <option value="" disabled selected>Select Branch</option>
+                            <option value="Cell Med">Cell Med</option>
+                            <option value="3G Med">3G Med</option>
+                            <option value="Boom Care">Boom Care</option>
+                        </select>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="expiry_date" value="<?php echo $row['expiry_date']; ?>" class="form-control" placeholder="Select Expiry Date" required />
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                         <a href="buffer_stock.php" class="btn btn-danger">CANCEL</a>
                         <button type="submit" name="update_buffer_stock_btn" class="btn btn-primary">Update</button>
                     </form>

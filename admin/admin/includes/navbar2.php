@@ -40,7 +40,7 @@
 <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
         <div class="sidebar-brand-icon">
-        <img src="img/3GMED.png" alt="Pharmacy Logo" style="width: 159; height: 90px;">
+        <img src="img/3.Gmed.png" alt="Pharmacy Logo" style="width: 159; height: 90px;">
         </div>
     </a>
 
@@ -103,7 +103,6 @@
                 <a class="collapse-item" href="product.php" onclick="toggleTab('settings-tab')">Create Product</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Discount</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Supplier List</a>
-                <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Product List</a>
                 <a class="collapse-item" href="register.php" onclick="toggleTab('settings-tab')">User Management</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Back-up and Restore</a>
                 <a class="collapse-item" href="archive.php" onclick="toggleTab('settings-tab')">Archive</a>

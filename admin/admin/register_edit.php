@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User Profile</title>
+</head>
+</html>
 <?php 
 session_start();
 include('includes/header.php');
@@ -9,8 +17,7 @@ include('includes/navbar2.php');
     <!-- DataTables Example -->
         <div class="card shadow nb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">EDIT Admin Profile
-                    
+                <h6 class="m-0 font-weight-bold text-primary">Edit User Profile
                 </h6>
             </div>
             <div class="card-body">
@@ -49,11 +56,17 @@ if (isset($_POST['edit_btn'])) {
                 <input type="password" name="edit_password" value="<?php echo $row['password'] ?>" class="form-control" placeholder="Enter Password" required />
             </div>
             <div class="form-group">
-                <label> Usertype </label>
-                <select name="update_usertype" class="form-control">
-                    <option value= "admin">Admin</option>
-                    <option value= "pharmacy_assistant">Pharmacy Assistant</option>
+                <label> Branch </label>
+                <select name="branch" class="form-control" required>
+                    <option value="" disabled selected>Select Branch</option>
+                    <option value="Cell Med">Cell Med</option>
+                    <option value="3G Med">3G Med</option>
+                    <option value="Boom Care">Boom Care</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label> Usertype </label>
+                <input type="usertype" name="update_usertype" value="<?php echo $row['usertype'] ?>" class="form-control" readonly required />
             </div>
 
 
