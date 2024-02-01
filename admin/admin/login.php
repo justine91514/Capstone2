@@ -139,7 +139,7 @@ session_start();
                                         <input class="form-check-input" type="checkbox" id="rememberMe">
                                         <label class="form-check-label" for="rememberMe" style="color: black;">Remember Me</label>
                                     </div>
-                                    <a href="#" class="ml-auto" style="color: black;">Forgot Password?</a>
+                                    <a href="forgotpass.php" class="ml-auto" style="color: black;">Forgot Password?</a>
                                 </div>
 
                                 <button type="submit" name="login_btn" class="btn btn-primary btn-user btn-block"> Log-In</button>
