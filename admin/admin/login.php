@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,11 +13,11 @@
     <meta name="author" content="">
     <title>Login</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
     <style>
@@ -38,7 +42,7 @@
         }
 
         .brand-text {
-            font-size: 2em;
+            font-size: 3em;
         }
 
         .slogan-text {
@@ -57,8 +61,9 @@
             border-radius: 15px;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
             display: block;
-            margin: 0 auto; /* Set left and right margin to auto */
+            margin: 20px auto; /* Adjusted margin for better positioning */
         }
+
         /* Change button color */
         .btn-primary {
             background-color: #0C96D4; /* Change the color code to your desired color */
@@ -72,101 +77,110 @@
             color: #000000;
         }
     </style>
-
 </head>
 
-
-<?php
-session_start();
-?>
+<body>
 
 <div class="container">
-
-<!-- Outer Row -->
-<div class="row justify-content-center">
-
-    <div class="col-xl-6 col-lg-6 col-md-6">
-
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <!-- Nested Row within Card Body -->
-                <div class="row">
-                    <!--this is the image code-->
-               <!--     <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>      -->
-                    <!--this is the image code-->
-                    <div class="col-lg-12">
-                        <div class="p-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-auto mt-auto">
+            <div class="login-container">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-lg-12">
                             <div class="text-center">
-                            <img src="img/3GMED.png" alt="Logo" class="mb-4" style="width: 200px; height: auto;">
-                                <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                <img src="img/3.Gmed.png" alt="Logo" class="mb-4" style="width: 200px; height: auto;">
+                                <h1 class="h1 mb-4" style="color: black; font-weight: bold;">Welcome Back!</h1>
                                 <p style="color: black;">Input credentials to access your account</p>
                                 <hr class="my-4">
                                 <?php
-
-                                if(isset($_SESSION['status']) && $_SESSION['status'] !='')
-                                {
-                                    echo '<h2 class="bg-danger text-white">'.$_SESSION['status'].'</h2>';
+                                if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
+                                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Error:</strong> ' . $_SESSION['status'] . '
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>';
                                     unset($_SESSION['status']);
                                 }
-                                ?>
-
-
+                                ?>                             
                             </div>
-
                             <form class="user" action="logincode.php" method="POST">
-                                <div class="form-group">
-                                    <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email Address..." required>
-                                </div>
-                                <div class="form-group">
-                                    <div class="password-container">
-                                        <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" required>
-                                        <span class="toggle-password" onclick="togglePasswordVisibility()"><i class="fas fa-eye"></i></span>
+
+                                <div class="form-group custom-width">
+                                    <div class="input-group">
+                                        <input type="email" name="email" class="form-control" placeholder="Enter Email Address..." required>
                                     </div>
                                 </div>
+
+                                <div class="form-group custom-width">
+                                    <div class="input-group">
+                                        <input type="password" name="password" class="form-control" id="exampleInputPassword" placeholder="Password" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="togglePassword" onclick="togglePasswordVisibility()">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group custom-width-usertype text-center"> <!-- Updated class for centering -->
+                                    <div class="input-group">
+                                        <select name="usertype" class="form-control" placeholder="Select User" required>
+                                            <option value="" disabled selected>Select User</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="pharmacy_assistant">Pharmacy Assistant</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group d-flex align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe" style="color: black;">Remember Me</label>
+                                    </div>
+                                    <a href="#" class="ml-auto" style="color: black;">Forgot Password?</a>
+                                </div>
+
+                                <button type="submit" name="login_btn" class="btn btn-primary btn-user btn-block"> Log-In</button>
                                 <!-- Add the necessary Font Awesome CDN for the eye icon -->
                                 <script src="https://kit.fontawesome.com/your-font-awesome-kit-id.js" crossorigin="anonymous"></script>
                                 <script>
-                                    function togglePasswordVisibility() {
-                                        var passwordField = document.getElementById("exampleInputPassword");
-                                        var eyeIcon = document.querySelector(".toggle-password i");
+                                    function togglePasswordVisibility()
+                                    {
+                                        var passwordInput = document.getElementById("exampleInputPassword");
+                                        var eyeIcon = document.querySelector("#togglePassword i");
 
-                                        if (passwordField.type === "password") {
-                                            passwordField.type = "text";
-                                            eyeIcon.classList.remove("fa-eye");
-                                            eyeIcon.classList.add("fa-eye-slash");
-                                        } else {
-                                            passwordField.type = "password";
-                                            eyeIcon.classList.remove("fa-eye-slash");
-                                            eyeIcon.classList.add("fa-eye");
-                                        }
+                                        var type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                                        passwordInput.setAttribute("type", type);
+
+                                        // Toggle eye icon based on password visibility
+                                        eyeIcon.classList.toggle("fa-eye-slash", type === "password");
                                     }
                                 </script>
-                                </div>
-                                <div class="form-group">
-                                    <select name="usertype" class="form-control form-control-user" placeholder="Select User" required>
-                                        <option value="" disabled selected>Select User</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="pharmacy_assistant">Pharmacy Assistant</option>
-                                    </select>
-                                </div>
-                                
-
-                                
-                                <button type="submit" name="login_btn" class="btn btn-primary btn-user btn-block"> Login</button>
-                                <hr>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
 
-</div>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<?php
-include('includes/scripts.php');
-?>
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+<script>
+    var passwordInput = document.getElementById("password");
+    var togglePasswordButton = document.getElementById("togglePassword");
+
+    togglePasswordButton.addEventListener("click", function () {
+        var type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
