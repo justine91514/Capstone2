@@ -62,10 +62,15 @@ if (isset($_POST['edit_btn'])) {
                 <label> Measurement </label>
                 <input type="text" name="measurement" value="<?php echo $row['measurement'] ?>" class="form-control" placeholder="Enter Category" required />
             </div>
-            <div class="form-group">
-                            <label> Prescription </label>
-                            <input type="checkbox" name="prescription" <?php echo ($row['prescription'] == 'yes') ? 'checked' : ''; ?>>
-                        </div>
+            <!-- Existing code ... -->
+<div class="form-group">
+    <label> Prescription </label>
+    <input type="checkbox" name="prescription" <?php echo ($row['prescription'] == 'yes') ? 'checked' : ''; ?>>
+</div>
+<!-- Remaining code ... -->
+
+
+
             <a href="product.php" class="btn btn-danger"> CANCEL</a>
             
             <button type="submit" name="updateproductbtn" class="btn btn-primary"> Update </button>

@@ -1,3 +1,10 @@
+<?php
+session_start();
+include('includes/header.php');
+include('includes/navbar2.php');
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,9 +40,7 @@ function getStatusColor($expiryDate)
 
 ?>
 <?php 
-session_start();
-include('includes/header.php');
-include('includes/navbar2.php');
+
 
 $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 $query = "SELECT prod_name FROM product_list";
@@ -69,6 +74,15 @@ $update_stocks_query = "UPDATE add_stock_list a
                         ) t ON a.product_stock_name = t.product_stock_name
                         SET a.stocks_available = t.total_quantity";
 mysqli_query($connection, $update_stocks_query);
+$expiring_soon_query = "SELECT COUNT(*) as expiring_soon_count FROM add_stock_list WHERE expiry_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY";
+$expiring_soon_result = mysqli_query($connection, $expiring_soon_query);
+$expiring_soon_count = 0;
+
+if ($expiring_soon_result) {
+    $expiring_soon_row = mysqli_fetch_assoc($expiring_soon_result);
+    $expiring_soon_count = $expiring_soon_row['expiring_soon_count'];
+}
+
 ?>
 
 <div class="modal fade" id="addadminprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -234,6 +248,8 @@ aria-hidden="true">
     </div>
 </div>
 </div>
+
+
     <?php
     include('includes/scripts.php');
     include('includes/footer.php');

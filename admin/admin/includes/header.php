@@ -29,20 +29,18 @@
 
                 
                 <!-- Topbar Right Section -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Alerts -->
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span style="display: inline-flex; align-items: center; justify-content: center; border: 2px solid lightgray; border-radius: 50%; padding: 5px; width: 35px; height: 35px; margin-right: -25px;">
+            <ul class="navbar-nav ml-auto">
+                <!-- Nav Item - Alerts -->
+                <li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; border: 2px solid lightgray; border-radius: 50%; padding: 5px; width: 35px; height: 35px; margin-right: -25px;">
                             <i class="fas fa-bell fa-fw"></i>
-                            </span>
+                        </span>
 
 
-
-                            <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter" style="margin-right: -25px;">3+</span>
+                    <!-- Counter - Alerts -->
+                    <span class="badge badge-danger badge-counter" style="margin-right: -25px;"></span>
+                            
 
                         </a>
                         <!-- Dropdown - Alerts -->
@@ -62,17 +60,19 @@
                             <span class="font-weight-bold">Low stock alert:</span> Some medications are running low.
                         </div>
                         </a>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                        <div class="mr-3">
-                            <div class="icon-circle bg-warning">
-                                <i class="fas fa-exclamation-triangle text-white"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="small text-gray-500">January 10, 2022</div>
-                            <span class="font-weight-bold">Expiring Soon:</span> Check medications with upcoming expiration dates.
-                        </div>
-                        </a>
+                        <a id="expiringSoonLink" class="dropdown-item d-flex align-items-center" href="#">
+    <div class="mr-3">
+        <div class="icon-circle bg-warning">
+            <i class="fas fa-exclamation-triangle text-white"></i>
+        </div>
+    </div>
+    <div>
+        <div id="notification-container"></div>
+        <span class="font-weight-bold">Expiring Soon:</span> <span id="expiringSoonMessage"></span>
+    </div>
+</a>
+
+
 
                         <!-- Dropdown - Sales and Inventory Alerts -->
                         <a class="dropdown-item d-flex align-items-center" href="#">
@@ -210,7 +210,20 @@
 
             </nav>
             <!-- End of Topbar -->
+<?php
+// Include other necessary PHP code or functions
 
+function getExpiringSoonMessage($connection)
+{
+    $expiringSoonCount = getExpiringSoonCount($connection);
+
+    if ($expiringSoonCount > 0) {
+        return "There are {$expiringSoonCount} product(s) that will expire soon.";
+    } else {
+        return 'There are 0 products that will expire soon.';
+    }
+}
+?>
 <!-- JavaScript Functions -->
 <script>
 function userFunction() {
@@ -228,10 +241,12 @@ function dateFunction() {
     console.log('Date section clicked');
 }
 </script>
-
+<?php include('notification_logic.php'); ?>
 </head>
 
 <body id="page-top">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
+
+    

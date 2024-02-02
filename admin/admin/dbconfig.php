@@ -4,17 +4,19 @@ $db_username = "root";
 $db_password = "";
 $db_name = "dbpharmacy";
 
- $connection = mysqli_connect($server_name,$db_username,$db_password);
- $dbconfig = mysqli_select_db($connection,$db_name);
+$connection = mysqli_connect($server_name, $db_username, $db_password);
 
- if($dbconfig)
- {
-    echo "database Connected";
- }
- else
- {
-    echo "database Connection Failed/ tignan mo sa daatabase/dbconfig.php file";
- }
+// Check connection
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
+$dbconfig = mysqli_select_db($connection, $db_name);
 
+// Check if the database selection was successful
+if (!$dbconfig) {
+    die("Database selection failed: " . mysqli_error($connection));
+}
+
+return $connection; // Return the connection object
 ?>

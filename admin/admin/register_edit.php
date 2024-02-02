@@ -56,14 +56,14 @@ if (isset($_POST['edit_btn'])) {
                 <input type="password" name="edit_password" value="<?php echo $row['password'] ?>" class="form-control" placeholder="Enter Password" required />
             </div>
             <div class="form-group">
-                <label> Branch </label>
-                <select name="branch" class="form-control" required>
-                    <option value="" disabled selected>Select Branch</option>
-                    <option value="Cell Med">Cell Med</option>
-                    <option value="3G Med">3G Med</option>
-                    <option value="Boom Care">Boom Care</option>
-                </select>
-            </div>
+    <label> Branch </label>
+    <select name="branch" class="form-control" required>
+        <option value="" disabled>Select Branch</option>
+        <option value="Cell Med" <?php echo ($row['branch'] == 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
+        <option value="3G Med" <?php echo ($row['branch'] == '3G Med') ? 'selected' : ''; ?>>3G Med</option>
+        <option value="Boom Care" <?php echo ($row['branch'] == 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
+    </select>
+</div>
             <div class="form-group">
                 <label> Usertype </label>
                 <input type="usertype" name="update_usertype" value="<?php echo $row['usertype'] ?>" class="form-control" readonly required />

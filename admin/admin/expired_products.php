@@ -8,8 +8,24 @@
 </html>
 
 <?php
-function getStatusColor($expiryDate)
+function getStatusColor($productName, $expiryDate)
 {
+    $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
+
+    // Check if the product is in the expired_list table
+    $check_expired_query = "SELECT COUNT(*) as count FROM expired_list WHERE product_name = '$productName'";
+    $check_expired_result = mysqli_query($connection, $check_expired_query);
+
+    if ($check_expired_result) {
+        $check_expired_row = mysqli_fetch_assoc($check_expired_result);
+
+        if ($check_expired_row['count'] > 0) {
+            // Product is in expired_list, set color to red
+            return 'red';
+        }
+    }
+
+    // Product is not in expired_list, continue with the original logic
     $currentDate = date('Y-m-d');
     $expiryDateObj = new DateTime($expiryDate);
     $currentDateObj = new DateTime($currentDate);
@@ -29,6 +45,7 @@ function getStatusColor($expiryDate)
         }
     }
 }
+
 
 ?>
 <?php
@@ -81,19 +98,32 @@ include('includes/navbar2.php');
                                 <td><?php echo $row['quantity']; ?></td>
                                 <td><?php echo $row['stocks_available']; ?></td>
                                 <td><?php echo $row['price']; ?></td>
-                                <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'> 
-                                    <?php 
-                                        echo $row['expiry_date']; 
-                                        // Add Font Awesome icons based on expiration status
-                                        if (getStatusColor($row['expiry_date']) == 'red') {
-                                            echo ' <i class="fas fa-exclamation-circle" style="color: red;"></i>';
-                                        } elseif (getStatusColor($row['expiry_date']) == 'orange') {
-                                            echo ' <i class="fas fa-exclamation-triangle" style="color: orange;"></i>';
-                                        } elseif (getStatusColor($row['expiry_date']) == 'green') {
-                                            echo ' <i class="fas fa-check-circle" style="color: green;"></i>';
-                                        }
-                                    ?>
-                                </td>      
+                                <td style='color: <?php echo getStatusColor($row['product_stock_name'], $row['expiry_date']); ?>;'> 
+    <?php 
+        $expiryDate = new DateTime($row['expiry_date']);
+
+        // Add one day if the product is in the expired_list table
+        if (getStatusColor($row['product_name'], $row['expiry_date']) == 'red') {
+            $expiryDate->modify('+1 day');
+        }
+
+        $formattedDate = $expiryDate->format('Y-m-d');
+
+        // Apply red color to the entire date text
+        echo '<span style="color: red;">' . $formattedDate . '</span>';
+
+        // Add Font Awesome icons based on expiration status
+        if (getStatusColor($row['product_name'], $row['expiry_date']) == 'red') {
+            echo ' <i class="fas fa-exclamation-circle" style="color: red;"></i>';
+        } elseif (getStatusColor($row['product_name'], $row['expiry_date']) == 'orange') {
+            echo ' <i class="fas fa-exclamation-triangle" style="color: orange;"></i>';
+        } elseif (getStatusColor($row['product_name'], $row['expiry_date']) == 'green') {
+            echo ' <i class="fas fa-check-circle" style="color: green;"></i>';
+        }
+    ?>
+</td>
+
+
                                 <td>
                                     <form action="code.php" method="POST">
                                         <input type="hidden" name="delete_id" value="<?php echo $row['id']; ?>">
