@@ -1,38 +1,57 @@
 <?php
 $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 
-// Query to get the expiring soon count
-$expiring_soon_query = "SELECT COUNT(*) as expiring_soon_count FROM add_stock_list WHERE expiry_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY";
+// Query to get the expiring soon count and details for add_stock_list
+$expiring_soon_query = "SELECT COUNT(*) as expiring_soon_count, GROUP_CONCAT(product_stock_name) as expiring_soon_products FROM add_stock_list WHERE expiry_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY";
 $expiring_soon_result = mysqli_query($connection, $expiring_soon_query);
-$expiring_soon_count = 0;
+$expiring_soon_data = mysqli_fetch_assoc($expiring_soon_result);
+$expiring_soon_count = $expiring_soon_data['expiring_soon_count'];
+$expiring_soon_products = $expiring_soon_data['expiring_soon_products'];
 
-if ($expiring_soon_result) {
-    $expiring_soon_row = mysqli_fetch_assoc($expiring_soon_result);
-    $expiring_soon_count = $expiring_soon_row['expiring_soon_count'];
-}
+// Query to get the expiring soon count and details for buffer_stock_list
+$expiring_soon_buffer_query = "SELECT COUNT(*) as expiring_soon_buffer_count, GROUP_CONCAT(buffer_stock_name) as expiring_soon_buffer_products FROM buffer_stock_list WHERE expiry_date BETWEEN CURDATE() AND CURDATE() + INTERVAL 7 DAY";
+$expiring_soon_buffer_result = mysqli_query($connection, $expiring_soon_buffer_query);
+$expiring_soon_buffer_data = mysqli_fetch_assoc($expiring_soon_buffer_result);
+$expiring_soon_buffer_count = $expiring_soon_buffer_data['expiring_soon_buffer_count'];
+$expiring_soon_buffer_products = $expiring_soon_buffer_data['expiring_soon_buffer_products'];
+
+
 ?>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const expiringSoonCount = <?php echo $expiring_soon_count; ?>;
-    const expiringSoonLink = document.getElementById('expiringSoonLink');
-    const expiringSoonMessage = document.getElementById('expiringSoonMessage');
-    
-    if (expiringSoonLink && expiringSoonMessage) {
-        expiringSoonLink.addEventListener('click', function () {
-            // Redirect to add_stocks.php when the "Expiring Soon" link is clicked
-            window.location.href = expiringSoonCount > 0 ? 'add_stocks.php' : '#';
-        });
 
-        // Update the expiring soon message
-        expiringSoonMessage.innerHTML = expiringSoonCount > 0
-            ? `There are (${expiringSoonCount}) product(s) that will expire soon`
-            : 'NONE';
+<script>
+// Update the notification badge count in the header
+document.addEventListener('DOMContentLoaded', function () {
+    const expiringSoonCount = <?php echo $expiring_soon_count + $expiring_soon_buffer_count; ?>;
+    const expiredCount = <?php echo $expired_count; ?>;
+    const badgeCounter = document.querySelector('.badge-counter');
+
+    if (badgeCounter) {
+        const totalCount = expiringSoonCount + expiredCount;
+        badgeCounter.innerHTML = totalCount > 0 ? totalCount : '';
     }
 
-    // Update the notification badge count in the header
-    const badgeCounter = document.getElementById('expiringSoonCount');
-    if (badgeCounter) {
-        badgeCounter.innerHTML = expiringSoonCount > 0 ? expiringSoonCount : '';
+    const expiringSoonLink = document.getElementById('expiringSoonLink');
+    const expiredLink = document.getElementById('expiredLink');
+
+    if (expiringSoonLink) {
+        expiringSoonLink.addEventListener('click', function () {
+            // Redirect to add_stocks.php when "Expiring Soon in Stocks" is clicked
+            window.location.href = 'add_stocks.php';
+        });
+    }
+
+    if (expiringSoonBufferLink) {
+        expiringSoonBufferLink.addEventListener('click', function () {
+            // Redirect to buffer_stocks.php when "Expiring Soon in Buffer" is clicked
+            window.location.href = 'buffer_stocks.php';
+        });
+    }
+
+    if (expiredLink) {
+        expiredLink.addEventListener('click', function () {
+            // Redirect to expired_products.php when "Expired Products" is clicked
+            window.location.href = 'expired_products.php';
+        });
     }
 });
 </script>

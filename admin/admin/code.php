@@ -211,7 +211,8 @@ if (isset($_POST['update_buffer_stock_btn'])) {
     }
 
     // Update the edited row with the new values
-    $updateQuery = "UPDATE buffer_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price', branch'$branch' WHERE id='$edit_id'";
+    $updateQuery = "UPDATE buffer_stock_list SET expiry_date='$expiry_date', quantity='$new_quantity', price='$price', branch='$branch' WHERE id='$edit_id'";
+
     mysqli_query($connection, $updateQuery);
 
     if ($updateQuery) {

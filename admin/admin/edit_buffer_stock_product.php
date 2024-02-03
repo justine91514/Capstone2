@@ -46,14 +46,14 @@ include('includes/navbar2.php');
                             <input type="text" name="price" value="<?php echo $row['price'] ?>" class="form-control" placeholder="Enter Category" required />
                         </div>
                         <div class="form-group">
-    <label> Branch </label>
-    <select name="branch" class="form-control" required>
-        <option value="" disabled>Select Branch</option>
-        <option value="Cell Med" <?php echo ($row['branch'] == 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
-        <option value="3G Med" <?php echo ($row['branch'] == '3G Med') ? 'selected' : ''; ?>>3G Med</option>
-        <option value="Boom Care" <?php echo ($row['branch'] == 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
-    </select>
-</div>
+                            <label> Branch </label>
+                            <select name="branch" class="form-control" required>
+                                <option value="" disabled>Select Branch</option>
+                                <option value="Cell Med" <?php echo ($row['branch'] == 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
+                                <option value="3G Med" <?php echo ($row['branch'] == '3G Med') ? 'selected' : ''; ?>>3G Med</option>
+                                <option value="Boom Care" <?php echo ($row['branch'] == 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label>Expiry Date</label>
                             <input type="date" name="expiry_date" value="<?php echo $row['expiry_date']; ?>" class="form-control" placeholder="Select Expiry Date" required />

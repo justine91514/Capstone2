@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expired Products</title>
 </head>
+
 </html>
 
 <?php
@@ -52,6 +53,7 @@ function getStatusColor($productName, $expiryDate)
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
+include('notification_logic.php');
 ?>
 
 <div class="container-fluid">
@@ -158,6 +160,8 @@ aria-hidden="true">
     </div>
 </div>
 </div>
+
+
     <?php
     include('includes/scripts.php');
     include('includes/footer.php');

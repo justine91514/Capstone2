@@ -1,3 +1,4 @@
+<?php include_once('notification_logic.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,16 +40,17 @@
 
 
                     <!-- Counter - Alerts -->
-                    <span class="badge badge-danger badge-counter" style="margin-right: -25px;"></span>
-                            
+                    <span class="badge badge-danger badge-counter" style="margin-right: -25px;"><?php echo $expiring_soon_count + $expiring_soon_buffer_count; ?></span>
+                    
 
                         </a>
                         <!-- Dropdown - Alerts -->
-                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header mb-2 text-center">
-                                Alerts Center
-                            </h6>
-                        <!-- Dropdown - Pharmacy Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                        <h6 class="dropdown-header mb-2 text-center">
+                            Alerts Center
+                        </h6>
+
+                        <!-- Dropdown - For Low Stock Alerts -->
                         <a class="dropdown-item d-flex align-items-center" href="#">
                         <div class="mr-3">
                             <div class="icon-circle bg-primary">
@@ -60,17 +62,61 @@
                             <span class="font-weight-bold">Low stock alert:</span> Some medications are running low.
                         </div>
                         </a>
-                        <a id="expiringSoonLink" class="dropdown-item d-flex align-items-center" href="#">
-    <div class="mr-3">
-        <div class="icon-circle bg-warning">
-            <i class="fas fa-exclamation-triangle text-white"></i>
-        </div>
-    </div>
-    <div>
-        <div id="notification-container"></div>
-        <span class="font-weight-bold">Expiring Soon:</span> <span id="expiringSoonMessage"></span>
-    </div>
-</a>
+                        
+                        <?php
+    if ($expiring_soon_count > 0) {
+        // Display message for expiring soon products in stocks
+        echo '<a class="dropdown-item d-flex align-items-center" href="add_stocks.php">
+                <div class="mr-3">
+                    <div class="icon-circle bg-warning">
+                        <i class="fas fa-exclamation-triangle text-white"></i>
+                    </div>
+                </div>
+                <div>
+                    <div id="notification-container"></div>
+                    <span class="font-weight-bold">Expiring Soon in Stocks:</span> ' . $expiring_soon_count . ' product(s) will expire soon in stocks.
+                </div>
+            </a>';
+    }
+
+    if ($expiring_soon_buffer_count > 0) {
+        // Display message for expiring soon products in buffer
+        echo '<a class="dropdown-item d-flex align-items-center" href="buffer_stock.php">
+                <div class="mr-3">
+                    <div class="icon-circle bg-warning">
+                        <i class="fas fa-exclamation-triangle text-white"></i>
+                    </div>
+                </div>
+                <div>
+                    <div id="notification-container"></div>
+                    <span class="font-weight-bold">Expiring Soon in Buffer:</span> ' . $expiring_soon_buffer_count . ' product(s) will expire soon in buffer.
+                </div>
+            </a>';
+    }
+?>
+
+<?php
+    // Check if there are expired products
+    $expired_count_query = "SELECT COUNT(*) as expired_count FROM expired_list";
+    $expired_count_result = mysqli_query($connection, $expired_count_query);
+    $expired_count_data = mysqli_fetch_assoc($expired_count_result);
+    $expired_count = $expired_count_data['expired_count'];
+
+    if ($expired_count > 0) {
+        echo '<a id="expiredLink" class="dropdown-item d-flex align-items-center" href="expired_products.php">
+                <div class="mr-3">
+                    <div class="icon-circle bg-danger">
+                        <i class="fas fa-calendar-times text-white"></i>
+                    </div>
+                </div>
+                <div>
+                    <div id="notification-container"></div>
+                    <span class="font-weight-bold">Expired Products:</span> ' . $expired_count . ' product(s) are expired.
+                </div>
+            </a>';
+    }
+?>
+
 
 
 
@@ -210,20 +256,7 @@
 
             </nav>
             <!-- End of Topbar -->
-<?php
-// Include other necessary PHP code or functions
 
-function getExpiringSoonMessage($connection)
-{
-    $expiringSoonCount = getExpiringSoonCount($connection);
-
-    if ($expiringSoonCount > 0) {
-        return "There are {$expiringSoonCount} product(s) that will expire soon.";
-    } else {
-        return 'There are 0 products that will expire soon.';
-    }
-}
-?>
 <!-- JavaScript Functions -->
 <script>
 function userFunction() {
