@@ -84,6 +84,26 @@ if (isset($_POST['updatecategorybtn'])) {
     }
 }
 
+if (isset($_POST['updatediscountbtn'])) {
+    $id = $_POST['edit_id'];
+    $discount_name = $_POST['edit_discount'];
+    $value = $_POST['edit_value'];
+
+    $query = "UPDATE discount_list SET discount_name='$discount_name', value='$value' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) 
+    {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: add_discount.php');
+    } 
+    else 
+    {
+        $_SESSION['status'] = "Your data is not Updated";
+        header('Location: add_discount.php');
+    }
+}
+
 if (isset($_POST['updateproductbtn'])) {
     $id = $_POST['edit_id']; // Assuming you have an 'edit_id' field in your form
     $prod_name = $_POST['prod_name'];
@@ -315,6 +335,30 @@ if(isset($_POST['typebtn']))
         {
             $_SESSION['status'] = "Product Type NOT Added";
             header('Location: add_product_type.php');
+        }
+    }
+}
+
+//this code is for product_type_list.php
+if(isset($_POST['discountbtn']))
+{
+    $discount_name = $_POST['discount_name'];
+    $value = $_POST['value'];
+   
+    if($discount_name)
+    {
+        $query = "INSERT INTO discount_list (discount_name, value) VALUES ('$discount_name', '$value')";
+        $query_run = mysqli_query($connection, $query);
+    
+        if($query_run)
+        {
+            $_SESSION['success'] = "Discount Added";
+            header('Location: add_discount.php');
+        }
+        else
+        {
+            $_SESSION['status'] = "Discount Added NOT Added";
+            header('Location: add_discount.php');
         }
     }
 }
@@ -551,6 +595,25 @@ if(isset($_POST['delete_category_btn']))
     {
         $_SESSION['status'] = "Your data is Not Deleted";
         header('Location: add_category.php');
+    }
+}
+
+if(isset($_POST['delete_discount_btn']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM discount_list WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your data is Deleted";
+        header('Location: add_discount.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your data is Not Deleted";
+        header('Location: add_discount.php');
     }
 }
 

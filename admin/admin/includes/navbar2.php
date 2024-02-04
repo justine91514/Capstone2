@@ -74,7 +74,7 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item" id="sales-report-tab">
-        <a class="nav-link" href="#" onclick="toggleTab('sales-report-tab')">
+        <a class="nav-link" href="sales_report.php" onclick="toggleTab('sales-report-tab')">
             <i class="fas fa-fw fa-chart-area" style="color: black;"></i>
             <span style="color: black;">Sales Report</span>
         </a>
@@ -83,7 +83,7 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item" id="transaction-history-tab">
-        <a class="nav-link" href="#" onclick="toggleTab('transaction-history-tab')">
+        <a class="nav-link" href="transaction_history.php" onclick="toggleTab('transaction-history-tab')">
             <i class="fas fa-history" style="color: black;"></i>
             <span style="color: black;">Transaction History</span>
         </a>
@@ -101,7 +101,7 @@
                 <a class="collapse-item" href="add_category.php" onclick="toggleTab('settings-tab')">Add Category</a>
                 <a class="collapse-item" href="add_product_type.php" onclick="toggleTab('settings-tab')">Add type</a>
                 <a class="collapse-item" href="product.php" onclick="toggleTab('settings-tab')">Create Product</a>
-                <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Discount</a>
+                <a class="collapse-item" href="add_discount.php" onclick="toggleTab('settings-tab')">Discount</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Supplier List</a>
                 <a class="collapse-item" href="register.php" onclick="toggleTab('settings-tab')">User Management</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Back-up and Restore</a>
