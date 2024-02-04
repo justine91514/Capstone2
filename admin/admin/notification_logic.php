@@ -1,4 +1,42 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+if (!class_exists('PHPMailer\PHPMailer\Exception')) {
+    require 'phpmailer/src/Exception.php';
+    require 'phpmailer/src/PHPMailer.php';
+    require 'phpmailer/src/SMTP.php';
+}
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'justine91514@gmail.com'; // Your Gmail address
+    $mail->Password   = 'vthpmrimahkbhuov'; // Your Gmail password
+    $mail->SMTPSecure = 'tls';
+    $mail->Port       = 587;
+
+    $mail->setFrom('justine91514@gmail.com', '3.G.Med.Pharmacy');
+
+    // Fetch all admin email addresses from the register database
+    $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
+    $admin_emails_query = "SELECT email FROM register WHERE usertype = 'admin'";
+    $admin_emails_result = mysqli_query($connection, $admin_emails_query);
+
+    while ($row = mysqli_fetch_assoc($admin_emails_result)) {
+        $mail->addAddress($row['email']);
+    }
+
+    $mail->isHTML(true);
+} catch (Exception $e) {
+    // Handle exception
+}
+
 $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 
 // Query to get the expiring soon count and details for add_stock_list
@@ -15,7 +53,33 @@ $expiring_soon_buffer_data = mysqli_fetch_assoc($expiring_soon_buffer_result);
 $expiring_soon_buffer_count = $expiring_soon_buffer_data['expiring_soon_buffer_count'];
 $expiring_soon_buffer_products = $expiring_soon_buffer_data['expiring_soon_buffer_products'];
 
+// Send email notification if expiring soon count is greater than 0
+if ($expiring_soon_count > 0) {
+    try {
+        $mail->Subject = 'Expiring Soon in Stocks';
+        $mail->Body    = 'There are ' . $expiring_soon_count . ' product(s) expiring soon in stocks.';
+        $mail->send();
+    } catch (Exception $e) {
+        // Handle exception
+    }
+}
 
+// Query to get the count of expired products
+$expired_count_query = "SELECT COUNT(*) as expired_count FROM expired_list";
+$expired_count_result = mysqli_query($connection, $expired_count_query);
+$expired_count_data = mysqli_fetch_assoc($expired_count_result);
+$expired_count = $expired_count_data['expired_count'];
+
+// Send email notification if expired count is greater than 0
+if ($expired_count > 0) {
+    try {
+        $mail->Subject = 'Expired Products';
+        $mail->Body    = 'There are ' . $expired_count . ' product(s) that have expired.';
+        $mail->send();
+    } catch (Exception $e) {
+        // Handle exception
+    }
+}
 ?>
 
 <script>
@@ -55,4 +119,3 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
-

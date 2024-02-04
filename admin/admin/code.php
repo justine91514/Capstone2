@@ -11,11 +11,13 @@ if(isset($_POST['registerbtn']))
     $email = $_POST['email'];
     $password = $_POST['password'];
     $cpassword = $_POST['confirmpassword'];
+    $branch = $_POST['branch'];
     $usertype = $_POST['usertype'];
+
 
     if($password === $cpassword)
     {
-        $query = "INSERT INTO register (first_name, mid_name, last_name, email, password,usertype) VALUES ('$first_name',' $mid_name', '$last_name', '$email', '$password','$usertype')";
+        $query = "INSERT INTO register (first_name, mid_name, last_name, email, password, branch, usertype) VALUES ('$first_name',' $mid_name', '$last_name', '$email', '$password', '$email', '$usertype')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
