@@ -1,4 +1,4 @@
-<?php include_once('notification_logic.php'); ?>
+<?php include_once('notification_logic2.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -274,7 +274,7 @@ function dateFunction() {
     console.log('Date section clicked');
 }
 </script>
-<?php include('notification_logic.php'); ?>
+<?php include('notification_logic2.php'); ?>
 </head>
 
 <body id="page-top">

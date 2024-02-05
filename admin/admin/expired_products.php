@@ -53,7 +53,7 @@ function getStatusColor($productName, $expiryDate)
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
-include('notification_logic.php');
+include('notification_logic2.php');
 ?>
 
 <div class="container-fluid">
