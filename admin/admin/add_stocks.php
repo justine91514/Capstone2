@@ -2,6 +2,8 @@
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
+include('barcode_lookup.php');
+include('product_info.php');
 
 $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 ?>
@@ -13,7 +15,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stocks</title>
-    <!-- Add the JavaScript script here -->
+
     <script>
         function changeTableFormat() {
             var selectedBranch = document.getElementById("branch").value;
@@ -94,9 +96,71 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 
     ?>
 
-    <div class="modal fade" id="addadminprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <!-- ... Your existing modal code ... -->
+<div class="modal fade" id="addadminprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="code.php" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>SKU</label>
+                        <input type="text" name="sku" class="form-control" placeholder="Enter SKU" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <select name="product_stock_name" class="form-control" required>
+                            <?php
+                            foreach ($productNames as $productName) {
+                                $query = "SELECT * FROM product_list WHERE prod_name='$productName'";
+                                $query_run = mysqli_query($connection, $query);
+                                $productInfo = mysqli_fetch_assoc($query_run);
+                                $measurement = $productInfo['measurement'];
+                                $selected = ($selectedProduct == $productName) ? 'selected' : '';
+                                echo "<option value='$productName' data-measurement='$measurement' $selected>
+                                          $productName - <span style='font-size: 80%;'>$measurement</span>
+                                      </option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="text" name="quantity" class="form-control" placeholder="Enter Quantity" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="text" name="price" class="form-control" placeholder="Enter Price" required />
+                    </div>
+                    <div class="form-group">
+                        <label> Branch </label>
+                        <select name="branch" class="form-control" required>
+                            <option value="" disabled selected>Select Branch</option>
+                            <option value="Cell Med">Cell Med</option>
+                            <option value="3G Med">3G Med</option>
+                            <option value="Boom Care">Boom Care</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="date" name="expiry_date" class="form-control" placeholder="Select Expiry Date" required 
+                            min="<?php echo date('Y-m-d'); ?>" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" name="add_stock_btn" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
     <div class="container-fluid">
         <div class="card shadow nb-4">
@@ -107,6 +171,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     </button>
                     <label> Branch </label>
                     <select id="branch" name="branch" class="form-control" onchange="changeTableFormat()" required>
+                        <option value="" disabled selected>Select Branch</option>
                         <option value="Cell Med" <?php echo ($selectedBranch === 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
                         <option value="3G Med" <?php echo ($selectedBranch === '3G Med') ? 'selected' : ''; ?>>3G Med</option>
                         <option value="Boom Care" <?php echo ($selectedBranch === 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
@@ -125,6 +190,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <th> ID </th>
+                            <th> SKU </th>
                             <th> Product Name </th>
                             <th> Quantity </th>
                             <th> Stocks Available </th>
@@ -141,6 +207,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             ?>
                                     <tr>
                                         <td> <?php echo $row['id']; ?></td>
+                                        <td> <?php echo $row['sku']; ?></td>
                                         <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
                                         <td> <?php echo $row['quantity']; ?></td>
                                         <td> <?php echo $row['stocks_available']; ?></td>
@@ -183,9 +250,24 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                 </div>
             </div>
         </div>
-        <!-- Logout Modal -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <!-- ... Your existing logout modal code ... -->
+        <!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.php">Logout</a>
+        </div>
+    </div>
+</div>
         </div>
         <?php
         include('includes/scripts.php');

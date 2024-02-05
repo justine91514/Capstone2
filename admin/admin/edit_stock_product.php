@@ -29,6 +29,10 @@ if (isset($_POST['edit_btn'])) {
                     <form action="code.php" method="POST">
                         <input type="hidden" name="edit_id" value="<?php echo $row['id'] ?>">
                         <div class="form-group">
+                            <label>SKU</label>
+                            <input type="text" name="sku" value="<?php echo $row['sku'] ?>" class="form-control" placeholder="Enter SKU"required />
+                        </div>
+                        <div class="form-group">
                             <label>Product Name</label>
                             <input type="text" name="product_stock_name" value="<?php echo $row['product_stock_name'] ?>" class="form-control" placeholder="Enter Category" readonly required />
                         </div>

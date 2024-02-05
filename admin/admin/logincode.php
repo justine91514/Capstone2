@@ -14,7 +14,8 @@ if (isset($_POST['login_btn'])) {
 
     if ($usertypes) {
         $_SESSION['username'] = $email_login;
-
+        $_SESSION['user_type'] = $usertype_login; // Set the usertype in the session
+    
         if ($usertype_login == "admin") {
             header('Location: index.php');
         } elseif ($usertype_login == "pharmacy_assistant") {
