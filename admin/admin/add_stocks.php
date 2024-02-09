@@ -2,8 +2,8 @@
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
-include('barcode_lookup.php');
-include('product_info.php');
+
+
 
 $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 ?>
@@ -16,12 +16,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stocks</title>
 
-    <script>
-        function changeTableFormat() {
-            var selectedBranch = document.getElementById("branch").value;
-            window.location.href = 'add_stocks.php?branch=' + selectedBranch;
-        }
-    </script>
+   
 </head>
 
 <body>
