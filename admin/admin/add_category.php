@@ -28,9 +28,6 @@ include('includes/navbar2.php');
                         <label> Category </label>
                         <input type="text" name="category_name" class="form-control" placeholder="Enter Category" required />
                     </div>
-
-                    
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -42,7 +39,6 @@ include('includes/navbar2.php');
 </div>
 
 <div class="container-fluid">
-
     <!-- DataTables Example -->
     <div class="card shadow nb-4">
         <div class="card-header py-3">

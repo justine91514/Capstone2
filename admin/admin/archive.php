@@ -61,7 +61,9 @@ include('includes/navbar2.php');
 
                 // Fetch updated data
                 $query = "SELECT archive_list.id, 
-                                 archive_list.product_name, 
+                                 archive_list.sku,   
+                                 archive_list.product_name,
+                                 archive_list.description, 
                                  archive_list.expiry_date, 
                                  archive_list.quantity, 
                                  archive_list.stocks_available, 
@@ -77,7 +79,9 @@ include('includes/navbar2.php');
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <th>ID</th>
+                        <th>SKU</th>
                         <th>Product Name</th>
+                        <th>Description</th>
                         <th>Quantity</th>
                         <th>Stocks Available</th>
                         <th>Price</th>
@@ -93,13 +97,14 @@ include('includes/navbar2.php');
                         ?>
                                 <tr>
                                     <td><?php echo $row['id']; ?></td>
+                                    <td><?php echo $row['sku']; ?></td>
                                     <td>
                                         <?php echo $row['product_name']; ?> -
                                         <span style='font-size: 80%;'>
                                             <?php echo $row['measurement']; ?>
                                         </span>
                                     </td>
-                                   
+                                    <td><?php echo $row['description']; ?></td>
                                     <td><?php echo $row['quantity']; ?></td>
                                     <td><?php echo $row['stocks_available']; ?></td>
                                     <td><?php echo $row['price']; ?></td>

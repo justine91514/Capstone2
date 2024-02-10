@@ -10,6 +10,15 @@
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
+include('dbconfig.php'); // Include your database connection file
+
+// Fetch discount options from the database
+$query = "SELECT * FROM discount_list";
+$result = mysqli_query($connection, $query);
+$discount_options = "";
+while ($row = mysqli_fetch_assoc($result)) {
+    $discount_options .= "<option value='{$row['discount_name']}'>{$row['discount_name']} - {$row['value']}%</option>";
+}
 ?>
 
 <!-- Modal -->
@@ -41,7 +50,10 @@ include('includes/navbar2.php');
         </div>
     </div>
 </div>
-
+<?php 
+// Store discount options in session to pass to pos.php
+$_SESSION['discount_options'] = $discount_options;
+?>
 <div class="container-fluid">
 
     <!-- DataTables Example -->

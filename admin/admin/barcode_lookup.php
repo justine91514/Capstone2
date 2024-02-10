@@ -20,3 +20,4 @@ if(isset($_POST['barcode'])) {
     echo json_encode(['error' => 'Invalid request']);
 }
 ?>
+buburahin?

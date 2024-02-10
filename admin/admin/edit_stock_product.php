@@ -37,6 +37,10 @@ if (isset($_POST['edit_btn'])) {
                             <input type="text" name="product_stock_name" value="<?php echo $row['product_stock_name'] ?>" class="form-control" placeholder="Enter Category" readonly required />
                         </div>
                         <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" name="description" value="<?php echo $row['description'] ?>" class="form-control" placeholder="Enter Description"required />
+                        </div>
+                        <div class="form-group">
                             <label>Quantity</label>
                             <input type="text" name="quantity" value="<?php echo $row['quantity'] ?>" class="form-control" placeholder="Enter Quantity" required />
                         </div>

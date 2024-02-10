@@ -16,7 +16,7 @@ include('includes/navbar2.php');
     <!-- DataTables Example -->
     <div class="card shadow nb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit Product</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit Buffer Product</h6>
         </div>
         <div class="card-body">
             <?php
@@ -33,6 +33,10 @@ include('includes/navbar2.php');
                     <form action="code.php" method="POST">
 
                         <input type="hidden" name="edit_id" value="<?php echo $row['id'] ?>">
+                        <div class="form-group">
+                            <label>SKU</label>
+                            <input type="text" name="sku" value="<?php echo $row['sku'] ?>" class="form-control" placeholder="Enter SKU" required />
+                        </div>
                         <div class="form-group">
                             <label>Product Name</label>
                             <input type="text" name="buffer_stock_name" value="<?php echo $row['buffer_stock_name'] ?>" class="form-control" placeholder="Enter Category" readonly required />

@@ -76,7 +76,9 @@ include('notification_logic2.php');
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <th>ID</th>
+                        <th>SKU</th>
                         <th>Product Name</th>
+                        <th>Description</th>
                         <th>Quantity</th>
                         <th>Stocks Available</th>
                         <th>Price</th>
@@ -89,6 +91,7 @@ include('notification_logic2.php');
                             ?>
                             <tr>
                                 <td><?php echo $row['id']; ?></td>
+                                <td><?php echo $row['sku']; ?></td>
                                 <td>
                                     <?php 
                                     echo $row['product_name']; 
@@ -97,6 +100,7 @@ include('notification_logic2.php');
                                     }
                                     ?>
                                 </td>
+                                <td><?php echo $row['description']; ?></td>
                                 <td><?php echo $row['quantity']; ?></td>
                                 <td><?php echo $row['stocks_available']; ?></td>
                                 <td><?php echo $row['price']; ?></td>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('includes/header.php');
+include('includes/header_pos.php');
 include('includes/navbar_pos.php');
 ?>
 <!DOCTYPE html>

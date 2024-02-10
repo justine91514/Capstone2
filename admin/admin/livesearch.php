@@ -11,32 +11,45 @@ if (isset($_POST['input'])) {
 
     $result = mysqli_query($connection, $query);
 
+    $response = array();
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             $id = $row['id'];
             $sku = $row['sku'];
             $product_stock_name = $row['product_stock_name'];
+            $description = $row['description'];
             $quantity = $row['quantity'];
             $stocks_available = $row['stocks_available']; // Corrected
             $expiry_date = $row['expiry_date'];
             $price = $row['price'];
             $measurement = $row['measurement'];
-            ?>
-
-            <tr>
-                <td><?php echo $id;?></td>
-                <td><?php echo $sku;?></td>
-                <td><?php echo $product_stock_name;?> - <span style='font-size: 80%;'><?php echo $measurement; ?></span></td>
-                <td><?php echo $quantity;?></td>
-                <td><?php echo $stocks_available;?></td>
-                <td><?php echo $expiry_date;?></td>
-                <td><?php echo $price;?></td>
-            </tr>
-
-            <?php
+            
+            // Build HTML for appending to the table
+            $html = "<tr>
+                        <td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td>
+                        <td>{$quantity}</td>
+                        <td>{$stocks_available}</td>
+                        <td>{$price}</td>
+                    </tr>";
+            
+            // Add data to response array
+            $response[] = array(
+                'description' => $description,
+                'price' => $price,
+                'quantity' => $quantity,
+                'html' => $html
+            );
         }
     } else {
-        echo "<h6 class='text-danger text-center mt-3'>No Data Found</h6>";
+        // If no data found
+        $response[] = array(
+            'description' => '',
+            'price' => '',
+            'quantity' => '',
+            'html' => "<h6 class='text-danger text-center mt-3'>No Data Found</h6>"
+        );
     }
+    // Send JSON response
+    echo json_encode($response);
 }
 ?>
