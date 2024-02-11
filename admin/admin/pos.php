@@ -76,8 +76,6 @@ include('includes/navbar_pos.php');
                 <label class="input-skulabel" for="total">Total Amount:</label>
                 <input type="text" class="form-control" id="total" autocomplete="off" readonly>
 
-                <input type="hidden" id="originalAmount" value="<?php echo $originalAmount; ?>">
-
                 <div class="container-fluid">
 
                 <h6 class="m-0 font-weight-bold text-primary">
@@ -138,6 +136,8 @@ include('includes/navbar_pos.php');
     // Store the original amount
     var originalAmount = parseFloat($('#total').val());
 
+    var scannedProducts = {};
+
     // Event listener for changes in the discount dropdown
     $('#discountSelect').change(function() {
         var totalAmount = parseFloat($('#total').val()); // Get the current total amount
@@ -175,15 +175,28 @@ include('includes/navbar_pos.php');
                             // Update description, price, and quantity fields
                             $('#description').val(responseData[0].description);
                             $('#price').val(responseData[0].price);
-                            $('#quantity').val(responseData[0].quantity);
-                            // Append new rows to the table
-                            for (var i = 0; i < responseData.length; i++) {
-                                $('#scannedItems').append(responseData[i].html);
+                            
+                            if (scannedProducts.hasOwnProperty(responseData[0].description)) {
+                                scannedProducts[responseData[0].description]++;
+                                // Update the quantity in the input field
+                                $('#quantity').val(scannedProducts[responseData[0].description]);
+                                // Update the quantity in the existing table row
+                                $('#scannedItems td:contains("' + responseData[0].description + '")').next().text(scannedProducts[responseData[0].description]);
+                            } else {
+                                scannedProducts[responseData[0].description] = 1;
+                                // Append new rows to the table
+                                var html = responseData[0].html.replace("<td></td>", "<td>" + scannedProducts[responseData[0].description] + "</td>");
+                                $('#scannedItems').append(html);
+                                // Update the quantity in the input field
+                                $('#quantity').val(scannedProducts[responseData[0].description]);
                             }
+
                             // Calculate total amount
                             var totalAmount = 0;
                             $('#scannedItems tr').each(function() {
-                                totalAmount += parseFloat($(this).find('td:last').text());
+                                var quantity = parseFloat($(this).find('td:eq(1)').text());
+                                var price = parseFloat($(this).find('td:eq(3)').text());
+                                totalAmount += quantity * price;
                             });
                             // Set total amount in the input field
                             $('#total').val(totalAmount.toFixed(2)); // Assuming you want to display 2 decimal places
@@ -236,3 +249,4 @@ aria-hidden="true">
 <?php
 include('includes/scripts.php');
 include('includes/footer.php');
+?>

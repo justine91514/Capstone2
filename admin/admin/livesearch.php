@@ -27,7 +27,7 @@ if (isset($_POST['input'])) {
             // Build HTML for appending to the table
             $html = "<tr>
                         <td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td>
-                        <td>{$quantity}</td>
+                        <td></td>
                         <td>{$stocks_available}</td>
                         <td>{$price}</td>
                     </tr>";
@@ -36,7 +36,7 @@ if (isset($_POST['input'])) {
             $response[] = array(
                 'description' => $description,
                 'price' => $price,
-                'quantity' => $quantity,
+               
                 'html' => $html
             );
         }
@@ -45,7 +45,7 @@ if (isset($_POST['input'])) {
         $response[] = array(
             'description' => '',
             'price' => '',
-            'quantity' => '',
+            
             'html' => "<h6 class='text-danger text-center mt-3'>No Data Found</h6>"
         );
     }
