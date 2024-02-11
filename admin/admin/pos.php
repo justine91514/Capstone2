@@ -74,7 +74,9 @@ include('includes/navbar_pos.php');
                 <input type="text" class="form-control" id="quantity" autocomplete="off">
 
                 <label class="input-skulabel" for="total">Total Amount:</label>
-                <input type="text" class="form-control" id="total" autocomplete="off">
+                <input type="text" class="form-control" id="total" autocomplete="off" readonly>
+
+                <input type="hidden" id="originalAmount" value="<?php echo $originalAmount; ?>">
 
                 <div class="container-fluid">
 
@@ -132,28 +134,50 @@ include('includes/navbar_pos.php');
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function(){
-    // Event listener for barcode scanner
-    $('#dbpharmacy').keypress(function(e){
-        if(e.which === 13){ // 13 is the ASCII code for Enter key
-            var input = $(this).val();
-            if(input != ""){
-                $.ajax({
-                    url:"livesearch.php",
-                    method:"POST",
-                    data:{input:input},
+        $(document).ready(function() {
+    // Store the original amount
+    var originalAmount = parseFloat($('#total').val());
 
-                    success:function(data){
+    // Event listener for changes in the discount dropdown
+    $('#discountSelect').change(function() {
+        var totalAmount = parseFloat($('#total').val()); // Get the current total amount
+        var discountValue = parseFloat($(this).val()); // Get the selected discount value
+        
+        // Check if a discount is selected
+        if (!isNaN(discountValue)) {
+            // Calculate the discounted total amount
+            var discountedAmount = originalAmount - (originalAmount * (discountValue / 100));
+            // Update the total amount input field with the discounted value
+            $('#total').val(discountedAmount.toFixed(2)); // Assuming you want to display 2 decimal places
+        } else {
+            // If no discount selected, reset the total amount to the original value
+            $('#total').val(originalAmount.toFixed(2)); // Reset to original amount
+        }
+    });
+
+    // Event listener for barcode scanner
+    $('#dbpharmacy').keypress(function(e) {
+        if (e.which === 13) { // 13 is the ASCII code for Enter key
+            var input = $(this).val();
+            if (input != "") {
+                $.ajax({
+                    url: "livesearch.php",
+                    method: "POST",
+                    data: {
+                        input: input
+                    },
+
+                    success: function(data) {
                         // Parse JSON response
                         var responseData = JSON.parse(data);
                         // Check if data exists
-                        if(responseData.length > 0) {
+                        if (responseData.length > 0) {
                             // Update description, price, and quantity fields
                             $('#description').val(responseData[0].description);
                             $('#price').val(responseData[0].price);
                             $('#quantity').val(responseData[0].quantity);
                             // Append new rows to the table
-                            for(var i = 0; i < responseData.length; i++) {
+                            for (var i = 0; i < responseData.length; i++) {
                                 $('#scannedItems').append(responseData[i].html);
                             }
                             // Calculate total amount
@@ -163,6 +187,8 @@ include('includes/navbar_pos.php');
                             });
                             // Set total amount in the input field
                             $('#total').val(totalAmount.toFixed(2)); // Assuming you want to display 2 decimal places
+                            // Update original amount
+                            originalAmount = totalAmount;
                         } else {
                             // If no data found, clear the fields
                             $('#description').val('');
@@ -183,25 +209,7 @@ include('includes/navbar_pos.php');
         }
     });
 });
-    </script>   
-    <script>
-$(document).ready(function(){
-    $('#discountSelect').change(function(){
-        // Get the selected discount value
-        var discountValue = $(this).val();
 
-        // Calculate discounted total amount
-        var totalAmount = parseFloat($('#total').val());
-        if (discountValue !== "") {
-            // If a discount is selected, calculate the discounted amount
-            var discountAmount = totalAmount * (discountValue / 100);
-            totalAmount -= discountAmount;
-        }
-        
-        // Update the total amount input field
-        $('#total').val(totalAmount.toFixed(2)); // Assuming you want to display 2 decimal places
-    });
-});
 </script>
              
 </body>
@@ -228,4 +236,3 @@ aria-hidden="true">
 <?php
 include('includes/scripts.php');
 include('includes/footer.php');
-?>

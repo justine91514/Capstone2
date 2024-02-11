@@ -1,15 +1,16 @@
-<?php
-session_start();
-include('includes/header_pos.php');
-include('includes/navbar_pos.php');
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stocks</title>
+    <title>Transaction History</title>
 </head>
+<?php
+session_start();
+include('includes/header_pos.php');
+include('includes/navbar_pos.php');
+?>
+
 
 </html>
 <div class="container-fluid">
