@@ -108,6 +108,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     <div class="form-group">
                         <label>Product Name</label>
                         <select name="buffer_stock_name" class="form-control" required>
+                        <option value="">Select Product</option> <!-- Empty option -->
                             <?php
                             foreach ($productNames as $productName) {
                                 $query = "SELECT * FROM product_list WHERE prod_name='$productName'";
@@ -121,6 +122,10 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             }
                             ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" name="descript" class="form-control" placeholder="Enter Description" required />
                         </div>
                         <div class="form-group">
                             <label>Quantity</label>
@@ -185,6 +190,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <th> ID </th>
                         <th> SKU </th>
                         <th> Product Name </th>
+                        <th> Description </th>
                         <th> Quantity </th>
                         <th> Buffer Stocks Available </th>
                         <th> Price </th>
@@ -203,6 +209,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['sku']; ?></td>
                             <td> <?php echo $row['buffer_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
+                            <td> <?php echo $row['descript']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>
                             <td> <?php echo $row['buffer_stocks_available']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
@@ -268,10 +275,6 @@ aria-hidden="true">
         </div>
     </div>
 </div>
-</div>
-    <?php
-    include('includes/scripts.php');
-    include('includes/footer.php');
-    ?>
-    </body>
+
+
 </html>

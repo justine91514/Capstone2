@@ -38,7 +38,7 @@ if (isset($_POST['edit_btn'])) {
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" name="description" value="<?php echo $row['description'] ?>" class="form-control" placeholder="Enter Description"required />
+                            <input type="text" name="descript" value="<?php echo $row['descript'] ?>" class="form-control" placeholder="Enter Description"required />
                         </div>
                         <div class="form-group">
                             <label>Quantity</label>

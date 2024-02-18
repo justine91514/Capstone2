@@ -64,8 +64,8 @@ include('includes/navbar_pos.php');
                 <label class="input-skulabel" for="barcode">Barcode:</label>
                 <input type="text" class="form-control" id="barcode" autocomplete="off">
                 
-                <label class="input-skulabel" for="description">Description:</label>
-                <input type="text" class="form-control" id="description" autocomplete="off">
+                <label class="input-skulabel" for="descript">Description:</label>
+                <input type="text" class="form-control" id="descript" autocomplete="off">
                 
                 <label class="input-skulabel" for="price">Price:</label>
                 <input type="text" class="form-control" id="price" autocomplete="off">
@@ -172,23 +172,23 @@ include('includes/navbar_pos.php');
                         var responseData = JSON.parse(data);
                         // Check if data exists
                         if (responseData.length > 0) {
-                            // Update description, price, and quantity fields
-                            $('#description').val(responseData[0].description);
+                            // Update descript, price, and quantity fields
+                            $('#descript').val(responseData[0].descript);
                             $('#price').val(responseData[0].price);
                             
-                            if (scannedProducts.hasOwnProperty(responseData[0].description)) {
-                                scannedProducts[responseData[0].description]++;
+                            if (scannedProducts.hasOwnProperty(responseData[0].descript)) {
+                                scannedProducts[responseData[0].descript]++;
                                 // Update the quantity in the input field
-                                $('#quantity').val(scannedProducts[responseData[0].description]);
+                                $('#quantity').val(scannedProducts[responseData[0].descript]);
                                 // Update the quantity in the existing table row
-                                $('#scannedItems td:contains("' + responseData[0].description + '")').next().text(scannedProducts[responseData[0].description]);
+                                $('#scannedItems td:contains("' + responseData[0].descript + '")').next().text(scannedProducts[responseData[0].descript]);
                             } else {
-                                scannedProducts[responseData[0].description] = 1;
+                                scannedProducts[responseData[0].descript] = 1;
                                 // Append new rows to the table
-                                var html = responseData[0].html.replace("<td></td>", "<td>" + scannedProducts[responseData[0].description] + "</td>");
+                                var html = responseData[0].html.replace("<td></td>", "<td>" + scannedProducts[responseData[0].descript] + "</td>");
                                 $('#scannedItems').append(html);
                                 // Update the quantity in the input field
-                                $('#quantity').val(scannedProducts[responseData[0].description]);
+                                $('#quantity').val(scannedProducts[responseData[0].descript]);
                             }
 
                             // Calculate total amount
@@ -204,7 +204,7 @@ include('includes/navbar_pos.php');
                             originalAmount = totalAmount;
                         } else {
                             // If no data found, clear the fields
-                            $('#description').val('');
+                            $('#descript').val('');
                             $('#price').val('');
                             $('#quantity').val('');
                             // Clear total amount

@@ -89,6 +89,15 @@
         </a>
     </li>
 
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item" id="pos-tab">
+        <a class="nav-link" href="pos.php" onclick="toggleTab('transaction-history-tab')">
+            <i class="fas fa-history" style="color: black;"></i>
+            <span style="color: black;">Cashier</span>
+        </a>
+    </li>
+
     <div style="height: 250px;"></div>
 
     <li class="nav-item" id="settings-tab">

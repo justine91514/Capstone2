@@ -17,7 +17,7 @@ if (isset($_POST['input'])) {
             $id = $row['id'];
             $sku = $row['sku'];
             $product_stock_name = $row['product_stock_name'];
-            $description = $row['description'];
+            $descript = $row['descript'];
             $quantity = $row['quantity'];
             $stocks_available = $row['stocks_available']; // Corrected
             $expiry_date = $row['expiry_date'];
@@ -34,7 +34,7 @@ if (isset($_POST['input'])) {
             
             // Add data to response array
             $response[] = array(
-                'description' => $description,
+                'descript' => $descript,
                 'price' => $price,
                
                 'html' => $html
@@ -43,7 +43,7 @@ if (isset($_POST['input'])) {
     } else {
         // If no data found
         $response[] = array(
-            'description' => '',
+            'descript' => '',
             'price' => '',
             
             'html' => "<h6 class='text-danger text-center mt-3'>No Data Found</h6>"

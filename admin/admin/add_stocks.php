@@ -17,6 +17,8 @@
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
+include("dbconfig.php");
+
 $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 ?>
     <?php
@@ -58,8 +60,8 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 
     while ($expired_product = mysqli_fetch_assoc($expired_products_result)) {
         // Move expired product to expired_list
-        $move_to_expired_query = "INSERT INTO expired_list (sku, product_name, description, quantity, stocks_available, price, expiry_date)
-                             VALUES ('{$expired_product['sku']}', '{$expired_product['product_stock_name']}','{$expired_product['description']}',  '{$expired_product['quantity']}', '{$expired_product['stocks_available']}', '{$expired_product['price']}', '{$expired_product['expiry_date']}')";
+        $move_to_expired_query = "INSERT INTO expired_list (sku, product_name, descript, quantity, stocks_available, price, expiry_date)
+                             VALUES ('{$expired_product['sku']}', '{$expired_product['product_stock_name']}','{$expired_product['descript']}',  '{$expired_product['quantity']}', '{$expired_product['stocks_available']}', '{$expired_product['price']}', '{$expired_product['expiry_date']}')";
         mysqli_query($connection, $move_to_expired_query);
 
         // Delete expired product from add_stock_list
@@ -100,53 +102,56 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
             </div>
             <form action="code.php" method="POST">
                 <div class="modal-body">
-                    <div class="form-group">
+                <div class="form-group">
                         <label>SKU</label>
-                        <input type="text" name="sku" class="form-control" placeholder="Enter SKU" required />
+                        <input type="text" name="sku" id="sku_input" class="form-control" placeholder="Enter SKU" required />
                     </div>
+
                     <div class="form-group">
-                        <label>Product Name</label>
-                        <select name="product_stock_name" class="form-control" required>
-                            <?php
-                            foreach ($productNames as $productName) {
-                                $query = "SELECT * FROM product_list WHERE prod_name='$productName'";
-                                $query_run = mysqli_query($connection, $query);
-                                $productInfo = mysqli_fetch_assoc($query_run);
-                                $measurement = $productInfo['measurement'];
-                                $selected = ($selectedProduct == $productName) ? 'selected' : '';
-                                echo "<option value='$productName' data-measurement='$measurement' $selected>
-                                          $productName - <span style='font-size: 80%;'>$measurement</span>
-                                      </option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" name="description" class="form-control" placeholder="Enter Description"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Quantity</label>
-                        <input type="text" name="quantity" class="form-control" placeholder="Enter Quantity" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Price</label>
-                        <input type="text" name="price" class="form-control" placeholder="Enter Price" required />
-                    </div>
-                    <div class="form-group">
-                        <label> Branch </label>
-                        <select name="branch" class="form-control" required>
-                            <option value="" disabled selected>Select Branch</option>
-                            <option value="Cell Med">Cell Med</option>
-                            <option value="3G Med">3G Med</option>
-                            <option value="Boom Care">Boom Care</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Expiry Date</label>
-                        <input type="date" name="expiry_date" class="form-control" placeholder="Select Expiry Date" required 
-                            min="<?php echo date('Y-m-d'); ?>" />
-                    </div>
+    <label>Product Name</label>
+    <select name="product_stock_name" class="form-control" required disabled>
+        <option value="">Select Product</option> <!-- Empty option -->
+        <?php
+        foreach ($productNames as $productName) {
+            $query = "SELECT * FROM product_list WHERE prod_name='$productName'";
+            $query_run = mysqli_query($connection, $query);
+            $productInfo = mysqli_fetch_assoc($query_run);
+            $measurement = $productInfo['measurement'];
+            $selected = ($selectedProduct == $productName) ? 'selected' : '';
+            echo "<option value='$productName' data-measurement='$measurement' $selected>
+                      $productName - <span style='font-size: 80%;'>$measurement</span>
+                  </option>";
+        }
+        ?>
+    </select>
+</div>
+<div class="form-group">
+    <label>Description</label>
+    <input type="text" name="descript" class="form-control" placeholder="Enter Description" required disabled/>
+</div>
+<div class="form-group">
+    <label>Quantity</label>
+    <input type="text" name="quantity" class="form-control" placeholder="Enter Quantity" required disabled/>
+</div>
+<div class="form-group">
+    <label>Price</label>
+    <input type="text" name="price" class="form-control" placeholder="Enter Price" required disabled/>
+</div>
+<div class="form-group">
+    <label>Branch</label>
+    <select name="branch" class="form-control" required disabled>
+        <option value="" disabled selected>Select Branch</option>
+        <option value="Cell Med" <?php echo ($selectedBranch === 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
+        <option value="3G Med" <?php echo ($selectedBranch === '3G Med') ? 'selected' : ''; ?>>3G Med</option>
+        <option value="Boom Care" <?php echo ($selectedBranch === 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
+    </select>
+</div>
+<div class="form-group">
+    <label>Expiry Date</label>
+    <input type="date" name="expiry_date" class="form-control" placeholder="Select Expiry Date" required disabled
+        min="<?php echo date('Y-m-d'); ?>" />
+</div>
+
 
                 </div>
                 <div class="modal-footer">
@@ -195,6 +200,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <th> Price </th>
                         <th> Branch </th>
                         <th> Expiry Date </th>
+                        <th> Date Added </th>
                         <th> Edit </th>
                         <th> Move To Archive </th>
                     </thead>
@@ -207,7 +213,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['sku']; ?></td>
                             <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
-                            <td> <?php echo $row['description']; ?></td>
+                            <td> <?php echo $row['descript']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>
                             <td> <?php echo $row['stocks_available']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
@@ -225,6 +231,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                                     }
                                 ?>
                             </td>
+                            <td> <?php echo $row['date_added']; ?></td>
                             <td>
                                 <form action="edit_stock_product.php" method="post">
                                         <input type="hidden" name=edit_id value="<?php echo $row['id']; ?>">
@@ -273,5 +280,48 @@ aria-hidden="true">
         include('includes/footer.php');
         ?>
     </body>
+<script>
+    document.getElementById('sku_input').addEventListener('change', function() {
+    var sku = this.value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'livesearch_product.php?sku=' + sku, true);
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            var data = JSON.parse(xhr.responseText);
+            document.querySelector('[name="product_stock_name"]').value = data.product_name;
+            document.querySelector('[name="descript"]').value = data.descript;
+        }
+    };
+    xhr.send();
+});
+</script>
 
+<script>
+    document.getElementById('sku_input').addEventListener('input', function() {
+    var sku = this.value.trim();
+    var productNameField = document.querySelector('[name="product_stock_name"]');
+    var descriptionField = document.querySelector('[name="descript"]');
+    var quantityField = document.querySelector('[name="quantity"]');
+    var priceField = document.querySelector('[name="price"]');
+    var branchField = document.querySelector('[name="branch"]');
+    var expiryDateField = document.querySelector('[name="expiry_date"]');
+
+    if (sku) {
+        productNameField.removeAttribute('disabled');
+        descriptionField.removeAttribute('disabled');
+        quantityField.removeAttribute('disabled');
+        priceField.removeAttribute('disabled');
+        branchField.removeAttribute('disabled');
+        expiryDateField.removeAttribute('disabled');
+    } else {
+        productNameField.setAttribute('disabled', 'disabled');
+        descriptionField.setAttribute('disabled', 'disabled');
+        quantityField.setAttribute('disabled', 'disabled');
+        priceField.setAttribute('disabled', 'disabled');
+        branchField.setAttribute('disabled', 'disabled');
+        expiryDateField.setAttribute('disabled', 'disabled');
+    }
+});
+
+</script>
     </html>

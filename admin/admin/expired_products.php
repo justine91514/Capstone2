@@ -100,7 +100,7 @@ include('notification_logic2.php');
                                     }
                                     ?>
                                 </td>
-                                <td><?php echo $row['description']; ?></td>
+                                <td><?php echo $row['descript']; ?></td>
                                 <td><?php echo $row['quantity']; ?></td>
                                 <td><?php echo $row['stocks_available']; ?></td>
                                 <td><?php echo $row['price']; ?></td>

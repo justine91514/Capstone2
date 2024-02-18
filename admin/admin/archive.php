@@ -63,7 +63,7 @@ include('includes/navbar2.php');
                 $query = "SELECT archive_list.id, 
                                  archive_list.sku,   
                                  archive_list.product_name,
-                                 archive_list.description, 
+                                 archive_list.descript, 
                                  archive_list.expiry_date, 
                                  archive_list.quantity, 
                                  archive_list.stocks_available, 
@@ -104,7 +104,7 @@ include('includes/navbar2.php');
                                             <?php echo $row['measurement']; ?>
                                         </span>
                                     </td>
-                                    <td><?php echo $row['description']; ?></td>
+                                    <td><?php echo $row['descript']; ?></td>
                                     <td><?php echo $row['quantity']; ?></td>
                                     <td><?php echo $row['stocks_available']; ?></td>
                                     <td><?php echo $row['price']; ?></td>
