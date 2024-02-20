@@ -378,8 +378,8 @@ if (isset($_POST['add_prod_btn'])) {
     $product_name = $_POST['prod_name'];
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
+    $stocks_available = $_POST['stocks_available'];
     $measurement = $_POST['measurement'];
-   
     $prescription = isset($_POST['prescription']) ? 1 : 0;
 
     // Check if $category_name is not empty
@@ -403,46 +403,35 @@ if (isset($_POST['add_prod_btn'])) {
 
 if (isset($_POST['add_stock_btn'])) {
     $sku = $_POST['sku'];
-    $product_stock_name = $_POST['product_stock_name'];
-    $descript = $_POST['descript'];
-    $expiry_date = $_POST['expiry_date'];
+    $purchase_price = $_POST['purchase_price'];
+    $product_name = $_POST['product_stock_name'];
+    $description = $_POST['descript'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
     $branch = $_POST['branch'];
-    $date_added = date('Y-m-d H:i:s'); // Get current date and time
+    $expiry_date = $_POST['expiry_date'];
+    $date_added = date('Y-m-d H:i:s'); // Current date and time
 
-    // Retrieve the current stocks_available value
-    $query = "SELECT * FROM add_stock_list WHERE product_stock_name='$product_stock_name'";
-    $query_run = mysqli_query($connection, $query);
+    // Execute query to add stock
+    $add_stock_query = "INSERT INTO add_stock_list (sku, purchase_price, product_stock_name, descript, quantity, price, branch, expiry_date, date_added)
+                        VALUES ('$sku', '$purchase_price', '$product_name', '$description', '$quantity', '$price', '$branch', '$expiry_date', '$date_added')";
+    $add_stock_result = mysqli_query($connection, $add_stock_query);
 
-    // Initialize newStocks variable
-    $newStocks = $quantity;
+    if ($add_stock_result) {
+        // Update Stocks Available in product_list table
+        $update_stocks_query = "UPDATE product_list 
+                                SET stocks_available = stocks_available + '$quantity' 
+                                WHERE prod_name = '$product_name'";
+        mysqli_query($connection, $update_stocks_query);
 
-    // Check if the product exists in the add_stock_list table
-    if ($query_run && mysqli_num_rows($query_run) > 0) {
-        $row = mysqli_fetch_assoc($query_run);
-        $currentStocks = $row['stocks_available'];
-
-        // Calculate the new stocks_available value
-        $newStocks = $quantity + $currentStocks;
-
-        // Update the database with the new value
-        $updateQuery = "UPDATE add_stock_list SET stocks_available=$newStocks WHERE product_stock_name='$product_stock_name'";
-        mysqli_query($connection, $updateQuery);
-    }
-
-    // Insert the new stock information into the database
-    $query = "INSERT INTO add_stock_list (sku, product_stock_name, descript, expiry_date, quantity, stocks_available, price, branch, date_added) VALUES ('$sku', '$product_stock_name','$descript', '$expiry_date', '$quantity', '$newStocks','$price', '$branch', '$date_added')";
-    $query_run = mysqli_query($connection, $query);
-
-    if ($query_run) {
-        $_SESSION['success'] = "Product Added";
+        $_SESSION['success'] = "Stock added successfully";
         header('Location: add_stocks.php');
     } else {
-        $_SESSION['status'] = "Product NOT Added";
+        $_SESSION['status'] = "Failed to add stock";
         header('Location: add_stocks.php');
     }
 }
+
 
 
 

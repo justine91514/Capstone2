@@ -20,6 +20,7 @@ include('includes/navbar2.php');
 include("dbconfig.php");
 
 $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
+
 ?>
     <?php
     function getStatusColor($expiryDate)
@@ -87,6 +88,30 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
         $expiring_soon_row = mysqli_fetch_assoc($expiring_soon_result);
         $expiring_soon_count = $expiring_soon_row['expiring_soon_count'];
     }
+
+
+    
+        updateStocksAvailable();
+    
+
+
+    function updateStocksAvailable() {
+        $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
+    
+        // Query to get total stocks available for each product
+        $query = "SELECT product_stock_name, SUM(quantity) AS total_stocks FROM add_stock_list GROUP BY product_stock_name";
+        $result = mysqli_query($connection, $query);
+    
+        // Loop through the result to update stocks available in the product_list table
+        while ($row = mysqli_fetch_assoc($result)) {
+            $product_stock_name = $row['product_stock_name'];
+            $total_stocks = $row['total_stocks'];
+    
+            // Query to update stocks available in the product_list table
+            $update_query = "UPDATE product_list SET stocks_available = $total_stocks WHERE prod_name = '$product_stock_name'";
+            mysqli_query($connection, $update_query);
+        }
+    }
     ?>
 
 
@@ -102,12 +127,16 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
             </div>
             <form action="code.php" method="POST">
                 <div class="modal-body">
-                <div class="form-group">
-                        <label>SKU</label>
-                        <input type="text" name="sku" id="sku_input" class="form-control" placeholder="Enter SKU" required />
-                    </div>
+        <div class="form-group">
+            <label>SKU</label>
+            <input type="text" name="sku" id="sku_input" class="form-control" placeholder="Enter SKU" required />
+        </div>
+        <div class="form-group">
+            <label>Purchase Price</label>
+            <input type="text" name="purchase_price" class="form-control" placeholder="Enter Purchase Price" required/>
+        </div>
 
-                    <div class="form-group">
+    <div class="form-group">          
     <label>Product Name</label>
     <select name="product_stock_name" class="form-control" required disabled>
         <option value="">Select Product</option> <!-- Empty option -->
@@ -173,11 +202,12 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     </button>
                     <label> Branch </label>
                     <select id="branch" name="branch" class="form-control" onchange="changeTableFormat()" required>
-                        <option value="" disabled selected>Select Branch</option>
+                        <option value="All" <?php echo ($selectedBranch === 'All') ? 'selected' : ''; ?>>All</option>
                         <option value="Cell Med" <?php echo ($selectedBranch === 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
                         <option value="3G Med" <?php echo ($selectedBranch === '3G Med') ? 'selected' : ''; ?>>3G Med</option>
                         <option value="Boom Care" <?php echo ($selectedBranch === 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
                     </select>
+
                 </h6>
             </div>
             <div class="card-body">
@@ -193,10 +223,10 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     <thead>
                         <th> ID </th>
                         <th> SKU </th>
+                        <th> Purchase Price </th>
                         <th> Product Name </th>
                         <th> Description </th>
                         <th> Quantity </th>
-                        <th> Stocks Available </th>
                         <th> Price </th>
                         <th> Branch </th>
                         <th> Expiry Date </th>
@@ -212,10 +242,10 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['sku']; ?></td>
+                            <td> <?php echo $row['purchase_price']; ?></td>
                             <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
                             <td> <?php echo $row['descript']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>
-                            <td> <?php echo $row['stocks_available']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
                             <td> <?php echo $row['branch']; ?></td>
                             <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'>
@@ -322,6 +352,7 @@ aria-hidden="true">
         expiryDateField.setAttribute('disabled', 'disabled');
     }
 });
+
 
 </script>
     </html>

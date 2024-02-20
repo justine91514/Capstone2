@@ -10,7 +10,18 @@
 session_start();
 include('includes/header.php');
 include('includes/navbar2.php');
+$selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 
+// Check if parameter indicating updated stocks available is present in URL
+if(isset($_GET['updated_stocks_available'])) {
+    $updated_stocks_available = $_GET['updated_stocks_available'];
+    // Use the updated stocks available value
+} else {
+    // Use the regular query to fetch product details
+    $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
+    $query = "SELECT id, prod_name, categories, type, measurement, stocks_available, prescription FROM product_list";
+    $query_run = mysqli_query($connection, $query);
+}
 ?>
 
 <!-- Modal -->
@@ -89,6 +100,15 @@ include('includes/navbar2.php');
                     Add Product
                 </button>
             </h6>
+            <div class="form-group">
+        <label>Select Branch</label>
+        <select id="branch" name="branch" class="form-control" onchange="changeBranch()">
+            <option value="All" <?php if($selectedBranch == 'All') echo 'selected'; ?>>All</option>
+            <option value="Cell Med" <?php if($selectedBranch == 'Cell Med') echo 'selected'; ?>>Cell Med</option>
+            <option value="3G Med" <?php if($selectedBranch == '3G Med') echo 'selected'; ?>>3G Med</option>
+            <option value="Boom Care" <?php if($selectedBranch == 'Boom Care') echo 'selected'; ?>>Boom Care</option>
+        </select>
+    </div>
         </div>
         <div class="card-body">
 
@@ -97,8 +117,23 @@ include('includes/navbar2.php');
             <?php
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
 
-                $query = "SELECT * FROM product_list";
-                $query_run = mysqli_query ($connection, $query);
+                // Query to fetch product details with total quantity per branch
+                $query = "SELECT p.id, p.prod_name, p.categories, p.type, p.measurement, 
+                          SUM(CASE WHEN a.branch = 'Cell Med' THEN a.quantity ELSE 0 END) AS 'Cell Med',
+                          SUM(CASE WHEN a.branch = '3G Med' THEN a.quantity ELSE 0 END) AS '3G Med',
+                          SUM(CASE WHEN a.branch = 'Boom Care' THEN a.quantity ELSE 0 END) AS 'Boom Care',
+                          p.prescription 
+                          FROM product_list p
+                          LEFT JOIN add_stock_list a ON p.prod_name = a.product_stock_name";
+
+                // If a specific branch is selected, filter the products for that branch
+                if($selectedBranch != 'All') {
+                    $query .= " WHERE a.branch = '$selectedBranch'";
+                }
+
+                $query .= " GROUP BY p.id";
+
+                $query_run = mysqli_query($connection, $query);
             ?>
 
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -108,7 +143,7 @@ include('includes/navbar2.php');
                         <th> Category </th>
                         <th> Type </th>
                         <th> Measurement </th>
-                        
+                        <th> Stocks Available</th>
                         <th> Prescrpition </th>
                         <th> Edit </th>
                         <th> Delete </th>
@@ -126,6 +161,19 @@ include('includes/navbar2.php');
                             <td> <?php echo $row['categories']; ?></td>
                             <td> <?php echo $row['type']; ?></td>
                             <td> <?php echo $row['measurement']; ?></td>
+                            <td>
+    <?php 
+    if ($selectedBranch === 'All') {
+        // Calculate the total quantity available across all branches
+        $totalStocks = $row['Cell Med'] + $row['3G Med'] + $row['Boom Care'];
+        echo $totalStocks;
+    } else {
+        // Display the quantity available for the selected branch
+        echo $row[$selectedBranch];
+    }
+    ?>
+</td>
+
                             <td><?php echo ($row['prescription'] == 1) ? 'Yes' : 'No'; ?></td>
 
                             
@@ -172,6 +220,13 @@ aria-hidden="true">
         </div>
     </div>
 </div>
+<script>
+    // JavaScript function to change the URL based on the selected branch
+    function changeBranch() {
+        var selectedBranch = document.getElementById("branch").value;
+        window.location.href = 'product.php?branch=' + selectedBranch;
+    }
+</script>
 </div>
     <?php
     include('includes/scripts.php');
