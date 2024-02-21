@@ -68,6 +68,20 @@ if(isset($_GET['updated_stocks_available'])) {
             ?>
         </select>
     </div>
+    <div class="form-group">
+        <label>Product Unit</label>
+        <select name="unit" class="form-control" required>
+            <option value="" disabled selected>Select Product Unit</option>
+            <?php
+            $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
+            $query = "SELECT * FROM unit_list";
+            $query_run = mysqli_query($connection, $query);
+            while ($row = mysqli_fetch_assoc($query_run)) {
+                echo "<option value='" . $row['unit_name'] . "'>" . $row['unit_name'] . "</option>";
+            }
+            ?>
+        </select>
+    </div>
         <div class="form-group">
             <label>Measurement</label>
             <input type="text" name="measurement" class="form-control" placeholder="Enter Measurement" required />
@@ -118,7 +132,7 @@ if(isset($_GET['updated_stocks_available'])) {
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
 
                 // Query to fetch product details with total quantity per branch
-                $query = "SELECT p.id, p.prod_name, p.categories, p.type, p.measurement, 
+                $query = "SELECT p.id, p.prod_name, p.categories, p.type, p.unit, p.measurement, 
                           SUM(CASE WHEN a.branch = 'Cell Med' THEN a.quantity ELSE 0 END) AS 'Cell Med',
                           SUM(CASE WHEN a.branch = '3G Med' THEN a.quantity ELSE 0 END) AS '3G Med',
                           SUM(CASE WHEN a.branch = 'Boom Care' THEN a.quantity ELSE 0 END) AS 'Boom Care',
@@ -142,6 +156,7 @@ if(isset($_GET['updated_stocks_available'])) {
                         <th> Product Name </th>
                         <th> Category </th>
                         <th> Type </th>
+                        <th> Unit </th>
                         <th> Measurement </th>
                         <th> Stocks Available</th>
                         <th> Prescrpition </th>
@@ -160,19 +175,20 @@ if(isset($_GET['updated_stocks_available'])) {
                             <td> <?php echo $row['prod_name']; ?></td>
                             <td> <?php echo $row['categories']; ?></td>
                             <td> <?php echo $row['type']; ?></td>
+                            <td> <?php echo $row['unit']; ?></td>
                             <td> <?php echo $row['measurement']; ?></td>
                             <td>
-    <?php 
-    if ($selectedBranch === 'All') {
-        // Calculate the total quantity available across all branches
-        $totalStocks = $row['Cell Med'] + $row['3G Med'] + $row['Boom Care'];
-        echo $totalStocks;
-    } else {
-        // Display the quantity available for the selected branch
-        echo $row[$selectedBranch];
-    }
-    ?>
-</td>
+                                <?php 
+                                if ($selectedBranch === 'All') {
+                                    // Calculate the total quantity available across all branches
+                                    $totalStocks = $row['Cell Med'] + $row['3G Med'] + $row['Boom Care'];
+                                    echo $totalStocks;
+                                } else {
+                                    // Display the quantity available for the selected branch
+                                    echo $row[$selectedBranch];
+                                }
+                                ?>
+                            </td>
 
                             <td><?php echo ($row['prescription'] == 1) ? 'Yes' : 'No'; ?></td>
 

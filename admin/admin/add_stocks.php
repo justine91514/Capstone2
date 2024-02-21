@@ -131,10 +131,6 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
             <label>SKU</label>
             <input type="text" name="sku" id="sku_input" class="form-control" placeholder="Enter SKU" required />
         </div>
-        <div class="form-group">
-            <label>Purchase Price</label>
-            <input type="text" name="purchase_price" class="form-control" placeholder="Enter Purchase Price" required/>
-        </div>
 
     <div class="form-group">          
     <label>Product Name</label>
@@ -223,7 +219,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     <thead>
                         <th> ID </th>
                         <th> SKU </th>
-                        <th> Purchase Price </th>
+                   <!-- <th> Purchase Price </th> -->
                         <th> Product Name </th>
                         <th> Description </th>
                         <th> Quantity </th>
@@ -242,7 +238,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['sku']; ?></td>
-                            <td> <?php echo $row['purchase_price']; ?></td>
+                            
                             <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
                             <td> <?php echo $row['descript']; ?></td>
                             <td> <?php echo $row['quantity']; ?></td>

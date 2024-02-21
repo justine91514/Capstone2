@@ -86,6 +86,25 @@ if (isset($_POST['updatecategorybtn'])) {
     }
 }
 
+if (isset($_POST['updateunitbtn'])) {
+    $id = $_POST['edit_unit_btn'];
+    $edit_unit = $_POST['edit_unit'];
+
+    $query = "UPDATE unit_list SET unit_name='$edit_unit' WHERE id='$id'";
+    $query_run = mysqli_query($connection, $query);
+
+    if ($query_run) 
+    {
+        $_SESSION['success'] = "Your data is updated";
+        header('Location: add_unit.php');
+    } 
+    else 
+    {
+        $_SESSION['status'] = "Your data is not Updated";
+        header('Location: add_unit.php');
+    }
+}
+
 if (isset($_POST['updatediscountbtn'])) {
     $id = $_POST['edit_id'];
     $discount_name = $_POST['edit_discount'];
@@ -111,11 +130,12 @@ if (isset($_POST['updateproductbtn'])) {
     $prod_name = $_POST['prod_name'];
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
+    $unit = $_POST['unit'];
     $measurement = $_POST['measurement'];
     $prescription = isset($_POST['prescription']) ? 1 : 0;
 
     // Corrected query and parameter binding
-    $query = "UPDATE product_list SET prod_name='$prod_name', categories='$categories', type='$type', measurement='$measurement', prescription='$prescription' WHERE id='$id'";
+    $query = "UPDATE product_list SET prod_name='$prod_name', categories='$categories', type='$type', unit='$unit', measurement='$measurement', prescription='$prescription' WHERE id='$id'";
     $query_run = mysqli_query($connection, $query);
 
     if ($query_run) {
@@ -343,7 +363,27 @@ if(isset($_POST['typebtn']))
         }
     }
 }
-
+if(isset($_POST['unitbtn']))
+{
+    $unit_name = $_POST['unit_name'];
+   
+    if($unit_name)
+    {
+        $query = "INSERT INTO unit_list (unit_name) VALUES ('$unit_name')";
+        $query_run = mysqli_query($connection, $query);
+    
+        if($query_run)
+        {
+            $_SESSION['success'] = "Unit Added";
+            header('Location: add_unit.php');
+        }
+        else
+        {
+            $_SESSION['status'] = "Unit NOT Added";
+            header('Location: add_unit.php');
+        }
+    }
+}
 //this code is for product_type_list.php
 if(isset($_POST['discountbtn']))
 {
@@ -378,6 +418,7 @@ if (isset($_POST['add_prod_btn'])) {
     $product_name = $_POST['prod_name'];
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
+    $unit = $_POST['unit'];
     $stocks_available = $_POST['stocks_available'];
     $measurement = $_POST['measurement'];
     $prescription = isset($_POST['prescription']) ? 1 : 0;
@@ -385,7 +426,7 @@ if (isset($_POST['add_prod_btn'])) {
     // Check if $category_name is not empty
     if ($categories) {
         // Corrected query and parameter binding
-        $query = "INSERT INTO product_list (prod_name, categories, type, measurement, prescription) VALUES ('$product_name', '$categories', '$type', '$measurement', '$prescription')";
+        $query = "INSERT INTO product_list (prod_name, categories, type, unit, measurement, prescription) VALUES ('$product_name', '$categories', '$type', '$unit', '$measurement', '$prescription')";
         $query_run = mysqli_query($connection, $query);
 
         if ($query_run)

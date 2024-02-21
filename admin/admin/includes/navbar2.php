@@ -91,12 +91,7 @@
 
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item" id="pos-tab">
-        <a class="nav-link" href="pos.php" onclick="toggleTab('transaction-history-tab')">
-            <i class="fas fa-history" style="color: black;"></i>
-            <span style="color: black;">Cashier</span>
-        </a>
-    </li>
+
 
     <div style="height: 250px;"></div>
 
@@ -109,6 +104,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="add_category.php" onclick="toggleTab('settings-tab')">Add Category</a>
                 <a class="collapse-item" href="add_product_type.php" onclick="toggleTab('settings-tab')">Add type</a>
+                <a class="collapse-item" href="add_unit.php" onclick="toggleTab('settings-tab')">Add Unit</a>
                 <a class="collapse-item" href="product.php" onclick="toggleTab('settings-tab')">Create Product</a>
                 <a class="collapse-item" href="add_discount.php" onclick="toggleTab('settings-tab')">Discount</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Supplier List</a>
