@@ -128,6 +128,7 @@ if (isset($_POST['updatediscountbtn'])) {
 if (isset($_POST['updateproductbtn'])) {
     $id = $_POST['edit_id']; // Assuming you have an 'edit_id' field in your form
     $prod_name = $_POST['prod_name'];
+    $prod_code = $_POST['prod_code'];
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
     $unit = $_POST['unit'];
@@ -135,7 +136,7 @@ if (isset($_POST['updateproductbtn'])) {
     $prescription = isset($_POST['prescription']) ? 1 : 0;
 
     // Corrected query and parameter binding
-    $query = "UPDATE product_list SET prod_name='$prod_name', categories='$categories', type='$type', unit='$unit', measurement='$measurement', prescription='$prescription' WHERE id='$id'";
+    $query = "UPDATE product_list SET prod_name='$prod_name', prod_code='$prod_code', categories='$categories', type='$type', unit='$unit', measurement='$measurement', prescription='$prescription' WHERE id='$id'";
     $query_run = mysqli_query($connection, $query);
 
     if ($query_run) {
@@ -416,6 +417,7 @@ if(isset($_POST['discountbtn']))
 // ADD BUTTONS
 if (isset($_POST['add_prod_btn'])) {
     $product_name = $_POST['prod_name'];
+    $product_code = $_POST['prod_code'];
     $categories = $_POST['categories']; // Corrected variable name
     $type = $_POST['type'];
     $unit = $_POST['unit'];
@@ -426,7 +428,7 @@ if (isset($_POST['add_prod_btn'])) {
     // Check if $category_name is not empty
     if ($categories) {
         // Corrected query and parameter binding
-        $query = "INSERT INTO product_list (prod_name, categories, type, unit, measurement, prescription) VALUES ('$product_name', '$categories', '$type', '$unit', '$measurement', '$prescription')";
+        $query = "INSERT INTO product_list (prod_name, prod_code, categories, type, unit, measurement, prescription) VALUES ('$product_name', '$product_code', '$categories', '$type', '$unit', '$measurement', '$prescription')";
         $query_run = mysqli_query($connection, $query);
 
         if ($query_run)

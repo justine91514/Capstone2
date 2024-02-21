@@ -23,11 +23,11 @@
                         <form action="code.php" method="POST">
                             <input type="hidden" name="edit_id" value="<?php echo $row['id'] ?>">
                             <div class="form-group">
-                                <label> Product </label>
+                                <label> Product Name </label>
                                 <input type="text" name="prod_name" value="<?php echo $row['prod_name'] ?>" class="form-control" placeholder="Enter Category" required />
                             </div>
                             <div class="form-group">
-                                <label> Category </label>
+                                <label> Category Name</label>
                                 <select name="categories" class="form-control" required>
                                     <option value="" disabled>Select Category</option>
                                     <?php
@@ -41,7 +41,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label> Type </label>
+                                <label> Product Code </label>
+                                <input type="text" name="prod_code" value="<?php echo $row['prod_code'] ?>" class="form-control" placeholder="Enter Prod Code" required />
+                            </div>
+                            <div class="form-group">
+                                <label> Type Name</label>
                                 <select name="type" class="form-control" required>
                                     <option value="" disabled>Select Type</option>
                                     <?php
@@ -55,7 +59,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label> Unit </label>
+                                <label> Unit Name </label>
                                 <select name="unit" class="form-control" required>
                                     <option value="" disabled>Select Type</option>
                                     <?php

@@ -41,6 +41,10 @@ if(isset($_GET['updated_stocks_available'])) {
             <input type="text" name="prod_name" class="form-control" placeholder="Input Product Name" required />
         </div>
         <div class="form-group">
+            <label>Product Code</label>
+            <input type="text" name="prod_code" class="form-control" placeholder="Input Product Code" required />
+        </div>
+        <div class="form-group">
         <label>Category</label>
         <select name="categories" class="form-control" required>
             <option value="" disabled selected>Select Category</option>
@@ -132,7 +136,7 @@ if(isset($_GET['updated_stocks_available'])) {
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
 
                 // Query to fetch product details with total quantity per branch
-                $query = "SELECT p.id, p.prod_name, p.categories, p.type, p.unit, p.measurement, 
+                $query = "SELECT p.id, p.prod_name, p.prod_code, p.categories, p.type, p.unit, p.measurement, 
                           SUM(CASE WHEN a.branch = 'Cell Med' THEN a.quantity ELSE 0 END) AS 'Cell Med',
                           SUM(CASE WHEN a.branch = '3G Med' THEN a.quantity ELSE 0 END) AS '3G Med',
                           SUM(CASE WHEN a.branch = 'Boom Care' THEN a.quantity ELSE 0 END) AS 'Boom Care',
@@ -154,6 +158,7 @@ if(isset($_GET['updated_stocks_available'])) {
                     <thead>
                         <th> ID </th>
                         <th> Product Name </th>
+                        <th> Product Code </th>
                         <th> Category </th>
                         <th> Type </th>
                         <th> Unit </th>
@@ -173,6 +178,7 @@ if(isset($_GET['updated_stocks_available'])) {
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['prod_name']; ?></td>
+                            <td> <?php echo $row['prod_code']; ?></td>
                             <td> <?php echo $row['categories']; ?></td>
                             <td> <?php echo $row['type']; ?></td>
                             <td> <?php echo $row['unit']; ?></td>
