@@ -40,7 +40,7 @@ include('includes/navbar_pos.php');
     <div class="container">
         <div class="left-section">
             <input type="text" class="form-control" id="dbpharmacy" autocomplete="off"
-                placeholder="Input SKU ...">
+                placeholder="Search Transac no ...">
             <div id="searchresult" style="position: absolute; top: 100%; left: 0; right: 0; z-index: 999; background-color: #fff; border: 1px solid #ced4da; border-top: none; display: none;"></div>
 
             <table class="table table-bordered table-striped mt-4">

@@ -18,7 +18,7 @@ if (isset($_POST['input'])) {
             $sku = $row['sku'];
             $product_stock_name = $row['product_stock_name'];
             $descript = $row['descript'];
-            $quantity = $row['quantity'];
+            $quantity = 1; // Set default quantity to 1
             $stocks_available = $row['stocks_available']; // Corrected
             $expiry_date = $row['expiry_date'];
             $price = $row['price'];
@@ -27,7 +27,7 @@ if (isset($_POST['input'])) {
             // Build HTML for appending to the table
             $html = "<tr>
                         <td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td>
-                        <td></td>
+                        <td>{$quantity}</td>
                         <td>{$stocks_available}</td>
                         <td>{$price}</td>
                     </tr>";
@@ -36,7 +36,6 @@ if (isset($_POST['input'])) {
             $response[] = array(
                 'descript' => $descript,
                 'price' => $price,
-               
                 'html' => $html
             );
         }
@@ -45,7 +44,6 @@ if (isset($_POST['input'])) {
         $response[] = array(
             'descript' => '',
             'price' => '',
-            
             'html' => "<h6 class='text-danger text-center mt-3'>No Data Found</h6>"
         );
     }
