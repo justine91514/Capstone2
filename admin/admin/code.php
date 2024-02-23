@@ -424,11 +424,12 @@ if (isset($_POST['add_prod_btn'])) {
     $stocks_available = $_POST['stocks_available'];
     $measurement = $_POST['measurement'];
     $prescription = isset($_POST['prescription']) ? 1 : 0;
+    $discounted = isset($_POST['discounted']) ? 1 : 0;
 
     // Check if $category_name is not empty
     if ($categories) {
         // Corrected query and parameter binding
-        $query = "INSERT INTO product_list (prod_name, prod_code, categories, type, unit, measurement, prescription) VALUES ('$product_name', '$product_code', '$categories', '$type', '$unit', '$measurement', '$prescription')";
+        $query = "INSERT INTO product_list (prod_name, prod_code, categories, type, unit, measurement, prescription, discounted) VALUES ('$product_name', '$product_code', '$categories', '$type', '$unit', '$measurement', '$prescription', '$discounted')";
         $query_run = mysqli_query($connection, $query);
 
         if ($query_run)

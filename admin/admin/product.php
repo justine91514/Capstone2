@@ -91,13 +91,18 @@ if(isset($_GET['updated_stocks_available'])) {
             <input type="text" name="measurement" class="form-control" placeholder="Enter Measurement" required />
         </div>
         
-        <div class="form-group">
+        <<div class="form-group">
     <label>Prescription</label>
     <div class="form-check">
-        <input type="checkbox" name="prescription" class="form-check-input" id="prescriptionCheckbox" />
+        <input type="checkbox" name="prescription" class="form-check-input" id="prescriptionCheckbox" value="1" />
         <label class="form-check-label" for="prescriptionCheckbox">Prescription required</label>
     </div>
+    <div class="form-check">
+        <input type="checkbox" name="discounted" class="form-check-input" id="generic_discount_Checkbox" value="1" />
+        <label class="form-check-label" for="generic_discount_Checkbox">Generic Discount required</label>
+    </div>
 </div>
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -140,7 +145,7 @@ if(isset($_GET['updated_stocks_available'])) {
                           SUM(CASE WHEN a.branch = 'Cell Med' THEN a.quantity ELSE 0 END) AS 'Cell Med',
                           SUM(CASE WHEN a.branch = '3G Med' THEN a.quantity ELSE 0 END) AS '3G Med',
                           SUM(CASE WHEN a.branch = 'Boom Care' THEN a.quantity ELSE 0 END) AS 'Boom Care',
-                          p.prescription 
+                          p.prescription,  p.discounted 
                           FROM product_list p
                           LEFT JOIN add_stock_list a ON p.prod_name = a.product_stock_name";
 
@@ -164,7 +169,8 @@ if(isset($_GET['updated_stocks_available'])) {
                         <th> Unit </th>
                         <th> Measurement </th>
                         <th> Stocks Available</th>
-                        <th> Prescrpition </th>
+                        <th> Prescription </th>
+                        <th> Has Discount </th>
                         <th> Edit </th>
                         <th> Delete </th>
                     </thead>
@@ -197,6 +203,7 @@ if(isset($_GET['updated_stocks_available'])) {
                             </td>
 
                             <td><?php echo ($row['prescription'] == 1) ? 'Yes' : 'No'; ?></td>
+                            <td><?php echo ($row['discounted'] == 1) ? 'Yes' : 'No'; ?></td>
 
                             
                             <td> 
