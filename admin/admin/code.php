@@ -918,10 +918,61 @@ if (isset($_POST['move_buffer_stock_btn'])) {
     }
 }
 
-
-
 // MOVE BUTTONS
 // ####################################################################
+
+
+if (isset($_POST['charge_btn'])) {
+    // Get the transaction details from the form
+    $transaction_id = generate_transaction_id(); // You need to implement this function to generate a unique transaction ID
+    $date = date('Y-m-d');
+    $time = date('H:i:s');
+    $mode_of_payment = $_POST['discount']; // Assuming the selected discount serves as the mode of payment
+    $list_of_items = ""; // Initialize an empty list of items
+
+    // Concatenate the list of items
+    foreach ($_SESSION['scannedProducts'] as $product => $quantity) {
+        $list_of_items .= $product . " x" . $quantity . ", ";
+    }
+
+    // Remove the trailing comma and space
+    $list_of_items = rtrim($list_of_items, ", ");
+
+    // Calculate the total amount
+    $total = calculate_total($_SESSION['scannedProducts']); // You need to implement this function to calculate the total amount
+
+    // Insert the transaction details into the database
+    $query = "INSERT INTO transaction_list (transaction_id, date, time, mode_of_payment, list_of_items, total) 
+              VALUES ('$transaction_id', '$date', '$time', '$mode_of_payment', '$list_of_items', '$total')";
+
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        // Transaction inserted successfully
+        $_SESSION['success'] = "Transaction completed successfully";
+        unset($_SESSION['scannedProducts']); // Clear the scanned products from the session
+        header('Location: transaction_history_pos.php');
+    } else {
+        // Failed to insert transaction
+        $_SESSION['status'] = "Failed to complete the transaction";
+        header('Location: pos.php'); // Redirect back to the POS page
+    }
+} else {
+    // Redirect to the POS page if charge_btn is not set
+    header('Location: pos.php');
+}
+
+// Function to generate a unique transaction ID
+function generate_transaction_id() {
+    // Implementation to generate a unique ID (You can use timestamp or any other method)
+}
+
+// Function to calculate the total amount
+function calculate_total($scannedProducts) {
+    // Implementation to calculate the total amount based on scanned products
+}
+
+
 
 
 
@@ -931,10 +982,6 @@ if(isset($_POST['logout_btn']))
     session_destroy();
     unset($_SESSION['username']);
 }
-
-
-
-
 
 
 

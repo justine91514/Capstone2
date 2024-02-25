@@ -98,7 +98,7 @@ include('includes/navbar_pos.php');
                                 <div class="modal-body">
                                     <div class="form-group">
                                     <label>Discounts</label>
-                                        <select id="discountSelect" name="discount" class="form-control" required>
+                                        <select id="discountSelect" name="discount" class="form-control">
                                             
                                             <option value="">No Discount</option> <!-- Empty option -->
                                             <?php
@@ -116,10 +116,11 @@ include('includes/navbar_pos.php');
                                             ?>
                                         </select>
                                 </div>
+                                <input type="hidden" name="total_amount" id="total_amount">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" name="categorybtn" class="btn btn-primary">Charge</button>
+                                <button type="submit" name="charge_btn" class="btn btn-primary">Charge</button>
                             </div>
                         </form>
 
@@ -148,53 +149,82 @@ include('includes/navbar_pos.php');
     });
 
     $('#dbpharmacy').keypress(function(e) {
-        if (e.which === 13) {
-            var input = $(this).val();
-            if (input != "") {
-                $.ajax({
-                    url: "livesearch.php",
-                    method: "POST",
-                    data: { input: input },
-                    success: function(data) {
-                        var responseData = JSON.parse(data);
-                        if (responseData.length > 0) {
-                            $('#descript').val(responseData[0].descript);
-                            $('#price').val(responseData[0].price);
-                            
-                            var productName = responseData[0].descript;
-                            if (scannedProducts.hasOwnProperty(productName)) {
-                                scannedProducts[productName]++;
-                                $('#quantity').val(scannedProducts[productName]);
-                                $('#scannedItems td:contains("' + productName + '")').next().text(scannedProducts[productName]);
-                            } else {
-                                scannedProducts[productName] = 1;
-                                var html = "<tr><td>" + productName + "</td><td>" + scannedProducts[productName] + "</td><td>" + responseData[0].stocks_available + "</td><td>" + responseData[0].price + "</td></tr>";
-                                $('#scannedItems').append(html);
-                                $('#quantity').val(scannedProducts[productName]);
-                            }
-
-                            var totalAmount = 0;
-                            $('#scannedItems tr').each(function() {
-                                var quantity = parseFloat($(this).find('td:eq(1)').text());
-                                var price = parseFloat($(this).find('td:eq(3)').text());
-                                totalAmount += quantity * price;
-                            });
-                            $('#total').val(totalAmount.toFixed(2));
-                            originalAmount = totalAmount;
+    if (e.which === 13) {
+        var input = $(this).val();
+        if (input != "") {
+            $.ajax({
+                url: "livesearch.php",
+                method: "POST",
+                data: { input: input },
+                success: function(data) {
+                    var responseData = JSON.parse(data);
+                    if (responseData.length > 0) {
+                        // Update UI with scanned product details
+                        $('#descript').val(responseData[0].descript);
+                        $('#price').val(responseData[0].price);
+                        
+                        var productName = responseData[0].descript;
+                        if (scannedProducts.hasOwnProperty(productName)) {
+                            scannedProducts[productName]++;
+                            $('#quantity').val(scannedProducts[productName]);
+                            $('#scannedItems td:contains("' + productName + '")').next().text(scannedProducts[productName]);
                         } else {
-                            $('#descript').val('');
-                            $('#price').val('');
-                            $('#quantity').val('');
-                            $('#total').val('');
+                            scannedProducts[productName] = 1;
+                            var html = "<tr><td>" + productName + "</td><td>" + scannedProducts[productName] + "</td><td>" + responseData[0].stocks_available + "</td><td>" + responseData[0].price + "</td></tr>";
+                            $('#scannedItems').append(html);
+                            $('#quantity').val(scannedProducts[productName]);
                         }
-                        $('#barcode').val(input);
+
+                        // Calculate total amount
+                        var totalAmount = 0;
+                        $('#scannedItems tr').each(function() {
+                            var quantity = parseFloat($(this).find('td:eq(1)').text());
+                            var price = parseFloat($(this).find('td:eq(3)').text());
+                            totalAmount += quantity * price;
+                        });
+                        $('#total').val(totalAmount.toFixed(2));
+                        originalAmount = totalAmount;
+
+                        // Store scanned products in session
+                        var scannedProductsSession = responseData.reduce(function(acc, curr) {
+                            acc[curr.descript] = acc[curr.descript] ? acc[curr.descript] + 1 : 1;
+                            return acc;
+                        }, {});
+
+                        $.ajax({
+                            url: 'save_scanned_products.php',
+                            method: 'POST',
+                            data: { scannedProducts: scannedProductsSession },
+                            success: function(response) {
+                                console.log(response); // Log success message if needed
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(error); // Log error if needed
+                            }
+                        });
+                    } else {
+                        // Clear input fields if no product found
+                        $('#descript').val('');
+                        $('#price').val('');
+                        $('#quantity').val('');
+                        $('#total').val('');
                     }
-                });
-            }
-            $(this).val('');
-            e.preventDefault();
+                    $('#barcode').val(input);
+                }
+            });
         }
-    });
+        $(this).val('');
+        e.preventDefault();
+    }
+});
+// Include the charge form submission code here
+$('#chargeForm').submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+            var totalAmount = parseFloat($('#total').val());
+            $('#total_amount').val(totalAmount); // Set the total amount in the hidden input field
+            $(this).unbind('submit').submit(); // Submit the form
+        });
+
 });
 
 </script>

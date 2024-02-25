@@ -47,15 +47,15 @@ include('includes/navbar_pos.php');
                                 ?>    
                                 <tr>
                         <td> <?php echo $row['transaction_id']; ?></td>
-                        <td> <?php echo $row['date']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
+                        <td> <?php echo $row['date']; ?></td>
                         <td> <?php echo $row['time']; ?></td>
                         <td> <?php echo $row['mode_of_payment']; ?></td>
                         <td> <?php echo $row['list_of_items']; ?></td>   
-                        <td> <?php echo $row['Total']; ?></td>       
+                        <td> <?php echo $row['total']; ?></td>       
                         <td> 
-                            <form action="edit_stock_product.php" method="post">
-                                <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
-                                <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
+                            <form action="print_product.php" method="post">
+                                <input type="hidden" name= print_id>
+                                <button type="submit" name="print_btn" class="btn btn-success">PRINT</button>
                             </form>
                         </td>
                     </tr>
