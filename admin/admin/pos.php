@@ -98,7 +98,6 @@ include('includes/navbar_pos.php');
                                 <div class="modal-body">
                                     <div class="form-group">
                                     <label>Discounts</label>
-                                    <label>Discounts</label>
                                         <select id="discountSelect" name="discount" class="form-control" required>
                                             
                                             <option value="">No Discount</option> <!-- Empty option -->
@@ -165,14 +164,14 @@ include('includes/navbar_pos.php');
                             var productName = responseData[0].descript;
                             if (scannedProducts.hasOwnProperty(productName)) {
                                 scannedProducts[productName]++;
+                                $('#quantity').val(scannedProducts[productName]);
+                                $('#scannedItems td:contains("' + productName + '")').next().text(scannedProducts[productName]);
                             } else {
                                 scannedProducts[productName] = 1;
+                                var html = "<tr><td>" + productName + "</td><td>" + scannedProducts[productName] + "</td><td>" + responseData[0].stocks_available + "</td><td>" + responseData[0].price + "</td></tr>";
+                                $('#scannedItems').append(html);
+                                $('#quantity').val(scannedProducts[productName]);
                             }
-
-                            $('#quantity').val(scannedProducts[productName]); // Update quantity input field
-
-                            var html = responseData[0].html.replace("<td></td>", "<td>" + scannedProducts[productName] + "</td>");
-                            $('#scannedItems').append(html);
 
                             var totalAmount = 0;
                             $('#scannedItems tr').each(function() {
@@ -197,7 +196,6 @@ include('includes/navbar_pos.php');
         }
     });
 });
-
 
 </script>
              

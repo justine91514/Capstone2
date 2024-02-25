@@ -36,6 +36,7 @@ if (isset($_POST['input'])) {
             $response[] = array(
                 'descript' => $descript,
                 'price' => $price,
+                'stocks_available' => $stocks_available, // Include the stocks_available data in the response
                 'html' => $html
             );
         }
@@ -44,6 +45,7 @@ if (isset($_POST['input'])) {
         $response[] = array(
             'descript' => '',
             'price' => '',
+            'stocks_available' => '', // Include an empty value for stocks_available
             'html' => "<h6 class='text-danger text-center mt-3'>No Data Found</h6>"
         );
     }
