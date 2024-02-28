@@ -117,8 +117,10 @@ include('includes/navbar_pos.php');
                                         </select>
                                 </div>
                                 <button type="button" class="btn btn-primary" onclick="selectPaymentMode('Cash')">Cash</button>
-<button type="button" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
-<input type="hidden" id="payment_mode" name="mode_of_payment">
+                                <button type="button" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
+
+                                <input type="hidden" id="payment_mode" name="mode_of_payment">
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -132,7 +134,7 @@ include('includes/navbar_pos.php');
         
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
+<script>
     function selectPaymentMode(mode) {
         document.getElementById('payment_mode').value = mode;
     }
@@ -180,6 +182,14 @@ include('includes/navbar_pos.php');
                                 $('#scannedItems').append(html);
                                 $('#quantity').val(scannedProducts[productName]);
                             }
+
+                                //aayusin
+                            var html = responseData[0].html.replace("<td></td>", "<td>" + scannedProducts[productName] + "</td>");
+                            $('#scannedItems').append(html);
+
+
+
+
 
                             var totalAmount = 0;
                             $('#scannedItems tr').each(function() {
