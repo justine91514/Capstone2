@@ -9,6 +9,7 @@
 session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
+
 ?>
 
 
@@ -48,7 +49,7 @@ include('includes/navbar_pos.php');
                                 <tr>
                         <td> <?php echo $row['transaction_id']; ?></td>
                         <td> <?php echo $row['date']; ?></td>
-                        <td><?php echo $row['formatted_time']; ?></td>
+                        <td> <?php echo $row['formatted_time']; ?></td>
                         <td> <?php echo $row['mode_of_payment']; ?></td>
                         <td> <?php echo $row['list_of_items']; ?></td>   
                         <td> <?php echo $row['total']; ?></td>       

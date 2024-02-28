@@ -932,41 +932,47 @@ $date = $current_time->format('Y-m-d'); // Current date
 $time = $current_time->format('h:i:s A'); // Current time in 12-hour format with AM/PM
 $am_pm = $current_time->format('A'); // AM or PM indicator
 
-// Check if the charge button is clicked
-if (isset($_POST['charge_btn'])) {
-    // Get the list of items from the session or wherever you're storing it
-    $list_of_items = ''; // Initialize an empty string
-    if(isset($_SESSION['scannedProducts'])) {
-        foreach ($_SESSION['scannedProducts'] as $product => $quantity) {
-            // Append each product and quantity to the list_of_items string
-            $list_of_items .= $product . ' x' . $quantity . ', ';
-        }
-        $list_of_items = rtrim($list_of_items, ', '); // Remove trailing comma and space
-    }
-
-    // Get the total amount
-    $total = isset($_POST['total']) ? $_POST['total'] : 0;
-
-    // Get the mode of payment (assuming you have it stored in the form)
+// Check if either the mode of payment or charge button is clicked
+if (isset($_POST['mode_of_payment']) || isset($_POST['charge_btn'])) {
+    // Get the mode of payment
     $mode_of_payment = isset($_POST['mode_of_payment']) ? $_POST['mode_of_payment'] : '';
 
-    // Insert the transaction details into the transaction_list table
-    $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, list_of_items, total) 
-                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$list_of_items', '$total')";
-    
-    // Execute the query
-    $result = mysqli_query($connection, $insert_query);
+    // Your other code for inserting transaction details into the database
+    // For example:
+    // Check if the charge button is clicked
+    if (isset($_POST['charge_btn'])) {
+        // Get the list of items from the session or wherever you're storing it
+        $list_of_items = ''; // Initialize an empty string
+        if(isset($_SESSION['scannedProducts'])) {
+            foreach ($_SESSION['scannedProducts'] as $product => $quantity) {
+                // Append each product and quantity to the list_of_items string
+                $list_of_items .= $product . ' x' . $quantity . ', ';
+            }
+            $list_of_items = rtrim($list_of_items, ', '); // Remove trailing comma and space
+        }
 
-    if ($result) {
-        $_SESSION['success'] = "Transaction recorded successfully";
-        // Clear the scanned products session
-        unset($_SESSION['scannedProducts']);
-        header('Location: transaction_history_pos.php');
-    } else {
-        $_SESSION['status'] = "Failed to record transaction";
-        header('Location: pos.php');
+        // Get the total amount
+        $total = isset($_POST['total']) ? $_POST['total'] : 0;
+
+        // Insert the transaction details into the transaction_list table
+        $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, list_of_items, total) 
+                        VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$list_of_items', '$total')";
+        
+        // Execute the query
+        $result = mysqli_query($connection, $insert_query);
+
+        if ($result) {
+            $_SESSION['success'] = "Transaction recorded successfully";
+            // Clear the scanned products session
+            unset($_SESSION['scannedProducts']);
+            header('Location: pos.php');
+        } else {
+            $_SESSION['status'] = "Failed to record transaction";
+            header('Location: pos.php');
+        }
     }
 }
+
 
 
 
