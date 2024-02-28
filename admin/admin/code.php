@@ -922,55 +922,53 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 // ####################################################################
 
 
-if (isset($_POST['charge_btn'])) {
-    // Get the transaction details from the form
-    $transaction_id = generate_transaction_id(); // You need to implement this function to generate a unique transaction ID
-    $date = date('Y-m-d');
-    $time = date('H:i:s');
-    $mode_of_payment = $_POST['discount']; // Assuming the selected discount serves as the mode of payment
-    $list_of_items = ""; // Initialize an empty list of items
+date_default_timezone_set('Asia/Manila');
 
-    // Concatenate the list of items
-    foreach ($_SESSION['scannedProducts'] as $product => $quantity) {
-        $list_of_items .= $product . " x" . $quantity . ", ";
+// Get the current date and time in the Philippines timezone
+$current_time = new DateTime('now', new DateTimeZone('Asia/Manila'));
+
+// Format the current time
+$date = $current_time->format('Y-m-d'); // Current date
+$time = $current_time->format('h:i:s A'); // Current time in 12-hour format with AM/PM
+$am_pm = $current_time->format('A'); // AM or PM indicator
+
+// Check if the charge button is clicked
+if (isset($_POST['charge_btn'])) {
+    // Get the list of items from the session or wherever you're storing it
+    $list_of_items = ''; // Initialize an empty string
+    if(isset($_SESSION['scannedProducts'])) {
+        foreach ($_SESSION['scannedProducts'] as $product => $quantity) {
+            // Append each product and quantity to the list_of_items string
+            $list_of_items .= $product . ' x' . $quantity . ', ';
+        }
+        $list_of_items = rtrim($list_of_items, ', '); // Remove trailing comma and space
     }
 
-    // Remove the trailing comma and space
-    $list_of_items = rtrim($list_of_items, ", ");
+    // Get the total amount
+    $total = isset($_POST['total']) ? $_POST['total'] : 0;
 
-    // Calculate the total amount
-    $total = calculate_total($_SESSION['scannedProducts']); // You need to implement this function to calculate the total amount
+    // Get the mode of payment (assuming you have it stored in the form)
+    $mode_of_payment = isset($_POST['mode_of_payment']) ? $_POST['mode_of_payment'] : '';
 
-    // Insert the transaction details into the database
-    $query = "INSERT INTO transaction_list (transaction_id, date, time, mode_of_payment, list_of_items, total) 
-              VALUES ('$transaction_id', '$date', '$time', '$mode_of_payment', '$list_of_items', '$total')";
-
-    $result = mysqli_query($connection, $query);
+    // Insert the transaction details into the transaction_list table
+    $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, list_of_items, total) 
+                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$list_of_items', '$total')";
+    
+    // Execute the query
+    $result = mysqli_query($connection, $insert_query);
 
     if ($result) {
-        // Transaction inserted successfully
-        $_SESSION['success'] = "Transaction completed successfully";
-        unset($_SESSION['scannedProducts']); // Clear the scanned products from the session
+        $_SESSION['success'] = "Transaction recorded successfully";
+        // Clear the scanned products session
+        unset($_SESSION['scannedProducts']);
         header('Location: transaction_history_pos.php');
     } else {
-        // Failed to insert transaction
-        $_SESSION['status'] = "Failed to complete the transaction";
-        header('Location: pos.php'); // Redirect back to the POS page
+        $_SESSION['status'] = "Failed to record transaction";
+        header('Location: pos.php');
     }
-} else {
-    // Redirect to the POS page if charge_btn is not set
-    header('Location: pos.php');
 }
 
-// Function to generate a unique transaction ID
-function generate_transaction_id() {
-    // Implementation to generate a unique ID (You can use timestamp or any other method)
-}
 
-// Function to calculate the total amount
-function calculate_total($scannedProducts) {
-    // Implementation to calculate the total amount based on scanned products
-}
 
 
 
