@@ -61,6 +61,9 @@ include('includes/navbar_pos.php');
         <div class="right-section">
             <div class="product-info">
                 <h2>PRODUCT INFO</h2>
+
+                <input type="hidden" class="form-control" id="product_stock_name" autocomplete="off">
+                
                 <label class="input-skulabel" for="barcode">Barcode:</label>
                 <input type="text" class="form-control" id="barcode" autocomplete="off">
                 
@@ -158,61 +161,64 @@ include('includes/navbar_pos.php');
     });
 
     $('#dbpharmacy').keypress(function(e) {
-        if (e.which === 13) {
-            var input = $(this).val();
-            if (input != "") {
-                $.ajax({
-                    url: "livesearch.php",
-                    method: "POST",
-                    data: { input: input },
-                    success: function(data) {
-                        var responseData = JSON.parse(data);
-                        if (responseData.length > 0) {
-                            $('#descript').val(responseData[0].descript);
-                            $('#price').val(responseData[0].price);
-                            
-                            var productName = responseData[0].descript;
-                            if (scannedProducts.hasOwnProperty(productName)) {
-                                scannedProducts[productName]++;
-                                $('#quantity').val(scannedProducts[productName]);
-                                $('#scannedItems td:contains("' + productName + '")').next().text(scannedProducts[productName]);
-                            } else {
-                                scannedProducts[productName] = 1;
-                                var html = "<tr><td>" + productName + "</td><td>" + scannedProducts[productName] + "</td><td>" + responseData[0].stocks_available + "</td><td>" + responseData[0].price + "</td></tr>";
-                                $('#scannedItems').append(html);
-                                $('#quantity').val(scannedProducts[productName]);
-                            }
+    if (e.which === 13) {
+        var input = $(this).val();
+        if (input != "") {
+            $.ajax({
+                url: "livesearch.php",
+                method: "POST",
+                data: { input: input },
+                success: function(data) {
+                    var responseData = JSON.parse(data);
+                    if (responseData.length > 0) {
+                        $('#descript').val(responseData[0].descript);
+                        $('#price').val(responseData[0].price);
+                        
+                        var productName = responseData[0].product_stock_name;
+                        var measurement = responseData[0].measurement;
+                        var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
+                        $('#product_stock_name').val(productNameWithMeasurement);
+                        if (scannedProducts.hasOwnProperty(productName)) {
+                            scannedProducts[productName]++;
+                            $('#quantity').val(scannedProducts[productName]);
+                            $('#scannedItems td:contains("' + productName + '")').next().text(scannedProducts[productName]);
+                        } else {
+                            scannedProducts[productName] = 1;
+                            var html = "<tr>" + 
+                            "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
+                                        "<td>" + scannedProducts[productName] + "</td>" + 
+                                        "<td>" + responseData[0].stocks_available + "</td>" + 
+                                        "<td>" + responseData[0].price + "</td>" + 
+                                    "</tr>";
 
-                                //aayusin
-                            var html = responseData[0].html.replace("<td></td>", "<td>" + scannedProducts[productName] + "</td>");
                             $('#scannedItems').append(html);
 
-
-
-
-
-                            var totalAmount = 0;
-                            $('#scannedItems tr').each(function() {
-                                var quantity = parseFloat($(this).find('td:eq(1)').text());
-                                var price = parseFloat($(this).find('td:eq(3)').text());
-                                totalAmount += quantity * price;
-                            });
-                            $('#total').val(totalAmount.toFixed(2));
-                            originalAmount = totalAmount;
-                        } else {
-                            $('#descript').val('');
-                            $('#price').val('');
-                            $('#quantity').val('');
-                            $('#total').val('');
+                            $('#quantity').val(scannedProducts[productName]);
                         }
-                        $('#barcode').val(input);
+
+                        var totalAmount = 0;
+                        $('#scannedItems tr').each(function() {
+                            var quantity = parseFloat($(this).find('td:eq(1)').text());
+                            var price = parseFloat($(this).find('td:eq(3)').text());
+                            totalAmount += quantity * price;
+                        });
+                        $('#total').val(totalAmount.toFixed(2));
+                        originalAmount = totalAmount;
+                    } else {
+                        $('#descript').val('');
+                        $('#price').val('');
+                        $('#quantity').val('');
+                        $('#total').val('');
                     }
-                });
-            }
-            $(this).val('');
-            e.preventDefault();
+                    $('#barcode').val(input);
+                }
+            });
         }
-    });
+        $(this).val('');
+        e.preventDefault();
+    }
+});
+
 });
 
 </script>
