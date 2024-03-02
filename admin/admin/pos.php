@@ -3,6 +3,10 @@ session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
 ?>
+<?php
+    date_default_timezone_set('Asia/Manila');
+    echo date('g:i:a');
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -248,3 +252,5 @@ aria-hidden="true">
 include('includes/scripts.php');
 include('includes/footer.php');
 ?>
+
+

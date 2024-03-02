@@ -64,58 +64,58 @@
                         </a>
                         
                         <?php
-    if ($expiring_soon_count > 0) {
-        // Display message for expiring soon products in stocks
-        echo '<a class="dropdown-item d-flex align-items-center" href="add_stocks.php">
-                <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                        <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                </div>
-                <div>
-                    <div id="notification-container"></div>
-                    <span class="font-weight-bold">Expiring Soon in Stocks:</span> ' . $expiring_soon_count . ' product(s) will expire soon in stocks.
-                </div>
-            </a>';
-    }
+                            if ($expiring_soon_count > 0) {
+                                // Display message for expiring soon products in stocks
+                                echo '<a class="dropdown-item d-flex align-items-center" href="add_stocks.php">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-warning">
+                                                <i class="fas fa-exclamation-triangle text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div id="notification-container"></div>
+                                            <span class="font-weight-bold">Expiring Soon in Stocks:</span> ' . $expiring_soon_count . ' product(s) will expire soon in stocks.
+                                        </div>
+                                    </a>';
+                            }
 
-    if ($expiring_soon_buffer_count > 0) {
-        // Display message for expiring soon products in buffer
-        echo '<a class="dropdown-item d-flex align-items-center" href="buffer_stock.php">
-                <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                        <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                </div>
-                <div>
-                    <div id="notification-container"></div>
-                    <span class="font-weight-bold">Expiring Soon in Buffer:</span> ' . $expiring_soon_buffer_count . ' product(s) will expire soon in buffer.
-                </div>
-            </a>';
-    }
-?>
+                            if ($expiring_soon_buffer_count > 0) {
+                                // Display message for expiring soon products in buffer
+                                echo '<a class="dropdown-item d-flex align-items-center" href="buffer_stock.php">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-warning">
+                                                <i class="fas fa-exclamation-triangle text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div id="notification-container"></div>
+                                            <span class="font-weight-bold">Expiring Soon in Buffer:</span> ' . $expiring_soon_buffer_count . ' product(s) will expire soon in buffer.
+                                        </div>
+                                    </a>';
+                            }
+                        ?>
 
-<?php
-    // Check if there are expired products
-    $expired_count_query = "SELECT COUNT(*) as expired_count FROM expired_list";
-    $expired_count_result = mysqli_query($connection, $expired_count_query);
-    $expired_count_data = mysqli_fetch_assoc($expired_count_result);
-    $expired_count = $expired_count_data['expired_count'];
+                        <?php
+                            // Check if there are expired products
+                            $expired_count_query = "SELECT COUNT(*) as expired_count FROM expired_list";
+                            $expired_count_result = mysqli_query($connection, $expired_count_query);
+                            $expired_count_data = mysqli_fetch_assoc($expired_count_result);
+                            $expired_count = $expired_count_data['expired_count'];
 
-    if ($expired_count > 0) {
-        echo '<a id="expiredLink" class="dropdown-item d-flex align-items-center" href="expired_products.php">
-                <div class="mr-3">
-                    <div class="icon-circle bg-danger">
-                        <i class="fas fa-calendar-times text-white"></i>
-                    </div>
-                </div>
-                <div>
-                    <div id="notification-container"></div>
-                    <span class="font-weight-bold">Expired Products:</span> ' . $expired_count . ' product(s) are expired.
-                </div>
-            </a>';
-    }
-?>
+                            if ($expired_count > 0) {
+                                echo '<a id="expiredLink" class="dropdown-item d-flex align-items-center" href="expired_products.php">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-danger">
+                                                <i class="fas fa-calendar-times text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div id="notification-container"></div>
+                                            <span class="font-weight-bold">Expired Products:</span> ' . $expired_count . ' product(s) are expired.
+                                        </div>
+                                    </a>';
+                            }
+                        ?>
 
 
 
