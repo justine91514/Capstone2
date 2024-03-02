@@ -2,11 +2,10 @@
 session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
+
+
 ?>
-<?php
-    date_default_timezone_set('Asia/Manila');
-    echo date('g:i:a');
-?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -128,6 +127,7 @@ include('includes/navbar_pos.php');
 
                                 <input type="hidden" id="payment_mode" name="mode_of_payment">
 
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -147,15 +147,15 @@ include('includes/navbar_pos.php');
     }
 </script>
 
-    <script>
-        $(document).ready(function() {
+<script>
+$(document).ready(function() {
     var originalAmount = parseFloat($('#total').val());
     var scannedProducts = {};
 
     $('#discountSelect').change(function() {
         var totalAmount = parseFloat($('#total').val());
         var discountValue = parseFloat($(this).val());
-        
+
         if (!isNaN(discountValue)) {
             var discountedAmount = originalAmount - (originalAmount * (discountValue / 100));
             $('#total').val(discountedAmount.toFixed(2));
@@ -177,27 +177,28 @@ include('includes/navbar_pos.php');
                     if (responseData.length > 0) {
                         $('#descript').val(responseData[0].descript);
                         $('#price').val(responseData[0].price);
-                        
+
                         var productName = responseData[0].product_stock_name;
                         var measurement = responseData[0].measurement;
                         var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
                         $('#product_stock_name').val(productNameWithMeasurement);
-                        if (scannedProducts.hasOwnProperty(productName)) {
-                            scannedProducts[productName]++;
-                            $('#quantity').val(scannedProducts[productName]);
-                            $('#scannedItems td:contains("' + productName + '")').next().text(scannedProducts[productName]);
+
+                        if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
+                            scannedProducts[productNameWithMeasurement]++;
+                            $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+                            $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
                         } else {
-                            scannedProducts[productName] = 1;
-                            var html = "<tr>" + 
-                            "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-                                        "<td>" + scannedProducts[productName] + "</td>" + 
-                                        "<td>" + responseData[0].stocks_available + "</td>" + 
-                                        "<td>" + responseData[0].price + "</td>" + 
-                                    "</tr>";
+                            scannedProducts[productNameWithMeasurement] = 1;
+                            var html = "<tr>" +
+                                "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
+                                "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
+                                "<td>" + responseData[0].stocks_available + "</td>" +
+                                "<td>" + responseData[0].price + "</td>" +
+                                "</tr>";
 
                             $('#scannedItems').append(html);
 
-                            $('#quantity').val(scannedProducts[productName]);
+                            $('#quantity').val(scannedProducts[productNameWithMeasurement]);
                         }
 
                         var totalAmount = 0;
@@ -208,6 +209,16 @@ include('includes/navbar_pos.php');
                         });
                         $('#total').val(totalAmount.toFixed(2));
                         originalAmount = totalAmount;
+
+                        // Store scanned products in session
+                        $.ajax({
+                            url: "store_scanned_products.php",
+                            method: "POST",
+                            data: { scannedProducts: scannedProducts },
+                            success: function(response) {
+                                console.log(response); // Optional: Log the response for debugging
+                            }
+                        });
                     } else {
                         $('#descript').val('');
                         $('#price').val('');
@@ -222,12 +233,18 @@ include('includes/navbar_pos.php');
         e.preventDefault();
     }
 });
-
+  $('form').submit(function() {
+        $('#productName').val($('#product_stock_name').val());
+        $('#quantity').val($('#quantity').val());
+        $('#price').val($('#price').val());
+    });
 });
 
 </script>
+
              
 </body>
+
 </html>
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

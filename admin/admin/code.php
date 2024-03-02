@@ -922,6 +922,7 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 // ####################################################################
 
 
+
 date_default_timezone_set('Asia/Manila');
 
 // Get the current date and time in the Philippines timezone
@@ -937,9 +938,7 @@ if (isset($_POST['mode_of_payment']) || isset($_POST['charge_btn'])) {
     // Get the mode of payment
     $mode_of_payment = isset($_POST['mode_of_payment']) ? $_POST['mode_of_payment'] : '';
 
-    // Your other code for inserting transaction details into the database
-    // For example:
-    // Check if the charge button is clicked
+   
     if (isset($_POST['charge_btn'])) {
         // Get the list of items from the session or wherever you're storing it
         $list_of_items = ''; // Initialize an empty string
@@ -972,6 +971,8 @@ if (isset($_POST['mode_of_payment']) || isset($_POST['charge_btn'])) {
         }
     }
 }
+
+
 
 
 

@@ -25,7 +25,13 @@ if (isset($_POST['input'])) {
             $measurement = $row['measurement'];
             
             // Build HTML for appending to the table
-            $html = "<tr><td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td><td>{$quantity}</td><td>{$stocks_available}</td><td>{$price}</td></tr>";
+            $html = "<tr>
+                        <td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td>
+                        <td>{$quantity}</td>
+                        <td>{$stocks_available}</td>
+                        <td>{$price}</td>
+                    </tr>";
+        
             
             // Add data to response array
             $response[] = array(

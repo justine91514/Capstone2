@@ -10,6 +10,7 @@ session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
 date_default_timezone_set('Asia/Manila');
+
 ?>
 
 
