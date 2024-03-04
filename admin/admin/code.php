@@ -923,54 +923,69 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 
 
 
+
+
 date_default_timezone_set('Asia/Manila');
+
 
 // Get the current date and time in the Philippines timezone
 $current_time = new DateTime('now', new DateTimeZone('Asia/Manila'));
 
 // Format the current time
-$date = $current_time->format('Y-m-d'); // Current date
-$time = $current_time->format('h:i:s A'); // Current time in 12-hour format with AM/PM
-$am_pm = $current_time->format('A'); // AM or PM indicator
+$date = $current_time->format('Y-m-d'); 
+$time = $current_time->format('h:i:s A'); 
+$am_pm = $current_time->format('A');
 
-// Check if either the mode of payment or charge button is clicked
-if (isset($_POST['mode_of_payment']) || isset($_POST['charge_btn'])) {
+if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     // Get the mode of payment
-    $mode_of_payment = isset($_POST['mode_of_payment']) ? $_POST['mode_of_payment'] : '';
+    $mode_of_payment = $_POST['mode_of_payment'];
+    // Get the total amount
+    $total_amount = $_POST['total'];
 
-   
-    if (isset($_POST['charge_btn'])) {
-        // Get the list of items from the session or wherever you're storing it
-        $list_of_items = ''; // Initialize an empty string
-        if(isset($_SESSION['scannedProducts'])) {
-            foreach ($_SESSION['scannedProducts'] as $product => $quantity) {
-                // Append each product and quantity to the list_of_items string
-                $list_of_items .= $product . ' x' . $quantity . ', ';
-            }
-            $list_of_items = rtrim($list_of_items, ', '); // Remove trailing comma and space
-        }
+    // Insert the transaction details into the transaction_list table
+    $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, total_amount) 
+                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount')";
 
-        // Get the total amount
-        $total = isset($_POST['total']) ? $_POST['total'] : 0;
+    // Execute the query
+    $result = mysqli_query($connection, $insert_query);
 
-        // Insert the transaction details into the transaction_list table
-        $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, list_of_items, total) 
-                        VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$list_of_items', '$total')";
-        
-        // Execute the query
-        $result = mysqli_query($connection, $insert_query);
+    if ($result) {
+        $_SESSION['success'] = "Transaction recorded successfully";
+        // Clear the scanned products session
+        unset($_SESSION['scannedProducts']);
+        header('Location: pos.php');
+        exit();
+    } else {
+        $_SESSION['status'] = "Failed to record transaction";
+        header('Location: pos.php');
+        exit();
+    }
+}
 
-        if ($result) {
-            $_SESSION['success'] = "Transaction recorded successfully";
-            // Clear the scanned products session
-            unset($_SESSION['scannedProducts']);
+
+if (isset($_POST['charge_btn'])) {
+    // Handle charging logic here
+    $total = $_POST['total'];
+
+    if($total)
+    {
+        $query = "INSERT INTO transaction_list (total) VALUES ('$total')";
+        $query_run = mysqli_query($connection, $query);
+    
+        if($query_run)
+        {
+            $_SESSION['success'] = "Category Added";
             header('Location: pos.php');
-        } else {
-            $_SESSION['status'] = "Failed to record transaction";
+        }
+        else
+        {
+            $_SESSION['status'] = "Category NOT Added";
             header('Location: pos.php');
         }
     }
+   
 }
+
 
 
 

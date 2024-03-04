@@ -3,7 +3,6 @@ session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
 
-
 ?>
 
 
@@ -65,7 +64,7 @@ include('includes/navbar_pos.php');
             <div class="product-info">
                 <h2>PRODUCT INFO</h2>
 
-                <input type="hidden" class="form-control" id="product_stock_name" autocomplete="off">
+                <input type="text" class="form-control" id="product_stock_name" autocomplete="off">
                 
                 <label class="input-skulabel" for="barcode">Barcode:</label>
                 <input type="text" class="form-control" id="barcode" autocomplete="off">
@@ -79,8 +78,7 @@ include('includes/navbar_pos.php');
                 <label class="input-skulabel" for="quantity">Quantity:</label>
                 <input type="text" class="form-control" id="quantity" autocomplete="off">
 
-                <label class="input-skulabel" for="total">Total Amount:</label>
-                <input type="text" class="form-control" id="total" autocomplete="off" readonly>
+               
 
                 <div class="container-fluid">
 
@@ -122,6 +120,16 @@ include('includes/navbar_pos.php');
                                             ?>
                                         </select>
                                 </div>
+
+                                <label class="input-skulabel" for="total">Total Amount:</label>
+                                <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
+
+                                <label>Cash</label>
+<input type="text" class="form-control" id="cash">
+
+<label>Change</label>
+<input type="text" class="form-control" id="change" readonly>
+
                                 <button type="button" class="btn btn-primary" onclick="selectPaymentMode('Cash')">Cash</button>
                                 <button type="button" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
 
@@ -139,7 +147,6 @@ include('includes/navbar_pos.php');
                     </div>
                 </div>
         
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     function selectPaymentMode(mode) {
@@ -163,6 +170,19 @@ $(document).ready(function() {
             $('#total').val(originalAmount.toFixed(2));
         }
     });
+
+    $('#cash').on('input', function() {
+        var cash = parseFloat($(this).val());
+        var total = parseFloat($('#total').val());
+
+        if (!isNaN(cash)) {
+            var change = cash - total;
+            $('#change').val(change.toFixed(2));
+        } else {
+            $('#change').val('');
+        }
+    });
+
 
     $('#dbpharmacy').keypress(function(e) {
     if (e.which === 13) {

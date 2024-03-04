@@ -26,7 +26,7 @@ date_default_timezone_set('Asia/Manila');
             <div class="table-responsive">
                 <?php
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
-                $query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), ' ', DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, mode_of_payment, list_of_items, total FROM transaction_list";
+                $query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), ' ', DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, mode_of_payment, list_of_items, total_amount FROM transaction_list";
 
                 $query_run = mysqli_query($connection, $query);
                 ?>
@@ -54,7 +54,7 @@ date_default_timezone_set('Asia/Manila');
                         <td><?php echo $row['time_with_am_pm']; ?></td>
                         <td> <?php echo $row['mode_of_payment']; ?></td>
                         <td> <?php echo $row['list_of_items']; ?></td>   
-                        <td> <?php echo $row['total']; ?></td>       
+                        <td> <?php echo $row['total_amount']; ?></td>       
                         <td> 
                             <form action="print_product.php" method="post">
                                 <input type="hidden" name= print_id>
