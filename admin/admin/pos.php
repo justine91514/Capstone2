@@ -64,7 +64,7 @@ include('includes/navbar_pos.php');
             <div class="product-info">
                 <h2>PRODUCT INFO</h2>
 
-                <input type="text" class="form-control" id="product_stock_name" autocomplete="off">
+                <input type="hidden" class="form-control" id="product_stock_name" autocomplete="off">
                 
                 <label class="input-skulabel" for="barcode">Barcode:</label>
                 <input type="text" class="form-control" id="barcode" autocomplete="off">
@@ -79,7 +79,6 @@ include('includes/navbar_pos.php');
                 <input type="text" class="form-control" id="quantity" autocomplete="off">
 
                
-
                 <div class="container-fluid">
 
                 <h6 class="m-0 font-weight-bold text-primary">
@@ -125,13 +124,13 @@ include('includes/navbar_pos.php');
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
 
                                 <label>Cash</label>
-<input type="text" class="form-control" id="cash">
+                                <input type="text" class="form-control" id="cash">
 
-<label>Change</label>
-<input type="text" class="form-control" id="change" readonly>
+                                <label>Change</label>
+                                <input type="text" class="form-control" id="change" readonly>
 
-                                <button type="button" class="btn btn-primary" onclick="selectPaymentMode('Cash')">Cash</button>
-                                <button type="button" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
+                                <button type="button" id="cashBtn" class="btn btn-primary" onclick="selectPaymentMode('Cash')">Cash</button>
+<button type="button" id="gcashBtn" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
 
                                 <input type="hidden" id="payment_mode" name="mode_of_payment">
 
@@ -262,7 +261,19 @@ $(document).ready(function() {
 
 </script>
 
-             
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        // JavaScript code to validate payment mode before form submission
+        $('form').submit(function(event) {
+            // Check if a payment mode is selected
+            if (!$('#payment_mode').val()) {
+                // If no payment mode is selected, show a warning message
+                alert('Please select a payment mode (Cash or G-Cash).');
+                // Prevent form submission
+                event.preventDefault();
+            }
+        });
+    </script>        
 </body>
 
 </html>
