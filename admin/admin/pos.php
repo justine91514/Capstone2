@@ -119,6 +119,8 @@ include('includes/navbar_pos.php');
                                             ?>
                                         </select>
                                 </div>
+                                <input type="hidden" name="list_of_items" id="list_of_items">
+                                <input type="hidden" class="form-control" id="product_stock_name" name="list_of_items" autocomplete="off">
 
                                 <label class="input-skulabel" for="total">Total Amount:</label>
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
@@ -130,7 +132,7 @@ include('includes/navbar_pos.php');
                                 <input type="text" class="form-control" id="change" readonly>
 
                                 <button type="button" id="cashBtn" class="btn btn-primary" onclick="selectPaymentMode('Cash')">Cash</button>
-<button type="button" id="gcashBtn" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
+                                <button type="button" id="gcashBtn" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
 
                                 <input type="hidden" id="payment_mode" name="mode_of_payment">
 
@@ -188,65 +190,80 @@ $(document).ready(function() {
         var input = $(this).val();
         if (input != "") {
             $.ajax({
-                url: "livesearch.php",
+    url: "livesearch.php",
+    method: "POST",
+    data: { input: input },
+    success: function(data) {
+        var responseData = JSON.parse(data);
+        if (responseData.length > 0) {
+            $('#descript').val(responseData[0].descript);
+            $('#price').val(responseData[0].price);
+
+            var productName = responseData[0].product_stock_name;
+            var measurement = responseData[0].measurement;
+            var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
+            $('#product_stock_name').val(productNameWithMeasurement);
+
+            if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
+                scannedProducts[productNameWithMeasurement]++;
+                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+                $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
+            } else {
+                scannedProducts[productNameWithMeasurement] = 1;
+                var html = "<tr>" +
+                    "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
+                    "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
+                    "<td>" + responseData[0].stocks_available + "</td>" +
+                    "<td>" + responseData[0].price + "</td>" +
+                    "</tr>";
+
+                $('#scannedItems').append(html);
+
+                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+            }
+
+            var totalAmount = 0;
+            $('#scannedItems tr').each(function() {
+                var quantity = parseFloat($(this).find('td:eq(1)').text());
+                var price = parseFloat($(this).find('td:eq(3)').text());
+                totalAmount += quantity * price;
+            });
+            $('#total').val(totalAmount.toFixed(2));
+            originalAmount = totalAmount;
+
+            // Store scanned products in session
+            $.ajax({
+                url: "store_scanned_products.php",
                 method: "POST",
-                data: { input: input },
-                success: function(data) {
-                    var responseData = JSON.parse(data);
-                    if (responseData.length > 0) {
-                        $('#descript').val(responseData[0].descript);
-                        $('#price').val(responseData[0].price);
-
-                        var productName = responseData[0].product_stock_name;
-                        var measurement = responseData[0].measurement;
-                        var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
-                        $('#product_stock_name').val(productNameWithMeasurement);
-
-                        if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
-                            scannedProducts[productNameWithMeasurement]++;
-                            $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-                            $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
-                        } else {
-                            scannedProducts[productNameWithMeasurement] = 1;
-                            var html = "<tr>" +
-                                "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-                                "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
-                                "<td>" + responseData[0].stocks_available + "</td>" +
-                                "<td>" + responseData[0].price + "</td>" +
-                                "</tr>";
-
-                            $('#scannedItems').append(html);
-
-                            $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-                        }
-
-                        var totalAmount = 0;
-                        $('#scannedItems tr').each(function() {
-                            var quantity = parseFloat($(this).find('td:eq(1)').text());
-                            var price = parseFloat($(this).find('td:eq(3)').text());
-                            totalAmount += quantity * price;
-                        });
-                        $('#total').val(totalAmount.toFixed(2));
-                        originalAmount = totalAmount;
-
-                        // Store scanned products in session
-                        $.ajax({
-                            url: "store_scanned_products.php",
-                            method: "POST",
-                            data: { scannedProducts: scannedProducts },
-                            success: function(response) {
-                                console.log(response); // Optional: Log the response for debugging
-                            }
-                        });
-                    } else {
-                        $('#descript').val('');
-                        $('#price').val('');
-                        $('#quantity').val('');
-                        $('#total').val('');
-                    }
-                    $('#barcode').val(input);
+                data: { scannedProducts: scannedProducts },
+                success: function(response) {
+                    console.log(response); // Optional: Log the response for debugging
                 }
             });
+
+            // Pagkatapos ng pag-append ng HTML sa table, i-store ang productList sa isang input field na hidden
+            var productList = []; // Magdagdag ng array para sa mga produkto
+            $('#scannedItems tr').each(function() {
+                var productName = $(this).find('td:eq(0)').text();
+                productList.push(productName);
+            });
+
+            // I-store ang productList sa isang input field na hidden
+            $('<input>').attr({
+                type: 'hidden',
+                id: 'productList',
+                name: 'productList',
+                value: JSON.stringify(productList) // I-convert sa JSON format
+            }).appendTo('form');
+        } else {
+            $('#descript').val('');
+            $('#price').val('');
+            $('#quantity').val('');
+            $('#total').val('');
+        }
+        $('#barcode').val(input);
+    }
+});
         }
         $(this).val('');
         e.preventDefault();

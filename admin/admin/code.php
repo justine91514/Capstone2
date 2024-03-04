@@ -927,7 +927,6 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 
 date_default_timezone_set('Asia/Manila');
 
-
 // Get the current date and time in the Philippines timezone
 $current_time = new DateTime('now', new DateTimeZone('Asia/Manila'));
 
@@ -942,9 +941,12 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     // Get the total amount
     $total_amount = $_POST['total'];
 
+    // Retrieve the list of items from the hidden input field
+    $list_of_items = $_POST['list_of_items'];
+
     // Insert the transaction details into the transaction_list table
-    $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, total_amount) 
-                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount')";
+    $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, total_amount, list_of_items) 
+                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$list_of_items')";
 
     // Execute the query
     $result = mysqli_query($connection, $insert_query);
@@ -962,14 +964,17 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     }
 }
 
-
 if (isset($_POST['charge_btn'])) {
     // Handle charging logic here
     $total = $_POST['total'];
 
+    // Retrieve the list of items from the hidden input field
+    $list_of_items = $_POST['list_of_items'];
+
     if($total)
     {
-        $query = "INSERT INTO transaction_list (total) VALUES ('$total')";
+        // Insert the transaction details into the transaction_list table
+        $query = "INSERT INTO transaction_list (total, list_of_items) VALUES ('$total', '$list_of_items')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
@@ -983,7 +988,6 @@ if (isset($_POST['charge_btn'])) {
             header('Location: pos.php');
         }
     }
-   
 }
 
 
