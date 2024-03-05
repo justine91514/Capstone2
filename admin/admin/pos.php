@@ -49,6 +49,7 @@ include('includes/navbar_pos.php');
                 <thead>
                     <tr>                                           
                         <th> Product Name </th>
+                        <th id="productCodeHeader"> Product Code </th> 
                         <th> Quantity </th>
                         <th> Stocks Available </th>
                         <th> Price </th>
@@ -221,31 +222,36 @@ $(document).ready(function() {
     success: function(data) {
         var responseData = JSON.parse(data);
         if (responseData.length > 0) {
-            $('#descript').val(responseData[0].descript);
-            $('#price').val(responseData[0].price);
+    $('#descript').val(responseData[0].descript);
+    $('#price').val(responseData[0].price);
+    $('#prod_code').val(responseData[0].prod_code); // Idinagdag ang pag-set ng prod_code
+    
+    var productName = responseData[0].product_stock_name;
+    var measurement = responseData[0].measurement;
+    var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
+    $('#product_stock_name').val(productNameWithMeasurement);
+    
+    if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
+        scannedProducts[productNameWithMeasurement]++;
+        $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+        $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
+    } else {
+        scannedProducts[productNameWithMeasurement] = 1;
+        var html = "<tr>" +
+            "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
+            "<td>" + responseData[0].prod_code + "</td>" + // Display prod_code
+            "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
+            "<td>" + responseData[0].stocks_available + "</td>" +
+            "<td>" + responseData[0].price + "</td>" +
+            "</tr>";
 
-            var productName = responseData[0].product_stock_name;
-            var measurement = responseData[0].measurement;
-            var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
-            $('#product_stock_name').val(productNameWithMeasurement);
+        $('#scannedItems').append(html);
 
-            if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
-                scannedProducts[productNameWithMeasurement]++;
-                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-                $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
-            } else {
-                scannedProducts[productNameWithMeasurement] = 1;
-                var html = "<tr>" +
-                    "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-                    "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
-                    "<td>" + responseData[0].stocks_available + "</td>" +
-                    "<td>" + responseData[0].price + "</td>" +
-                    "</tr>";
+        $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+    }
+    
+    // ... rest of the code
 
-                $('#scannedItems').append(html);
-
-                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-            }
 
 
             //this code is for the total

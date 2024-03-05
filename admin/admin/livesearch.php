@@ -4,10 +4,11 @@ if (isset($_POST['input'])) {
 
     $input = $_POST['input'];
 
-    $query = "SELECT add_stock_list.*, product_list.measurement 
-              FROM add_stock_list
-              JOIN product_list ON add_stock_list.product_stock_name = product_list.prod_name
-              WHERE add_stock_list.sku LIKE '{$input}%'";
+    $query = "SELECT add_stock_list.*, product_list.measurement, product_list.prod_code 
+          FROM add_stock_list
+          JOIN product_list ON add_stock_list.product_stock_name = product_list.prod_name
+          WHERE add_stock_list.sku LIKE '{$input}%'";
+
 
     $result = mysqli_query($connection, $query);
 
@@ -22,11 +23,13 @@ if (isset($_POST['input'])) {
             $stocks_available = $row['stocks_available']; // Corrected
             $expiry_date = $row['expiry_date'];
             $price = $row['price'];
+            $prod_code = $row['prod_code'];
             $measurement = $row['measurement'];
             
             // Build HTML for appending to the table
             $html = "<tr>
                         <td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td>
+                        <td>{$prod_code}</td>
                         <td>{$quantity}</td>
                         <td>{$stocks_available}</td>
                         <td>{$price}</td>
@@ -37,6 +40,7 @@ if (isset($_POST['input'])) {
             $response[] = array(
                 'descript' => $descript,
                 'price' => $price,
+                'prod_code' => $prod_code,
                 'stocks_available' => $stocks_available,
                 'product_stock_name' => $product_stock_name,
                 'measurement' => $measurement,
@@ -48,6 +52,7 @@ if (isset($_POST['input'])) {
         $response[] = array(
             'descript' => '',
             'price' => '',
+            'prod_code' => '',
             'stocks_available' => '', // Include an empty value for stocks_available
             'product_stock_name' => '',
             'measurement' => '',
