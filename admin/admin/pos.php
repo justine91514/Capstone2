@@ -131,10 +131,22 @@ include('includes/navbar_pos.php');
                                 <label>Change</label>
                                 <input type="text" class="form-control" id="change" readonly>
 
-                                <button type="button" id="cashBtn" class="btn btn-primary" onclick="selectPaymentMode('Cash')">Cash</button>
-                                <button type="button" id="gcashBtn" class="btn btn-primary" onclick="selectPaymentMode('G-Cash')">G-Cash</button>
-
+                               
                                 <input type="hidden" id="payment_mode" name="mode_of_payment">
+
+                                <label>Reference#</label>
+                                <input type="text" name="ref_no" class="form-control" id="referenceInput" readonly>
+                                <div>
+                                    <label>Select Payment Mode:</label>
+                                    <div>
+                                        <input type="radio" id="cashRadio" name="mode_of_payment" value="Cash" checked>
+                                        <label for="cashRadio">Cash</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="gcashRadio" name="mode_of_payment" value="G-Cash">
+                                        <label for="gcashRadio">G-Cash</label>
+                                    </div>
+                                </div>
 
 
                             </div>
@@ -147,7 +159,20 @@ include('includes/navbar_pos.php');
                         </div>
                     </div>
                 </div>
-        
+        <script>
+        // Event listener for radio button change
+document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        var referenceInput = document.getElementById('referenceInput');
+        if (this.value === 'G-Cash') {
+            referenceInput.removeAttribute('readonly');
+        } else {
+            referenceInput.setAttribute('readonly', true);
+        }
+    });
+});
+
+        </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     function selectPaymentMode(mode) {
@@ -294,18 +319,7 @@ $(document).ready(function() {
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-        // JavaScript code to validate payment mode before form submission
-        $('form').submit(function(event) {
-            // Check if a payment mode is selected
-            if (!$('#payment_mode').val()) {
-                // If no payment mode is selected, show a warning message
-                alert('Please select a payment mode (Cash or G-Cash).');
-                // Prevent form submission
-                event.preventDefault();
-            }
-        });
-    </script>        
+    
 </body>
 
 </html>

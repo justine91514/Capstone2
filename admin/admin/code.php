@@ -925,6 +925,8 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 
 
 
+
+
 date_default_timezone_set('Asia/Manila');
 
 // Get the current date and time in the Philippines timezone
@@ -934,6 +936,12 @@ $current_time = new DateTime('now', new DateTimeZone('Asia/Manila'));
 $date = $current_time->format('Y-m-d'); 
 $time = $current_time->format('h:i:s A'); 
 $am_pm = $current_time->format('A');
+$ref_no = $_POST['ref_no'];
+
+// Function to generate transaction number
+function generateTransactionNo($date, $count) {
+    return $date . str_pad($count, 3, '0', STR_PAD_LEFT); // Format: YYMMDDXXX
+}
 
 if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     // Get the mode of payment
@@ -956,9 +964,18 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     // Ito ay upang alisin ang huling ", " sa dulo ng list
     $listOfItems = rtrim($listOfItems, ", ");
 
+    // Get the count of existing transactions
+    $transaction_count_query = "SELECT COUNT(*) AS transaction_count FROM transaction_list WHERE date = '$date'";
+    $transaction_count_result = mysqli_query($connection, $transaction_count_query);
+    $row = mysqli_fetch_assoc($transaction_count_result);
+    $count = $row['transaction_count'] + 1;
+
+    // Generate transaction number
+    $transaction_no = generateTransactionNo(date('ymd'), $count);
+
     // Insert the transaction details into the transaction_list table
-    $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, total_amount, list_of_items) 
-                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$listOfItems')";
+    $insert_query = "INSERT INTO transaction_list (transaction_no, date, time, am_pm, mode_of_payment, total_amount, list_of_items, ref_no) 
+                     VALUES ('$transaction_no', '$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$listOfItems', '$ref_no')";
 
     // Execute the query
     $result = mysqli_query($connection, $insert_query);
@@ -997,8 +1014,17 @@ if (isset($_POST['charge_btn'])) {
         // Ito ay upang alisin ang huling ", " sa dulo ng list
         $listOfItems = rtrim($listOfItems, ", ");
 
+        // Get the count of existing transactions
+        $transaction_count_query = "SELECT COUNT(*) AS transaction_count FROM transaction_list WHERE date = '$date'";
+        $transaction_count_result = mysqli_query($connection, $transaction_count_query);
+        $row = mysqli_fetch_assoc($transaction_count_result);
+        $count = $row['transaction_count'] + 1;
+
+        // Generate transaction number
+        $transaction_no = generateTransactionNo(date('ymd'), $count);
+
         // Insert the transaction details into the transaction_list table
-        $query = "INSERT INTO transaction_list (total, list_of_items) VALUES ('$total', '$listOfItems')";
+        $query = "INSERT INTO transaction_list (transaction_no, total, list_of_items) VALUES ('$transaction_no', '$total', '$listOfItems')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
@@ -1013,8 +1039,6 @@ if (isset($_POST['charge_btn'])) {
         }
     }
 }
-
-
 
 
 
