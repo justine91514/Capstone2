@@ -10,7 +10,6 @@ session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
 date_default_timezone_set('Asia/Manila');
-
 ?>
 
 
@@ -74,6 +73,8 @@ date_default_timezone_set('Asia/Manila');
             </div>
         </div>
     </div>
+
+
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 aria-hidden="true">

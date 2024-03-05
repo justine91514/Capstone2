@@ -944,9 +944,21 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     // Retrieve the list of items from the hidden input field
     $list_of_items = $_POST['list_of_items'];
 
+    // Pagtanggap ng mga impormasyon mula sa AJAX request
+    $scannedProducts = $_POST['scannedProducts'];
+    $productList = json_decode($_POST['productList']); // I-decode muna ang JSON string
+
+    // Loop through the productList and concatenate it
+    $listOfItems = "";
+    foreach ($productList as $productName) {
+        $listOfItems .= $productName . ", "; // Dapat ito ay nakaayos depende sa iyong requirements
+    }
+    // Ito ay upang alisin ang huling ", " sa dulo ng list
+    $listOfItems = rtrim($listOfItems, ", ");
+
     // Insert the transaction details into the transaction_list table
     $insert_query = "INSERT INTO transaction_list (date, time, am_pm, mode_of_payment, total_amount, list_of_items) 
-                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$list_of_items')";
+                     VALUES ('$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$listOfItems')";
 
     // Execute the query
     $result = mysqli_query($connection, $insert_query);
@@ -973,8 +985,20 @@ if (isset($_POST['charge_btn'])) {
 
     if($total)
     {
+        // Pagtanggap ng mga impormasyon mula sa AJAX request
+        $scannedProducts = $_POST['scannedProducts'];
+        $productList = json_decode($_POST['productList']); // I-decode muna ang JSON string
+
+        // Loop through the productList and concatenate it
+        $listOfItems = "";
+        foreach ($productList as $productName) {
+            $listOfItems .= $productName . ", "; // Dapat ito ay nakaayos depende sa iyong requirements
+        }
+        // Ito ay upang alisin ang huling ", " sa dulo ng list
+        $listOfItems = rtrim($listOfItems, ", ");
+
         // Insert the transaction details into the transaction_list table
-        $query = "INSERT INTO transaction_list (total, list_of_items) VALUES ('$total', '$list_of_items')";
+        $query = "INSERT INTO transaction_list (total, list_of_items) VALUES ('$total', '$listOfItems')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
@@ -989,6 +1013,7 @@ if (isset($_POST['charge_btn'])) {
         }
     }
 }
+
 
 
 

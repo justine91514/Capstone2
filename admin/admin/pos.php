@@ -222,6 +222,8 @@ $(document).ready(function() {
                 $('#quantity').val(scannedProducts[productNameWithMeasurement]);
             }
 
+
+            //this code is for the total
             var totalAmount = 0;
             $('#scannedItems tr').each(function() {
                 var quantity = parseFloat($(this).find('td:eq(1)').text());
@@ -255,6 +257,19 @@ $(document).ready(function() {
                 name: 'productList',
                 value: JSON.stringify(productList) // I-convert sa JSON format
             }).appendTo('form');
+
+
+            $.ajax({
+                            url: "code.php",
+                            method: "POST",
+                            data: {
+                                scannedProducts: scannedProducts,
+                                productList: JSON.stringify(productList) // Ito ang product list na ipapasa
+                            },
+                            success: function(response) {
+                                console.log(response); // Optional: Log the response for debugging
+                            }
+                        });
         } else {
             $('#descript').val('');
             $('#price').val('');
