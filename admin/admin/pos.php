@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('includes/header_pos.php');
-include('includes/navbar_pos.php');
+include 'includes/header_pos.php';
+include 'includes/navbar_pos.php';
 
 ?>
 
@@ -47,9 +47,9 @@ include('includes/navbar_pos.php');
 
             <table class="table table-bordered table-striped mt-4">
                 <thead>
-                    <tr>                                           
+                    <tr>
                         <th> Product Name </th>
-                        <th id="productCodeHeader"> Product Code </th> 
+                        <th> Product Code </th>
                         <th> Quantity </th>
                         <th> Stocks Available </th>
                         <th> Price </th>
@@ -66,20 +66,20 @@ include('includes/navbar_pos.php');
                 <h2>PRODUCT INFO</h2>
 
                 <input type="hidden" class="form-control" id="product_stock_name" autocomplete="off">
-                
+
                 <label class="input-skulabel" for="barcode">Barcode:</label>
                 <input type="text" class="form-control" id="barcode" autocomplete="off">
-                
+
                 <label class="input-skulabel" for="descript">Description:</label>
                 <input type="text" class="form-control" id="descript" autocomplete="off">
-                
+
                 <label class="input-skulabel" for="price">Price:</label>
                 <input type="text" class="form-control" id="price" autocomplete="off">
-                
+
                 <label class="input-skulabel" for="quantity">Quantity:</label>
                 <input type="text" class="form-control" id="quantity" autocomplete="off">
 
-               
+
                 <div class="container-fluid">
 
                 <h6 class="m-0 font-weight-bold text-primary">
@@ -87,7 +87,7 @@ include('includes/navbar_pos.php');
                       Proceed To Payment
                     </button>
                 </h6>
-        
+
            <!-- Modal -->
                 <div class="modal fade" id="payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -103,25 +103,25 @@ include('includes/navbar_pos.php');
                                     <div class="form-group">
                                     <label>Discounts</label>
                                         <select id="discountSelect" name="discount" class="form-control">
-                                            
+
                                             <option value="">No Discount</option> <!-- Empty option -->
                                             <?php
-                                            // Include the database connection file
-                                            include('dbconfig.php');
-                                            
-                                            // Fetch discount options from the database
-                                            $query = "SELECT * FROM discount_list";
-                                            $result = mysqli_query($connection, $query);
-                                            
-                                            // Loop through the results and display each discount option
-                                            while ($row = mysqli_fetch_assoc($result)) {
-                                                echo "<option value='{$row['value']}'>{$row['discount_name']} - {$row['value']}%</option>";
-                                            }
-                                            ?>
+// Include the database connection file
+include 'dbconfig.php';
+
+// Fetch discount options from the database
+$query = "SELECT * FROM discount_list";
+$result = mysqli_query($connection, $query);
+
+// Loop through the results and display each discount option
+while ($row = mysqli_fetch_assoc($result)) {
+    echo "<option value='{$row['value']}'>{$row['discount_name']} - {$row['value']}%</option>";
+}
+?>
                                         </select>
                                 </div>
-                                <input type="hidden" name="list_of_items" id="list_of_items">
-                                <input type="hidden" class="form-control" id="product_stock_name" name="list_of_items" autocomplete="off">
+                                <input type="text" name="list_of_items" id="list_of_items">
+                                <input type="text" class="form-control" id="product_stock_name" name="list_of_items" autocomplete="off">
 
                                 <label class="input-skulabel" for="total">Total Amount:</label>
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
@@ -132,7 +132,7 @@ include('includes/navbar_pos.php');
                                 <label>Change</label>
                                 <input type="text" class="form-control" id="change" readonly>
 
-                               
+
                                 <input type="hidden" id="payment_mode" name="mode_of_payment">
 
                                 <label>Reference#</label>
@@ -222,36 +222,34 @@ $(document).ready(function() {
     success: function(data) {
         var responseData = JSON.parse(data);
         if (responseData.length > 0) {
-    $('#descript').val(responseData[0].descript);
-    $('#price').val(responseData[0].price);
-    $('#prod_code').val(responseData[0].prod_code); // Idinagdag ang pag-set ng prod_code
-    
-    var productName = responseData[0].product_stock_name;
-    var measurement = responseData[0].measurement;
-    var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
-    $('#product_stock_name').val(productNameWithMeasurement);
-    
-    if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
-        scannedProducts[productNameWithMeasurement]++;
-        $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-        $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
-    } else {
-        scannedProducts[productNameWithMeasurement] = 1;
-        var html = "<tr>" +
-            "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-            "<td>" + responseData[0].prod_code + "</td>" + // Display prod_code
-            "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
-            "<td>" + responseData[0].stocks_available + "</td>" +
-            "<td>" + responseData[0].price + "</td>" +
-            "</tr>";
+            $('#descript').val(responseData[0].descript);
+            $('#price').val(responseData[0].price);
+            $('#product_stock_name').val(productNameWithMeasurement);
 
-        $('#scannedItems').append(html);
+            var productName = responseData[0].product_stock_name;
+            var measurement = responseData[0].measurement;
+            var productCode = responseData[0].prod_code;
+            var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
 
-        $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-    }
-    
-    // ... rest of the code
 
+            if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
+                scannedProducts[productNameWithMeasurement]++;
+                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+                $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
+            } else {
+                scannedProducts[productNameWithMeasurement] = 1;
+                var html = "<tr>" +
+                    "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
+                    "<td>" + productCode + "</td>" + // Append Product Code
+                    "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
+                    "<td>" + responseData[0].stocks_available + "</td>" +
+                    "<td>" + responseData[0].price + "</td>" +
+                    "</tr>";
+
+                $('#scannedItems').append(html);
+
+                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+            }
 
 
             //this code is for the total
@@ -325,7 +323,7 @@ $(document).ready(function() {
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    
+
 </body>
 
 </html>
@@ -349,8 +347,6 @@ aria-hidden="true">
 </div>
 </div>
 <?php
-include('includes/scripts.php');
-include('includes/footer.php');
+include 'includes/scripts.php';
+include 'includes/footer.php';
 ?>
-
-

@@ -40,9 +40,9 @@ if (isset($_POST['input'])) {
             $response[] = array(
                 'descript' => $descript,
                 'price' => $price,
-                'prod_code' => $prod_code,
                 'stocks_available' => $stocks_available,
                 'product_stock_name' => $product_stock_name,
+                'prod_code' => $prod_code,
                 'measurement' => $measurement,
                 'html' => $html
             );

@@ -40,10 +40,7 @@
                                     ?>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label> Product Code </label>
-                                <input type="text" name="prod_code" value="<?php echo $row['prod_code'] ?>" class="form-control" placeholder="Enter Prod Code" required />
-                            </div>
+                            
                             <div class="form-group">
                                 <label> Type Name</label>
                                 <select name="type" class="form-control" required>

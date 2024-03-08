@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="need.css">
 </head>
 </html>
 <?php 
@@ -37,16 +39,13 @@ if(isset($_GET['updated_stocks_available'])) {
             <form action="code.php" method="POST">
     <div class="modal-body">
         <div class="form-group">
-            <label>Product Name</label>
-            <input type="text" name="prod_name" class="form-control" placeholder="Input Product Name" required />
+        <label class="modal-label" style="color: #259E9E;">Product Name</label>
+        <input type="text" name="prod_name" class="form-control" placeholder="Input Product Name" required style="border-radius: 5px; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         </div>
+        
         <div class="form-group">
-            <label>Product Code</label>
-            <input type="text" name="prod_code" class="form-control" placeholder="Input Product Code" required />
-        </div>
-        <div class="form-group">
-        <label>Category</label>
-        <select name="categories" class="form-control" required>
+        <label class="modal-label" style="color: #259E9E;">Category</label>
+        <select name="categories" class="form-control" required style="border-radius: 5px; border: 1px solid #ccc; padding: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             <option value="" disabled selected>Select Category</option>
             <?php
             $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
@@ -59,8 +58,8 @@ if(isset($_GET['updated_stocks_available'])) {
         </select>
     </div>
     <div class="form-group">
-        <label>Product Type</label>
-        <select name="type" class="form-control" required>
+    <label class="modal-label" style="color: #259E9E;">Product Type</label>
+    <select name="type" class="form-control" required style="border-radius: 5px; border: 1px solid #ccc; padding: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             <option value="" disabled selected>Select Product Type</option>
             <?php
             $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
@@ -73,8 +72,8 @@ if(isset($_GET['updated_stocks_available'])) {
         </select>
     </div>
     <div class="form-group">
-        <label>Product Unit</label>
-        <select name="unit" class="form-control" required>
+        <label class="modal-label" style="color: #259E9E;">Product Unit</label>
+        <select name="unit" class="form-control" required style="border-radius: 5px; border: 1px solid #ccc; padding: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             <option value="" disabled selected>Select Product Unit</option>
             <?php
             $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
@@ -87,12 +86,12 @@ if(isset($_GET['updated_stocks_available'])) {
         </select>
     </div>
         <div class="form-group">
-            <label>Measurement</label>
-            <input type="text" name="measurement" class="form-control" placeholder="Enter Measurement" required />
+        <label class="modal-label" style="color: #259E9E;">Measurement</label>
+        <input type="text" name="measurement" class="form-control" placeholder="Enter Measurement" required style="border-radius: 5px; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         </div>
         
-        <<div class="form-group">
-    <label>Prescription</label>
+        <div class="form-group">
+        <label class="modal-label" style="color: #259E9E;">Prescription</label>
     <div class="form-check">
         <input type="checkbox" name="prescription" class="form-check-input" id="prescriptionCheckbox" value="1" />
         <label class="form-check-label" for="prescriptionCheckbox">Prescription required</label>
@@ -163,7 +162,7 @@ if(isset($_GET['updated_stocks_available'])) {
                     <thead>
                         <th> ID </th>
                         <th> Product Name </th>
-                        <th> Product Code </th>
+                        <!-- <th> Product Code </th>-->
                         <th> Category </th>
                         <th> Type </th>
                         <th> Unit </th>
@@ -184,7 +183,7 @@ if(isset($_GET['updated_stocks_available'])) {
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['prod_name']; ?></td>
-                            <td> <?php echo $row['prod_code']; ?></td>
+                            
                             <td> <?php echo $row['categories']; ?></td>
                             <td> <?php echo $row['type']; ?></td>
                             <td> <?php echo $row['unit']; ?></td>
