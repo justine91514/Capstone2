@@ -49,7 +49,6 @@ include 'includes/navbar_pos.php';
                 <thead>
                     <tr>
                         <th> Product Name </th>
-                        <th> Product Code </th>
                         <th> Quantity </th>
                         <th> Stocks Available </th>
                         <th> Price </th>
@@ -120,9 +119,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 ?>
                                         </select>
                                 </div>
-                                <input type="text" name="list_of_items" id="list_of_items">
-                                <input type="text" class="form-control" id="product_stock_name" name="list_of_items" autocomplete="off">
-
+                                
                                 <label class="input-skulabel" for="total">Total Amount:</label>
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
 
@@ -228,7 +225,7 @@ $(document).ready(function() {
 
             var productName = responseData[0].product_stock_name;
             var measurement = responseData[0].measurement;
-            var productCode = responseData[0].prod_code;
+           
             var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
 
 
@@ -240,7 +237,7 @@ $(document).ready(function() {
                 scannedProducts[productNameWithMeasurement] = 1;
                 var html = "<tr>" +
                     "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-                    "<td>" + productCode + "</td>" + // Append Product Code
+                   
                     "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
                     "<td>" + responseData[0].stocks_available + "</td>" +
                     "<td>" + responseData[0].price + "</td>" +

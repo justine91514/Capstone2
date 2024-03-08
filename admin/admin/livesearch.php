@@ -23,13 +23,13 @@ if (isset($_POST['input'])) {
             $stocks_available = $row['stocks_available']; // Corrected
             $expiry_date = $row['expiry_date'];
             $price = $row['price'];
-            $prod_code = $row['prod_code'];
+           
             $measurement = $row['measurement'];
             
             // Build HTML for appending to the table
             $html = "<tr>
                         <td>{$product_stock_name} - <span style='font-size: 80%;'>{$measurement}</span></td>
-                        <td>{$prod_code}</td>
+                        
                         <td>{$quantity}</td>
                         <td>{$stocks_available}</td>
                         <td>{$price}</td>
@@ -42,7 +42,7 @@ if (isset($_POST['input'])) {
                 'price' => $price,
                 'stocks_available' => $stocks_available,
                 'product_stock_name' => $product_stock_name,
-                'prod_code' => $prod_code,
+                
                 'measurement' => $measurement,
                 'html' => $html
             );
@@ -52,7 +52,7 @@ if (isset($_POST['input'])) {
         $response[] = array(
             'descript' => '',
             'price' => '',
-            'prod_code' => '',
+            
             'stocks_available' => '', // Include an empty value for stocks_available
             'product_stock_name' => '',
             'measurement' => '',

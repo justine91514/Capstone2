@@ -1,5 +1,4 @@
 <?php
-
 function generateTransactionNo($date, $count) {
     // Separate the year, month, and day from the date
     $year = substr($date, 0, 2);
@@ -28,7 +27,6 @@ include('includes/navbar_pos.php');
 date_default_timezone_set('Asia/Manila');
 ?>
 
-
 </html>
 <div class="container-fluid">
     <div class="card shadow nb-4">
@@ -42,7 +40,6 @@ date_default_timezone_set('Asia/Manila');
                 <?php
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
                 $query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), ' ', DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, mode_of_payment, ref_no, list_of_items, total_amount FROM transaction_list";
-
                 $query_run = mysqli_query($connection, $query);
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
