@@ -31,13 +31,13 @@ include('includes/navbar2.php');
     <div class="card shadow nb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">
-            <div class="form-group">
-    <label> Branch </label>
-    <select id="reportType" name="branch" class="form-control" onchange="changeTableFormat()" required>
-        <option value="" disabled selected>Select Weekly or Daily</option>
-        <option value="Weekly">Weekly</option>
-        <option value="Daily">Daily</option>
-    </select>
+           
+        <label for="start_date">From:</label>
+        <input type="date" id="start_date" name="start_date">
+        <label for="end_date">:</label>
+        <input type="date" id="end_date" name="end_date">
+        <input type="button" value="Compute">
+    </form>
 </div>
         </div>
         <div class="card-body">
