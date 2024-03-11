@@ -97,7 +97,7 @@ include 'includes/navbar_pos.php';
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form action="code.php" method="POST">
+                            <form action="code.php" method="POST"
                                 <div class="modal-body">
                                     <div class="form-group">
                                     <label>Discounts</label>
@@ -105,21 +105,24 @@ include 'includes/navbar_pos.php';
 
                                             <option value="">No Discount</option> <!-- Empty option -->
                                             <?php
-// Include the database connection file
-include 'dbconfig.php';
+                                                // Include the database connection file
+                                                include 'dbconfig.php';
 
-// Fetch discount options from the database
-$query = "SELECT * FROM discount_list";
-$result = mysqli_query($connection, $query);
+                                                // Fetch discount options from the database
+                                                $query = "SELECT * FROM discount_list";
+                                                $result = mysqli_query($connection, $query);
 
-// Loop through the results and display each discount option
-while ($row = mysqli_fetch_assoc($result)) {
-    echo "<option value='{$row['value']}'>{$row['discount_name']} - {$row['value']}%</option>";
-}
-?>
+                                                // Loop through the results and display each discount option
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    echo "<option value='{$row['value']}'>{$row['discount_name']} - {$row['value']}%</option>";
+                                                }
+                                            ?>
                                         </select>
                                 </div>
                                 
+                                <label class="input-skulabel" for="ttl_price">Total Price:</label>
+                                <input type="text" class="form-control" name="ttl_price" id="ttl_price" autocomplete="off" readonly>
+
                                 <label class="input-skulabel" for="total">Total Amount:</label>
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
 
@@ -132,8 +135,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
                                 <input type="hidden" id="payment_mode" name="mode_of_payment">
 
-                                <label>Reference#</label>
-                                <input type="text" name="ref_no" class="form-control" id="referenceInput" readonly>
+                                
                                 <div>
                                     <label>Select Payment Mode:</label>
                                     <div>
@@ -145,6 +147,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                                         <label for="gcashRadio">G-Cash</label>
                                     </div>
                                 </div>
+
+                                <label>Reference#</label>
+                                <input type="text" name="ref_no" class="form-control" id="referenceInput" readonly>
 
 
                             </div>
@@ -181,10 +186,11 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
 <script>
 $(document).ready(function() {
     var originalAmount = parseFloat($('#total').val());
+    var originalPrice = originalAmount; // Store original price
+
     var scannedProducts = {};
 
     $('#discountSelect').change(function() {
-        var totalAmount = parseFloat($('#total').val());
         var discountValue = parseFloat($(this).val());
 
         if (!isNaN(discountValue)) {
@@ -201,7 +207,11 @@ $(document).ready(function() {
 
         if (!isNaN(cash)) {
             var change = cash - total;
-            $('#change').val(change.toFixed(2));
+            if (change >= 0) {
+                $('#change').val(change.toFixed(2));
+            } else {
+                $('#change').val('not enough money, add more');
+            }
         } else {
             $('#change').val('');
         }
@@ -249,14 +259,21 @@ $(document).ready(function() {
             }
 
 
-            //this code is for the total
+            // Update Total Price
             var totalAmount = 0;
             $('#scannedItems tr').each(function() {
                 var quantity = parseFloat($(this).find('td:eq(1)').text());
                 var price = parseFloat($(this).find('td:eq(3)').text());
                 totalAmount += quantity * price;
             });
-            $('#total').val(totalAmount.toFixed(2));
+            $('#ttl_price').val(totalAmount.toFixed(2));
+
+            // Update Total Amount only if no discount applied
+            var discountValue = parseFloat($('#discountSelect').val());
+            if (isNaN(discountValue)) {
+                $('#total').val(totalAmount.toFixed(2));
+            }
+
             originalAmount = totalAmount;
 
             // Store scanned products in session
@@ -318,6 +335,7 @@ $(document).ready(function() {
 });
 
 </script>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 

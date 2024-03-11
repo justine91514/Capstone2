@@ -44,7 +44,7 @@ include('includes/navbar2.php');
             <div class="table-responsive">
                 <?php
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
-                $query = "SELECT * FROM  sales_report_list";
+                $query = "SELECT * FROM  transaction_list";
                 $query_run = mysqli_query($connection, $query);
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -65,11 +65,11 @@ include('includes/navbar2.php');
                                 ?>    
                         <tr>
                             <td> <?php echo $row['transaction_id']; ?></td>
-                            <td> <?php echo $row['date']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
+                            <td> <?php echo $row['date']; ?> </td>
                             <td> <?php echo $row['time']; ?></td>
                             <td> <?php echo $row['mode_of_payment']; ?></td>
                             <td> <?php echo $row['list_of_items']; ?></td>   
-                            <td> <?php echo $row['Total']; ?></td>       
+                            <td> <?php echo $row['total_amount']; ?></td>       
                         </tr>
                                 <?php
                             }
