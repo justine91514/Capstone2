@@ -151,12 +151,12 @@ include 'includes/navbar_pos.php';
                                 <label>Reference#</label>
                                 <input type="text" name="ref_no" class="form-control" id="referenceInput" readonly>
 
-
-                            </div>
-                            <div class="modal-footer">
+                                <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" name="charge_btn" class="btn btn-primary">Charge</button>
                             </div>
+                            </div>
+                           
                         </form>
 
                         </div>
@@ -184,157 +184,166 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
 </script>
 
 <script>
-$(document).ready(function() {
-    var originalAmount = parseFloat($('#total').val());
-    var originalPrice = originalAmount; // Store original price
+    $(document).ready(function() {
+        var originalAmount = parseFloat($('#total').val());
+        var originalPrice = originalAmount; // Store original price
 
-    var scannedProducts = {};
+        var scannedProducts = {};
 
-    $('#discountSelect').change(function() {
-        var discountValue = parseFloat($(this).val());
+        $('#discountSelect').change(function() {
+            var discountValue = parseFloat($(this).val());
 
-        if (!isNaN(discountValue)) {
-            var discountedAmount = originalAmount - (originalAmount * (discountValue / 100));
-            $('#total').val(discountedAmount.toFixed(2));
-        } else {
-            $('#total').val(originalAmount.toFixed(2));
-        }
-    });
-
-    $('#cash').on('input', function() {
-        var cash = parseFloat($(this).val());
-        var total = parseFloat($('#total').val());
-
-        if (!isNaN(cash)) {
-            var change = cash - total;
-            if (change >= 0) {
-                $('#change').val(change.toFixed(2));
+            if (!isNaN(discountValue)) {
+                var discountedAmount = originalAmount - (originalAmount * (discountValue / 100));
+                $('#total').val(discountedAmount.toFixed(2));
+                calculateChange(); // Recalculate change when discount changes
             } else {
-                $('#change').val('not enough money, add more');
+                $('#total').val(originalAmount.toFixed(2));
+                calculateChange(); // Recalculate change when discount is removed
             }
-        } else {
-            $('#change').val('');
-        }
-    });
+        });
 
+        $('#cash').on('input', function() {
+            calculateChange(); // Recalculate change when cash input changes
+        });
 
-    $('#dbpharmacy').keypress(function(e) {
-    if (e.which === 13) {
-        var input = $(this).val();
-        if (input != "") {
-            $.ajax({
-    url: "livesearch.php",
-    method: "POST",
-    data: { input: input },
-    success: function(data) {
-        var responseData = JSON.parse(data);
-        if (responseData.length > 0) {
-            $('#descript').val(responseData[0].descript);
-            $('#price').val(responseData[0].price);
-            $('#product_stock_name').val(productNameWithMeasurement);
+        // Function to calculate change
+        function calculateChange() {
+            var cash = parseFloat($('#cash').val());
+            var total = parseFloat($('#total').val());
 
-            var productName = responseData[0].product_stock_name;
-            var measurement = responseData[0].measurement;
-           
-            var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
-
-
-            if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
-                scannedProducts[productNameWithMeasurement]++;
-                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-                $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
-            } else {
-                scannedProducts[productNameWithMeasurement] = 1;
-                var html = "<tr>" +
-                    "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-                   
-                    "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
-                    "<td>" + responseData[0].stocks_available + "</td>" +
-                    "<td>" + responseData[0].price + "</td>" +
-                    "</tr>";
-
-                $('#scannedItems').append(html);
-
-                $('#quantity').val(scannedProducts[productNameWithMeasurement]);
-            }
-
-
-            // Update Total Price
-            var totalAmount = 0;
-            $('#scannedItems tr').each(function() {
-                var quantity = parseFloat($(this).find('td:eq(1)').text());
-                var price = parseFloat($(this).find('td:eq(3)').text());
-                totalAmount += quantity * price;
-            });
-            $('#ttl_price').val(totalAmount.toFixed(2));
-
-            // Update Total Amount only if no discount applied
-            var discountValue = parseFloat($('#discountSelect').val());
-            if (isNaN(discountValue)) {
-                $('#total').val(totalAmount.toFixed(2));
-            }
-
-            originalAmount = totalAmount;
-
-            // Store scanned products in session
-            $.ajax({
-                url: "store_scanned_products.php",
-                method: "POST",
-                data: { scannedProducts: scannedProducts },
-                success: function(response) {
-                    console.log(response); // Optional: Log the response for debugging
+            if (!isNaN(cash)) {
+                var change = cash - total;
+                if (change >= 0) {
+                    $('#change').val(change.toFixed(2));
+                } else {
+                    $('#change').val('not enough money, add more');
                 }
-            });
+            } else {
+                $('#change').val('');
+            }
+        }
 
-            // Pagkatapos ng pag-append ng HTML sa table, i-store ang productList sa isang input field na hidden
-            var productList = []; // Magdagdag ng array para sa mga produkto
-            $('#scannedItems tr').each(function() {
-                var productName = $(this).find('td:eq(0)').text();
-                productList.push(productName);
-            });
+        $('#dbpharmacy').keypress(function(e) {
+            if (e.which === 13) {
+                var input = $(this).val();
+                if (input != "") {
+                    $.ajax({
+                        url: "livesearch.php",
+                        method: "POST",
+                        data: { input: input },
+                        success: function(data) {
+                            var responseData = JSON.parse(data);
+                            if (responseData.length > 0) {
+                                $('#descript').val(responseData[0].descript);
+                                $('#price').val(responseData[0].price);
+                                $('#product_stock_name').val(productNameWithMeasurement);
 
-            // I-store ang productList sa isang input field na hidden
-            $('<input>').attr({
-                type: 'hidden',
-                id: 'productList',
-                name: 'productList',
-                value: JSON.stringify(productList) // I-convert sa JSON format
-            }).appendTo('form');
+                                var productName = responseData[0].product_stock_name;
+                                var measurement = responseData[0].measurement;
+
+                                var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
+
+                                if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
+                                    scannedProducts[productNameWithMeasurement]++;
+                                    $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+                                    $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
+                                } else {
+                                    scannedProducts[productNameWithMeasurement] = 1;
+                                    var html = "<tr>" +
+                                        "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
+
+                                        "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
+                                        "<td>" + responseData[0].stocks_available + "</td>" +
+                                        "<td>" + responseData[0].price + "</td>" +
+                                        "</tr>";
+
+                                    $('#scannedItems').append(html);
+
+                                    $('#quantity').val(scannedProducts[productNameWithMeasurement]);
+                                }
+
+                                // Update Total Price
+                                var totalAmount = 0;
+                                $('#scannedItems tr').each(function() {
+                                    var quantity = parseFloat($(this).find('td:eq(1)').text());
+                                    var price = parseFloat($(this).find('td:eq(3)').text());
+                                    totalAmount += quantity * price;
+                                });
+                                $('#ttl_price').val(totalAmount.toFixed(2));
+
+                                // Update Total Amount only if no discount applied
+                                var discountValue = parseFloat($('#discountSelect').val());
+                                if (isNaN(discountValue)) {
+                                    $('#total').val(totalAmount.toFixed(2));
+                                    calculateChange(); // Recalculate change if no discount applied
+                                }
+
+                                originalAmount = totalAmount;
+
+                                // Store scanned products in session
+                                $.ajax({
+                                    url: "store_scanned_products.php",
+                                    method: "POST",
+                                    data: { scannedProducts: scannedProducts },
+                                    success: function(response) {
+                                        console.log(response); // Optional: Log the response for debugging
+                                    }
+                                });
+
+                                // Pagkatapos ng pag-append ng HTML sa table, i-store ang productList sa isang input field na hidden
+                                var productList = []; // Magdagdag ng array para sa mga produkto
+                                $('#scannedItems tr').each(function() {
+                                    var productName = $(this).find('td:eq(0)').text();
+                                    productList.push(productName);
+                                });
+
+                                // I-store ang productList sa isang input field na hidden
+                                $('<input>').attr({
+                                    type: 'hidden',
+                                    id: 'productList',
+                                    name: 'productList',
+                                    value: JSON.stringify(productList) // I-convert sa JSON format
+                                }).appendTo('form');
 
 
-            $.ajax({
-                            url: "code.php",
-                            method: "POST",
-                            data: {
-                                scannedProducts: scannedProducts,
-                                productList: JSON.stringify(productList) // Ito ang product list na ipapasa
-                            },
-                            success: function(response) {
-                                console.log(response); // Optional: Log the response for debugging
+                                $.ajax({
+                                    url: "code.php",
+                                    method: "POST",
+                                    data: {
+                                        scannedProducts: scannedProducts,
+                                        productList: JSON.stringify(productList) // Ito ang product list na ipapasa
+                                    },
+                                    success: function(response) {
+                                        console.log(response); // Optional: Log the response for debugging
+                                    }
+                                });
+                            } else {
+                                $('#descript').val('');
+                                $('#price').val('');
+                                $('#quantity').val('');
+                                $('#total').val('');
                             }
-                        });
-        } else {
-            $('#descript').val('');
-            $('#price').val('');
-            $('#quantity').val('');
-            $('#total').val('');
-        }
-        $('#barcode').val(input);
-    }
-});
-        }
-        $(this).val('');
-        e.preventDefault();
-    }
-});
-  $('form').submit(function() {
-        $('#productName').val($('#product_stock_name').val());
-        $('#quantity').val($('#quantity').val());
-        $('#price').val($('#price').val());
-    });
-});
+                            $('#barcode').val(input);
+                        }
+                    });
+                }
+                $(this).val('');
+                e.preventDefault();
+            }
+        });
 
+        $('form').submit(function() {
+            $('#productName').val($('#product_stock_name').val());
+            $('#quantity').val($('#quantity').val());
+            $('#price').val($('#price').val());
+        });
+
+        // Initial calculation of change
+        calculateChange();
+    });
 </script>
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

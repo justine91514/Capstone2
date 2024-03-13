@@ -22,6 +22,7 @@ session_start();
 
     <style>
         body {
+            background-image: url(img/pharmacy2.jpg);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -31,6 +32,17 @@ session_start();
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            /* Apply blur effect */
+            -webkit-backdrop-filter: blur(10px);
+            /* Safari */
+            backdrop-filter: blur(5px);
+            /* Standard */
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
         .login-container {
@@ -39,10 +51,11 @@ session_start();
             box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.25);
             padding: 25px;
             max-width: 420px;
+            padding-bottom: 30px;
         }
 
         .brand-text {
-            font-size: 3em;
+            font-size: 2em;
         }
 
         .slogan-text {
@@ -61,20 +74,30 @@ session_start();
             border-radius: 15px;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
             display: block;
-            margin: 20px auto; /* Adjusted margin for better positioning */
+            margin: 0 auto;
+            /* Set left and right margin to auto */
         }
 
         /* Change button color */
         .btn-primary {
-            background-color: #0C96D4; /* Change the color code to your desired color */
-            border-color: #0C96D4; /* Change the border color if needed */
+            background-color: #0C96D4;
+            /* Change the color code to your desired color */
+            border-color: #0C96D4;
+            /* Change the border color if needed */
         }
 
         /* Change button color on hover */
         .btn-primary:hover {
-            background-color: #D9D9D9; /* Change the hover color code */
-            border-color: #D9D9D9; /* Change the hover border color if needed */
+            background-color: #D9D9D9;
+            /* Change the hover color code */
+            border-color: #D9D9D9;
+            /* Change the hover border color if needed */
             color: #000000;
+        }
+
+        /* Style for the eye icon */
+        .input-group-text {
+            cursor: pointer;
         }
     </style>
 </head>
