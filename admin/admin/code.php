@@ -927,6 +927,7 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 
 
 
+
 date_default_timezone_set('Asia/Manila');
 
 // Get the current date and time in the Philippines timezone
@@ -1023,8 +1024,11 @@ if (isset($_POST['charge_btn'])) {
         // Generate transaction number
         $transaction_no = generateTransactionNo(date('ymd'), $count);
 
+        // Format the total amount with two decimal places
+        $formatted_total_amount = sprintf("%.2f", $total);
+
         // Insert the transaction details into the transaction_list table
-        $query = "INSERT INTO transaction_list (transaction_no, total, list_of_items) VALUES ('$transaction_no', '$total', '$listOfItems')";
+        $query = "INSERT INTO transaction_list (transaction_no, total, list_of_items) VALUES ('$transaction_no', '$formatted_total_amount', '$listOfItems')";
         $query_run = mysqli_query($connection, $query);
     
         if($query_run)
@@ -1039,6 +1043,7 @@ if (isset($_POST['charge_btn'])) {
         }
     }
 }
+
 
 
 

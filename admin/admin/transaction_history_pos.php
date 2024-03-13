@@ -82,7 +82,7 @@ date_default_timezone_set('Asia/Manila');
                                     <td> <?php echo $row['mode_of_payment']; ?></td>
                                     <td> <?php echo $row['ref_no']; ?></td>
                                     <td> <?php echo $row['list_of_items']; ?></td>   
-                                    <td> <?php echo $row['total_amount']; ?></td>       
+                                    <td> <?php echo number_format($row['total_amount'], 2); ?></td>   
                                     <td> 
                                         <form action="print_product.php" method="post">
                                             <input type="hidden" name= print_id>
