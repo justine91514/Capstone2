@@ -938,7 +938,7 @@ $date = $current_time->format('Y-m-d');
 $time = $current_time->format('h:i:s A'); 
 $am_pm = $current_time->format('A');
 $ref_no = $_POST['ref_no'];
-
+$sub_total = $_POST['sub_total'];
 // Function to generate transaction number
 function generateTransactionNo($date, $count) {
     return $date . str_pad($count, 3, '0', STR_PAD_LEFT); // Format: YYMMDDXXX
@@ -949,6 +949,7 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     $mode_of_payment = $_POST['mode_of_payment'];
     // Get the total amount
     $total_amount = $_POST['total'];
+    
 
     // Retrieve the list of items from the hidden input field
     $list_of_items = $_POST['list_of_items'];
@@ -975,8 +976,8 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     $transaction_no = generateTransactionNo(date('ymd'), $count);
 
     // Insert the transaction details into the transaction_list table
-    $insert_query = "INSERT INTO transaction_list (transaction_no, date, time, am_pm, mode_of_payment, total_amount, list_of_items, ref_no) 
-                     VALUES ('$transaction_no', '$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$listOfItems', '$ref_no')";
+    $insert_query = "INSERT INTO transaction_list (transaction_no, date, time, am_pm, mode_of_payment, total_amount, sub_total, list_of_items, ref_no) 
+                     VALUES ('$transaction_no', '$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$sub_total,', '$listOfItems', '$ref_no')";
 
     // Execute the query
     $result = mysqli_query($connection, $insert_query);

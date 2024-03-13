@@ -39,7 +39,7 @@ date_default_timezone_set('Asia/Manila');
             <div class="table-responsive">
                 <?php
                 $connection = mysqli_connect("localhost","root","","dbpharmacy");
-                $query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), ' ', DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, mode_of_payment, ref_no, list_of_items, total_amount FROM transaction_list";
+                $query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), ' ', DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, mode_of_payment, ref_no, list_of_items, sub_total, total_amount FROM transaction_list";
                 $query_run = mysqli_query($connection, $query);
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -50,7 +50,8 @@ date_default_timezone_set('Asia/Manila');
                         <th> Mode of Payment </th>
                         <th> Reference# </th>
                         <th> List of Items </th>
-                        <th> Total </th>
+                        <th> Sub Total </th>
+                        <th> Grand Total </th>
                         <th> Reissue of Reciept </th>
 
                     </thead>
@@ -82,7 +83,8 @@ date_default_timezone_set('Asia/Manila');
                                     <td><?php echo $row['time_with_am_pm']; ?></td>
                                     <td> <?php echo $row['mode_of_payment']; ?></td>
                                     <td> <?php echo $row['ref_no']; ?></td>
-                                    <td> <?php echo $row['list_of_items']; ?></td>   
+                                    <td> <?php echo $row['list_of_items']; ?></td>
+                                    <td> <?php echo $row['sub_total']; ?></td>     
                                     <td> <?php echo $row['total_amount']; ?></td>     
                                     <td> 
                                         <form action="print_product.php" method="post">

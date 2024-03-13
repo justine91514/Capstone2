@@ -100,6 +100,10 @@ include 'includes/navbar_pos.php';
                             <form action="code.php" method="POST"
                                 <div class="modal-body">
                                     <div class="form-group">
+
+                                    <label class="input-skulabel" for="sub_total">Sub Total:</label>
+                                <input type="text" class="form-control" name="sub_total" id="sub_total" autocomplete="off" readonly>
+
                                     <label>Discounts</label>
                                         <select id="discountSelect" name="discount" class="form-control">
 
@@ -120,10 +124,9 @@ include 'includes/navbar_pos.php';
                                         </select>
                                 </div>
                                 
-                                <label class="input-skulabel" for="ttl_price">Total Price:</label>
-                                <input type="text" class="form-control" name="ttl_price" id="ttl_price" autocomplete="off" readonly>
+                                
 
-                                <label class="input-skulabel" for="total">Total Amount:</label>
+                                <label class="input-skulabel" for="total">Grand Total:</label>
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
 
                                 <label>Cash</label>
@@ -270,7 +273,7 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
                                     var price = parseFloat($(this).find('td:eq(3)').text());
                                     totalAmount += quantity * price;
                                 });
-                                $('#ttl_price').val(totalAmount.toFixed(2));
+                                $('#sub_total').val(totalAmount.toFixed(2));
 
                                 // Update Total Amount only if no discount applied
                                 var discountValue = parseFloat($('#discountSelect').val());
