@@ -52,6 +52,7 @@ include 'includes/navbar_pos.php';
                         <th> Quantity </th>
                         <th> Stocks Available </th>
                         <th> Price </th>
+                        
                     </tr>
                 </thead>
                 <tbody id="scannedItems">
@@ -66,17 +67,17 @@ include 'includes/navbar_pos.php';
 
                 <input type="hidden" class="form-control" id="product_stock_name" autocomplete="off">
 
-                <label class="input-skulabel" for="barcode">Barcode:</label>
-                <input type="text" class="form-control" id="barcode" autocomplete="off">
+                <label class="input-skulabel" for="barcode" id="productInfoLabel">Barcode:</label>
+                <input type="text" class="form-control" id="barcode" autocomplete="off" readonly>
 
-                <label class="input-skulabel" for="descript">Description:</label>
-                <input type="text" class="form-control" id="descript" autocomplete="off">
+                <label class="input-skulabel" for="descript" id="productquantLabel">Description:</label>
+                <input type="text" class="form-control" id="descript" autocomplete="off"readonly>
 
                 <label class="input-skulabel" for="price">Price:</label>
-                <input type="text" class="form-control" id="price" autocomplete="off">
+                <input type="text" class="form-control" id="price" autocomplete="off" readonly>
 
                 <label class="input-skulabel" for="quantity">Quantity:</label>
-                <input type="text" class="form-control" id="quantity" autocomplete="off">
+                <input type="text" class="form-control" id="quantity" autocomplete="off" readonly>
 
 
                 <div class="container-fluid">
@@ -85,6 +86,8 @@ include 'includes/navbar_pos.php';
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#payment">
                       Proceed To Payment
                     </button>
+                    
+                    <button type="button" name="void_btn" class="btn btn-primary" id="voidButton">Void</button>
                 </h6>
 
            <!-- Modal -->
@@ -156,7 +159,8 @@ include 'includes/navbar_pos.php';
 
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" name="charge_btn" class="btn btn-primary">Charge</button>
+                                <button type="submit" name="charge_btn" class="btn btn-primary" id="chargeButton" disabled>Charge</button>
+
                             </div>
                             </div>
                            
@@ -185,6 +189,49 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
         document.getElementById('payment_mode').value = mode;
     }
 </script>
+<script>
+        $(document).ready(function() {
+            var voidButtonClicked = false; // Flag to track if void button has been clicked
+
+            // Function to handle voiding a product
+            $('#voidButton').click(function() {
+                voidButtonClicked = true; // Set the flag to true when void button is clicked
+                $('#scannedItems').find('tr').removeClass('selected'); // Remove any selected row
+                $('#product_info input').val('');
+                $('#productInfoLabel').text('Product Name:');
+                $('#productquantLabel').text('Quantity:'); // Clear product info fields
+            });
+
+            // Add click event listener to table rows for selection
+            $('#scannedItems').on('click', 'tr', function() {
+                if (voidButtonClicked) { // Check if void button has been clicked
+                    $(this).toggleClass('selected').siblings().removeClass('selected');
+                    // Display selected row info in PRODUCT INFO section
+                    if ($(this).hasClass('selected')) {
+                        var productNameWithMeasurement = $(this).find('td:eq(0)').text();
+                        var quantity = $(this).find('td:eq(1)').text();
+                        var stocksAvailable = $(this).find('td:eq(2)').text();
+                        var price = $(this).find('td:eq(3)').text();
+
+                        $('#barcode').val(productNameWithMeasurement);
+                        $('#descript').val(quantity);
+                        $('#price').val(stocksAvailable);
+                        $('#quantity').val(price);
+                    } else {
+                        // Clear PRODUCT INFO section if no row is selected
+                        $('#barcode').val('');
+                        $('#descript').val('');
+                        $('#price').val('');
+                        $('#quantity').val('');
+                    }
+                } else {
+                    alert("Please click the Void button first.");
+                }
+            });
+
+            // Rest of your existing code...
+        });
+    </script>
 
 <script>
     $(document).ready(function() {
@@ -207,7 +254,19 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
         });
 
         $('#cash').on('input', function() {
-            calculateChange(); // Recalculate change when cash input changes
+            var cash = parseFloat($(this).val());
+
+        // Check kung may laman ang Cash input field
+        if (!isNaN(cash) && cash > 0) {
+            // Enable charge button
+            $('#chargeButton').prop('disabled', false);
+        } else {
+            // Disable charge button kung walang laman
+            $('#chargeButton').prop('disabled', true);
+        }
+
+        calculateChange(); 
+            
         });
 
         // Function to calculate change
