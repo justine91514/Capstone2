@@ -78,7 +78,7 @@ date_default_timezone_set('Asia/Manila');
 
                                 ?>    
                                 <tr>
-                                    <td> <?php echo $transaction_no; ?></td>
+                                    <td> <?php echo $row['transaction_no']; ?></td>
                                     <td> <?php echo $row['date']; ?></td>
                                     <td><?php echo $row['time_with_am_pm']; ?></td>
                                     <td> <?php echo $row['mode_of_payment']; ?></td>
