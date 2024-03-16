@@ -73,10 +73,10 @@ include 'includes/navbar_pos.php';
                 <label class="input-skulabel" for="descript" id="productquantLabel">Description:</label>
                 <input type="text" class="form-control" id="descript" autocomplete="off"readonly>
 
-                <label class="input-skulabel" for="price">Price:</label>
+                <label class="input-skulabel" for="price" id="productStocksLabel">Price:</label>
                 <input type="text" class="form-control" id="price" autocomplete="off" readonly>
 
-                <label class="input-skulabel" for="quantity">Quantity:</label>
+                <label class="input-skulabel" for="quantity " id="productpriceLabel">Quantity:</label>
                 <input type="text" class="form-control" id="quantity" autocomplete="off" readonly>
 
 
@@ -86,8 +86,8 @@ include 'includes/navbar_pos.php';
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#payment">
                       Proceed To Payment
                     </button>
-                    
                     <button type="button" name="void_btn" class="btn btn-primary" id="voidButton">Void</button>
+                    <button type="button" name="delete_void_btn" class="btn btn-primary" id="delete_void_Button">Delete</button>
                 </h6>
 
            <!-- Modal -->
@@ -189,48 +189,114 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
         document.getElementById('payment_mode').value = mode;
     }
 </script>
+
 <script>
         $(document).ready(function() {
-            var voidButtonClicked = false; // Flag to track if void button has been clicked
+    var voidButtonClicked = false;
 
-            // Function to handle voiding a product
-            $('#voidButton').click(function() {
-                voidButtonClicked = true; // Set the flag to true when void button is clicked
-                $('#scannedItems').find('tr').removeClass('selected'); // Remove any selected row
-                $('#product_info input').val('');
-                $('#productInfoLabel').text('Product Name:');
-                $('#productquantLabel').text('Quantity:'); // Clear product info fields
-            });
+    // I-deactivate ang "Void" button sa simula
+    $('#voidButton').prop('disabled', true);
+    $('#delete_void_Button').hide(); // Itago ang Delete button sa simula
 
-            // Add click event listener to table rows for selection
-            $('#scannedItems').on('click', 'tr', function() {
-                if (voidButtonClicked) { // Check if void button has been clicked
-                    $(this).toggleClass('selected').siblings().removeClass('selected');
-                    // Display selected row info in PRODUCT INFO section
-                    if ($(this).hasClass('selected')) {
-                        var productNameWithMeasurement = $(this).find('td:eq(0)').text();
-                        var quantity = $(this).find('td:eq(1)').text();
-                        var stocksAvailable = $(this).find('td:eq(2)').text();
-                        var price = $(this).find('td:eq(3)').text();
+    $('#voidButton').click(function() {
+        if ($(this).text() === 'Void') { 
+            voidButtonClicked = false;
+            $(this).text('Cancel Void');
+            $('#productInfoLabel').text('Product Name:');
+            $('#productquantLabel').text('Quantity:');
+            $('#productStocksLabel').text('Stocks Available:');
+            $('#productpriceLabel').text('Price:');
+            
+            $('#barcode').val('');
+            $('#descript').val('');
+            $('#price').val('');
+            $('#quantity').val('');
+            enableTableRowSelection();
+           
+            $('#delete_void_Button').show();
+        } else { 
+            voidButtonClicked = true;
+            $(this).text('Void');
+            $('#productInfoLabel').text('Barcode:');
+            $('#productquantLabel').text('Description:');
+            $('#productStocksLabel').text('Price:');
+            $('#productpriceLabel').text('Quantity:');
+            $('#barcode').val('');
+            $('#descript').val('');
+            $('#price').val('');
+            $('#quantity').val('');
+            $('#delete_void_Button').hide(); 
+        }
+    });
 
-                        $('#barcode').val(productNameWithMeasurement);
-                        $('#descript').val(quantity);
-                        $('#price').val(stocksAvailable);
-                        $('#quantity').val(price);
-                    } else {
-                        // Clear PRODUCT INFO section if no row is selected
-                        $('#barcode').val('');
-                        $('#descript').val('');
-                        $('#price').val('');
-                        $('#quantity').val('');
-                    }
-                } else {
-                    alert("Please click the Void button first.");
+    // I-check ang laman ng #scannedItems bago mag-activate o mag-deactivate ng "Void" button
+    function checkTableContent() {
+        if ($('#scannedItems tr').length > 0) {
+            $('#voidButton').prop('disabled', false);
+        } else {
+            $('#voidButton').prop('disabled', true);
+        }
+    }
+
+    function disableTableRowSelection() {
+        $('#scannedItems').off('click', 'tr'); // I-turn off ang event listener para sa pag-click sa row ng table
+        $('#scannedItems tr').removeClass('selected'); // I-remove ang selected class sa lahat ng rows
+        $('#barcode').val('');
+        $('#descript').val('');
+        $('#price').val('');
+        $('#quantity').val('');
+    }
+
+    function enableTableRowSelection() {
+        $('#scannedItems').on('click', 'tr', function() {
+            if (!voidButtonClicked) { 
+                if (!$(this).hasClass('selected')) {
+                    $('#barcode').val('');
+                    $('#descript').val('');
+                    $('#price').val('');
+                    $('#quantity').val('');
                 }
-            });
+                $(this).toggleClass('selected').siblings().removeClass('selected');
+                if ($(this).hasClass('selected')) {
+                    var productNameWithMeasurement = $(this).find('td:eq(0)').text();
+                    var quantity = $(this).find('td:eq(1)').text();
+                    var stocksAvailable = $(this).find('td:eq(2)').text();
+                    var price = $(this).find('td:eq(3)').text();
 
-            // Rest of your existing code...
+                    $('#barcode').val(productNameWithMeasurement);
+                    $('#descript').val(quantity);
+                    $('#price').val(stocksAvailable);
+                    $('#quantity').val(price);
+                }
+            }
         });
+    }
+
+    // Tawagan ang checkTableContent function tuwing may pagbabago sa table content
+    $('#scannedItems').on('DOMSubtreeModified', function() {
+        checkTableContent();
+    });
+
+    // I-check din ang table content sa simula
+    checkTableContent();
+});
+
+$(document).ready(function() {
+    // Event listener para sa Delete button
+    $('#delete_void_Button').click(function() {
+        // Kumpirmahin kung mayroong napiling row
+        if ($('#scannedItems tr.selected').length >= 0) {
+            // Alisin ang bawat napiling row
+            $('#scannedItems tr.selected').remove();
+            // Pagkatapos ma-delete, i-clear ang mga field na naka-select
+            $('#barcode').val('');
+            $('#descript').val('');
+            $('#price').val('');
+            $('#quantity').val('');
+            
+        }
+    });
+});
     </script>
 
 <script>
