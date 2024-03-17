@@ -221,11 +221,13 @@ document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radi
             $('#productquantLabel').text('Description:');
             $('#productStocksLabel').text('Price:');
             $('#productpriceLabel').text('Quantity:');
+            
             $('#barcode').val('');
             $('#descript').val('');
             $('#price').val('');
             $('#quantity').val('');
             $('#delete_void_Button').hide(); 
+            enableTableRowSelection();
         }
     });
 
