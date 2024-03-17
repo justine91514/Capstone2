@@ -56,12 +56,7 @@
     </li>
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item" id="change-tab">
-    <a class="nav-link" href="change_item.php" onclick="toggleTab('change-tab')">
-        <i class="fas fa-exchange-alt" style="color: black;"></i> <!-- Change icon -->
-        <span style="color: black;">Change Item</span>
-    </a>
-</li>
+    
 
 
     <hr class="sidebar-divider my-0">
