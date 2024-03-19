@@ -49,15 +49,9 @@ if (isset($_POST['input'])) {
         }
     } else {
         // If no data found
-        $response[] = array(
-            'descript' => '',
-            'price' => '',
-            
-            'stocks_available' => '', // Include an empty value for stocks_available
-            'product_stock_name' => '',
-            'measurement' => '',
-            'html' => "<h6 class='text-danger text-center mt-3'>No Data Found</h6>"
-        );
+        // Send JSON response with empty array
+        echo json_encode($response);
+        exit(); // Terminate script execution here
     }
     // Send JSON response
     echo json_encode($response);

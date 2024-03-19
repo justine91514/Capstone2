@@ -169,137 +169,152 @@ include 'includes/navbar_pos.php';
                         </div>
                     </div>
                 </div>
-        <script>
-        // Event listener for radio button change
-document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radio) {
-    radio.addEventListener('change', function() {
-        var referenceInput = document.getElementById('referenceInput');
-        if (this.value === 'G-Cash') {
-            referenceInput.removeAttribute('readonly');
-        } else {
-            referenceInput.setAttribute('readonly', true);
-        }
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                
+                <script>
+    // Event listener for radio button change
+    document.querySelectorAll('input[name="mode_of_payment"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            var referenceInput = document.getElementById('referenceInput');
+            if (this.value === 'G-Cash') {
+                referenceInput.removeAttribute('readonly');
+            } else {
+                referenceInput.setAttribute('readonly', true);
+            }
+        });
     });
-});
 
-        </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
     function selectPaymentMode(mode) {
         document.getElementById('payment_mode').value = mode;
     }
 </script>
 
 <script>
-        $(document).ready(function() {
-    var voidButtonClicked = false;
+    $(document).ready(function() {
+        var voidButtonClicked = false;
 
-    // I-deactivate ang "Void" button sa simula
-    $('#voidButton').prop('disabled', true);
-    $('#delete_void_Button').hide(); // Itago ang Delete button sa simula
+        // Deactivate the "Void" button initially
+        $('#voidButton').prop('disabled', true);
+        $('#delete_void_Button').hide(); // Hide the Delete button initially
 
-    $('#voidButton').click(function() {
-        if ($(this).text() === 'Void') { 
-            voidButtonClicked = false;
-            $(this).text('Cancel Void');
-            $('#productInfoLabel').text('Product Name:');
-            $('#productquantLabel').text('Quantity:');
-            $('#productStocksLabel').text('Stocks Available:');
-            $('#productpriceLabel').text('Price:');
-            
-            $('#barcode').val('');
-            $('#descript').val('');
-            $('#price').val('');
-            $('#quantity').val('');
-            enableTableRowSelection();
-           
-            $('#delete_void_Button').show();
-        } else { 
-            voidButtonClicked = true;
-            $(this).text('Void');
-            $('#productInfoLabel').text('Barcode:');
-            $('#productquantLabel').text('Description:');
-            $('#productStocksLabel').text('Price:');
-            $('#productpriceLabel').text('Quantity:');
-            
-            $('#barcode').val('');
-            $('#descript').val('');
-            $('#price').val('');
-            $('#quantity').val('');
-            $('#delete_void_Button').hide(); 
-            enableTableRowSelection();
-        }
-    });
-
-    // I-check ang laman ng #scannedItems bago mag-activate o mag-deactivate ng "Void" button
-    function checkTableContent() {
-        if ($('#scannedItems tr').length > 0) {
-            $('#voidButton').prop('disabled', false);
-        } else {
-            $('#voidButton').prop('disabled', true);
-        }
-    }
-
-    function disableTableRowSelection() {
-        $('#scannedItems').off('click', 'tr'); // I-turn off ang event listener para sa pag-click sa row ng table
-        $('#scannedItems tr').removeClass('selected'); // I-remove ang selected class sa lahat ng rows
-        $('#barcode').val('');
-        $('#descript').val('');
-        $('#price').val('');
-        $('#quantity').val('');
-    }
-
-    function enableTableRowSelection() {
-        $('#scannedItems').on('click', 'tr', function() {
-            if (!voidButtonClicked) { 
-                if (!$(this).hasClass('selected')) {
-                    $('#barcode').val('');
-                    $('#descript').val('');
-                    $('#price').val('');
-                    $('#quantity').val('');
-                }
-                $(this).toggleClass('selected').siblings().removeClass('selected');
-                if ($(this).hasClass('selected')) {
-                    var productNameWithMeasurement = $(this).find('td:eq(0)').text();
-                    var quantity = $(this).find('td:eq(1)').text();
-                    var stocksAvailable = $(this).find('td:eq(2)').text();
-                    var price = $(this).find('td:eq(3)').text();
-
-                    $('#barcode').val(productNameWithMeasurement);
-                    $('#descript').val(quantity);
-                    $('#price').val(stocksAvailable);
-                    $('#quantity').val(price);
-                }
+        $('#voidButton').click(function() {
+            if ($(this).text() === 'Void') { 
+                voidButtonClicked = false;
+                $(this).text('Cancel Void');
+                $('#productInfoLabel').text('Product Name:');
+                $('#productquantLabel').text('Quantity:');
+                $('#productStocksLabel').text('Stocks Available:');
+                $('#productpriceLabel').text('Price:');
+                
+                $('#barcode').val('');
+                $('#descript').val('');
+                $('#price').val('');
+                $('#quantity').val('');
+                enableTableRowSelection();
+               
+                $('#delete_void_Button').show();
+            } else { 
+                voidButtonClicked = true;
+                $(this).text('Void');
+                $('#productInfoLabel').text('Barcode:');
+                $('#productquantLabel').text('Description:');
+                $('#productStocksLabel').text('Price:');
+                $('#productpriceLabel').text('Quantity:');
+                
+                $('#barcode').val('');
+                $('#descript').val('');
+                $('#price').val('');
+                $('#quantity').val('');
+                $('#delete_void_Button').hide(); 
+                enableTableRowSelection();
             }
         });
-    }
 
-    // Tawagan ang checkTableContent function tuwing may pagbabago sa table content
-    $('#scannedItems').on('DOMSubtreeModified', function() {
+        // Check the content of #scannedItems before enabling or disabling the "Void" button
+        function checkTableContent() {
+            if ($('#scannedItems tr').length > 0) {
+                $('#voidButton').prop('disabled', false);
+            } else {
+                $('#voidButton').prop('disabled', true);
+            }
+        }
+
+        function disableTableRowSelection() {
+            $('#scannedItems').off('click', 'tr'); // Turn off the event listener for clicking on table rows
+            $('#scannedItems tr').removeClass('selected'); // Remove the selected class from all rows
+            $('#barcode').val('');
+            $('#descript').val('');
+            $('#price').val('');
+            $('#quantity').val('');
+        }
+
+        function enableTableRowSelection() {
+            $('#scannedItems').on('click', 'tr', function() {
+                if (!voidButtonClicked) { 
+                    if (!$(this).hasClass('selected')) {
+                        $('#barcode').val('');
+                        $('#descript').val('');
+                        $('#price').val('');
+                        $('#quantity').val('');
+                    }
+                    $(this).toggleClass('selected').siblings().removeClass('selected');
+                    if ($(this).hasClass('selected')) {
+                        var productNameWithMeasurement = $(this).find('td:eq(0)').text();
+                        var quantity = $(this).find('td:eq(1)').text();
+                        var stocksAvailable = $(this).find('td:eq(2)').text();
+                        var price = $(this).find('td:eq(3)').text();
+
+                        $('#barcode').val(productNameWithMeasurement);
+                        $('#descript').val(quantity);
+                        $('#price').val(stocksAvailable);
+                        $('#quantity').val(price);
+                    }
+                }
+            });
+        }
+
+        // Call the checkTableContent function whenever there is a change in table content
+        $('#scannedItems').on('DOMSubtreeModified', function() {
+            checkTableContent();
+        });
+
+        // Check the table content initially
         checkTableContent();
     });
 
-    // I-check din ang table content sa simula
-    checkTableContent();
-});
+    $(document).ready(function() {
+        // Event listener for the Delete button
+        $('#delete_void_Button').click(function() {
+            // Confirm if any row is selected
+            if ($('#scannedItems tr.selected').length >= 0) {
+                // Remove each selected row
+                $('#scannedItems tr.selected').remove();
+                // After deletion, clear the selected fields
+                var totalAmount = 0;
+                $('#scannedItems tr').each(function() {
+                    var quantity = parseFloat($(this).find('td:eq(1)').text());
+                    var price = parseFloat($(this).find('td:eq(3)').text());
+                    totalAmount += quantity * price;
+                });
 
-$(document).ready(function() {
-    // Event listener para sa Delete button
-    $('#delete_void_Button').click(function() {
-        // Kumpirmahin kung mayroong napiling row
-        if ($('#scannedItems tr.selected').length >= 0) {
-            // Alisin ang bawat napiling row
-            $('#scannedItems tr.selected').remove();
-            // Pagkatapos ma-delete, i-clear ang mga field na naka-select
-            $('#barcode').val('');
-            $('#descript').val('');
-            $('#price').val('');
-            $('#quantity').val('');
-            
-        }
+                // Update Sub Total
+                $('#sub_total').val(totalAmount.toFixed(2));
+
+                // Check if there's a discount applied
+                var discountValue = parseFloat($('#discountSelect').val());
+                if (!isNaN(discountValue)) {
+                    var discountedAmount = totalAmount - (totalAmount * (discountValue / 100));
+                    $('#total').val(discountedAmount.toFixed(2));
+                } else {
+                    $('#total').val(totalAmount.toFixed(2));
+                }
+
+                // Recalculate change
+                calculateChange();
+            }
+        });
     });
-});
-    </script>
+</script>
 
 <script>
     $(document).ready(function() {
@@ -324,17 +339,16 @@ $(document).ready(function() {
         $('#cash').on('input', function() {
             var cash = parseFloat($(this).val());
 
-        // Check kung may laman ang Cash input field
-        if (!isNaN(cash) && cash > 0) {
-            // Enable charge button
-            $('#chargeButton').prop('disabled', false);
-        } else {
-            // Disable charge button kung walang laman
-            $('#chargeButton').prop('disabled', true);
-        }
+            // Check if the Cash input field is not empty
+            if (!isNaN(cash) && cash > 0) {
+                // Enable the charge button
+                $('#chargeButton').prop('disabled', false);
+            } else {
+                // Disable the charge button if empty
+                $('#chargeButton').prop('disabled', true);
+            }
 
-        calculateChange(); 
-            
+            calculateChange(); 
         });
 
         // Function to calculate change
@@ -372,17 +386,16 @@ $(document).ready(function() {
                                 var productName = responseData[0].product_stock_name;
                                 var measurement = responseData[0].measurement;
 
-                                var productNameWithMeasurement = productName + ' - ' + measurement; // Concatenate product name and measurement
+                                var productNameWithMeasurement = productName + ' - ' + measurement; 
 
-                                if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { // Modify here
+                                if (scannedProducts.hasOwnProperty(productNameWithMeasurement)) { 
                                     scannedProducts[productNameWithMeasurement]++;
                                     $('#quantity').val(scannedProducts[productNameWithMeasurement]);
                                     $('#scannedItems td:contains("' + productNameWithMeasurement + '")').next().text(scannedProducts[productNameWithMeasurement]);
                                 } else {
                                     scannedProducts[productNameWithMeasurement] = 1;
                                     var html = "<tr>" +
-                                        "<td>" + productNameWithMeasurement + "</td>" + // Display concatenated product name with measurement
-
+                                        "<td>" + productNameWithMeasurement + "</td>" + 
                                         "<td>" + scannedProducts[productNameWithMeasurement] + "</td>" +
                                         "<td>" + responseData[0].stocks_available + "</td>" +
                                         "<td>" + responseData[0].price + "</td>" +
@@ -406,7 +419,7 @@ $(document).ready(function() {
                                 var discountValue = parseFloat($('#discountSelect').val());
                                 if (isNaN(discountValue)) {
                                     $('#total').val(totalAmount.toFixed(2));
-                                    calculateChange(); // Recalculate change if no discount applied
+                                    calculateChange(); 
                                 }
 
                                 originalAmount = totalAmount;
@@ -417,23 +430,22 @@ $(document).ready(function() {
                                     method: "POST",
                                     data: { scannedProducts: scannedProducts },
                                     success: function(response) {
-                                        console.log(response); // Optional: Log the response for debugging
+                                        console.log(response); 
                                     }
                                 });
 
-                                // Pagkatapos ng pag-append ng HTML sa table, i-store ang productList sa isang input field na hidden
-                                var productList = []; // Magdagdag ng array para sa mga produkto
+                                // After appending HTML to the table, store the productList in a hidden input field
+                                var productList = []; 
                                 $('#scannedItems tr').each(function() {
                                     var productName = $(this).find('td:eq(0)').text();
                                     productList.push(productName);
                                 });
 
-                                // I-store ang productList sa isang input field na hidden
                                 $('<input>').attr({
                                     type: 'hidden',
                                     id: 'productList',
                                     name: 'productList',
-                                    value: JSON.stringify(productList) // I-convert sa JSON format
+                                    value: JSON.stringify(productList) 
                                 }).appendTo('form');
 
 
@@ -442,10 +454,10 @@ $(document).ready(function() {
                                     method: "POST",
                                     data: {
                                         scannedProducts: scannedProducts,
-                                        productList: JSON.stringify(productList) // Ito ang product list na ipapasa
+                                        productList: JSON.stringify(productList) 
                                     },
                                     success: function(response) {
-                                        console.log(response); // Optional: Log the response for debugging
+                                        console.log(response); 
                                     }
                                 });
                             } else {
@@ -476,7 +488,8 @@ $(document).ready(function() {
 
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
 
 </body>
 
