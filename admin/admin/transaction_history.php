@@ -26,11 +26,28 @@ include('includes/header.php');
 include('includes/navbar2.php');
 date_default_timezone_set('Asia/Manila');
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+</head>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<link rel="stylesheet" href="ack.css">
+<style>
+    .container-fluid {
+        margin-top: 100px; /* Adjust the value as needed */
+    }
+    .dataTables_wrapper {
+    margin-top: 20px !important; /* Adjust the value as needed */
+}
+    </style>
 </html>
 <div class="container-fluid">
     <div class="card shadow nb-4">
         <div class="card-header py-3">
+        <h1>Transaction History</h1>
             <h6 class="m-0 font-weight-bold text-primary">
                 
             </h6>
@@ -43,7 +60,7 @@ date_default_timezone_set('Asia/Manila');
                 $query_run = mysqli_query($connection, $query);
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+                    <thead style="background-color: #304B1B; color: white;">
                         <th> Transaction no. </th>
                         <th> Date </th>
                         <th> Time </th>
@@ -89,7 +106,9 @@ date_default_timezone_set('Asia/Manila');
                                     <td> 
                                         <form action="print_product.php" method="post">
                                             <input type="hidden" name= print_id>
-                                            <button type="submit" name="print_btn" class="btn btn-success">PRINT</button>
+                                            <button type="submit" name="print_btn" class="btn btn-action" style="border: none; background: none;">
+                                            <i class="fas fa-print" style="color: #0000FF;"></i>
+                                        </button>
                                         </form>
                                     </td>
                     </tr>
@@ -131,3 +150,70 @@ aria-hidden="true">
     include('includes/scripts.php');
     include('includes/footer.php');
     ?>
+    </script>
+    </html>
+
+    <script>
+    var ascending = true;
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("dataTable");
+        switching = true;
+        var icon = document.getElementById("sortIcon");
+        if (ascending) {
+            icon.classList.remove("fa-sort");
+            icon.classList.add("fa-sort-up");
+        } else {
+            icon.classList.remove("fa-sort-up");
+            icon.classList.add("fa-sort-down");
+        }
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+                if (ascending) {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+        ascending = !ascending;
+    }
+</script>
+        <!-- DataTables JavaScript -->
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "pageLength": 10, // Display 10 entries per page
+            "searching": true,
+            "ordering": false, // Disable ordering/sorting
+            "info": true,
+            "autoWidth": false,
+            "language": {
+                "paginate": {
+                    "previous": "<i class='fas fa-arrow-left'></i>", // Use arrow-left icon for previous button
+                    "next": "<i class='fas fa-arrow-right'></i>" // Use arrow-right icon for next button
+                }
+            },
+            "pagingType": "simple" // Set the pagination type to simple
+        });
+    });
+</script>

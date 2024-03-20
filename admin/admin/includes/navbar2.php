@@ -5,14 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Pharmacy App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
     #accordionSidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%; /* Set the height to fill the viewport */
+        overflow-y: auto; /* Enable vertical scrolling if necessary */
+        z-index: 1000;
         width: 250px;
         border-right: 1px solid #ccc;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
+
+    #content {
+            padding-left: 250px; /* Ensure the content is not hidden behind the sidebar */
+        }
 
     .nav-item.active {
         background-color: black !important;
@@ -29,8 +38,8 @@
     }
 
     .sidebar-brand-icon {
-            margin-top: 40px; /* Adjust the margin-top value according to your preference */
-        }
+        margin-top: 40px; /* Adjust the margin-top value according to your preference */
+    }
 </style>
 
 </head>
@@ -65,7 +74,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="add_stocks.php" onclick="toggleTab('inventory-tab')">Add Stocks</a>
-                <a class="collapse-item" href="buffer_stock.php" onclick="toggleTab('inventory-tab')">Buffer Stock</a>
+                
                 <a class="collapse-item" href="expired_products.php" onclick="toggleTab('inventory-tab')">Expired Products</a>
             </div>
         </div>
