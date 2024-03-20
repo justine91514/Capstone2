@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stocks</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="ack.css">
     <script>
         function changeTableFormat() {
             var selectedBranch = document.getElementById("branch").value;
@@ -11,6 +13,11 @@
         }
     </script>
 </head>
+<style>
+    .dataTables_wrapper {
+    margin-top: 10px !important; /* Adjust the value as needed */
+}
+    </style>
 <body>
 
 <?php
@@ -189,14 +196,19 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
 </div>
 
     <div class="container-fluid">
-        <!-- DataTables Example -->
         <div class="card shadow nb-4">
             <div class="card-header py-3">
+            <div class="card-header py-3">
+        <h1>Stocks Available</h1>
+        </div>
+        <div class="card-body">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile">
-                        Add Stock
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile" style="background-color: #304B1B; border: none; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);">
+                    <i class="fas fa-plus-square fa-lg"></i> <span style="font-weight: bold; text-transform: uppercase;">Add Stock</span>
                     </button>
-                    <label> Branch </label>
+                    </h6>
+                    <div class="form-group">
+                    <label class="modal-label" style="color: #304B1B; top: 5px; padding-top: 15px;"> Branch</label>
                     <select id="branch" name="branch" class="form-control" onchange="changeTableFormat()" required>
                         <option value="All" <?php echo ($selectedBranch === 'All') ? 'selected' : ''; ?>>All</option>
                         <option value="Cell Med" <?php echo ($selectedBranch === 'Cell Med') ? 'selected' : ''; ?>>Cell Med</option>
@@ -204,7 +216,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <option value="Boom Care" <?php echo ($selectedBranch === 'Boom Care') ? 'selected' : ''; ?>>Boom Care</option>
                     </select>
 
-                </h6>
+                
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -216,7 +228,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                 $query_run = mysqli_query($connection, $query);
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+                    <thead style="background-color: #304B1B; color: white;">
                         <th> ID </th>
                         <th> SKU </th>
                    <!-- <th> Purchase Price </th> -->
@@ -228,7 +240,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <th> Expiry Date </th>
                         <th> Date Added </th>
                         <th> Edit </th>
-                        <th> Move To Archive </th>
+                       
                     </thead>
                     <tbody>
                     <?php
@@ -261,13 +273,17 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             <td>
                                 <form action="edit_stock_product.php" method="post">
                                         <input type="hidden" name=edit_id value="<?php echo $row['id']; ?>">
-                                    <button type="submit" name="edit_btn" class="btn btn-success">EDIT</button>
-                                    </form>
-                            </td>
-                            <td>
-                                <form action="code.php" method="POST">
+                                    <button type="submit" name="edit_btn" class="btn btn-action editBtn">
+                                        <i class="fas fa-edit" style="color: #44A6F1;"></i>
+                                    </button>
+                                    <span class="action-divider">|</span>
+                                    
+                            
+                                <form action="code.php" method="POST" style="display: inline-block;">
                                     <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
-                                    <button type="submit" name="move_to_archive_btn" class="btn btn-danger">Delete</button>
+                                    <button type="submit" name="move_to_archive_btn" class="btn btn-action" style="border: none; background: none;">
+                            <i class="fas fa-archive" style="color: #FF0000;"></i>
+                        </button>
                                 </form>
                             </td>
                         </tr>
@@ -351,3 +367,67 @@ aria-hidden="true">
 </script>
 
     </html>
+    <script>
+    var ascending = true;
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("dataTable");
+        switching = true;
+        var icon = document.getElementById("sortIcon");
+        if (ascending) {
+            icon.classList.remove("fa-sort");
+            icon.classList.add("fa-sort-up");
+        } else {
+            icon.classList.remove("fa-sort-up");
+            icon.classList.add("fa-sort-down");
+        }
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+                if (ascending) {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+        ascending = !ascending;
+    }
+</script>
+        <!-- DataTables JavaScript -->
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "pageLength": 10, // Display 10 entries per page
+            "searching": true,
+            "ordering": false, // Disable ordering/sorting
+            "info": true,
+            "autoWidth": false,
+            "language": {
+                "paginate": {
+                    "previous": "<i class='fas fa-arrow-left'></i>", // Use arrow-left icon for previous button
+                    "next": "<i class='fas fa-arrow-right'></i>" // Use arrow-right icon for next button
+                }
+            },
+            "pagingType": "simple" // Set the pagination type to simple
+        });
+    });
+</script>

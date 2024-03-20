@@ -109,7 +109,7 @@
                 <a class="collapse-item" href="add_discount.php" onclick="toggleTab('settings-tab')">Discount</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Supplier List</a>
                 <a class="collapse-item" href="register.php" onclick="toggleTab('settings-tab')">User Management</a>
-                <a class="collapse-item" href="#" onclick="toggleTab('settings-tab')">Back-up and Restore</a>
+                <a class="collapse-item" href="restore.php" onclick="toggleTab('settings-tab')">Back-up and Restore</a>
                 <a class="collapse-item" href="archive.php" onclick="toggleTab('settings-tab')">Archive</a>
             </div>
         </div>
