@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expired Products</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="ack.css">
 </head>
-
+<style>
+    .dataTables_wrapper {
+    margin-top: 20px !important; /* Adjust the value as needed */
+}
+.container-fluid {
+        margin-top: 100px; /* Adjust the value as needed */
+    }
+    </style>
 </html>
 
 <?php
@@ -74,10 +83,10 @@ include('notification_logic2.php');
                 $result = mysqli_query($connection, $query);
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+                    <thead style="background-color: #EB3223; color: white;">
                         <th>ID</th>
                         <th>SKU</th>
-                        <th>Product Name</th>
+                        <th>Product Name <button class="btn btn-link btn-sm" onclick="sortTable(1)"><i id="sortIcon" class="fas fa-sort" style="color: white;"></i></button></th>
                         <th>Description</th>
                         <th>Quantity</th>
                         <th>Stocks Available</th>
@@ -133,7 +142,9 @@ include('notification_logic2.php');
                                 <td>
                                     <form action="code.php" method="POST">
                                         <input type="hidden" name="delete_id" value="<?php echo $row['id']; ?>">
-                                        <button type="submit" name="permanent_delete_expired_btn" class="btn btn-danger">DELETE</button>
+                                        <button type="submit" name="permanent_delete_expired_btn" class="btn btn-action" style="border: none; background: none;">
+                                        <i class="fas fa-trash-alt" style="color: #FF0000;"></i>
+                                    </button>
                                     </form>
                                 </td>
                             </tr>
@@ -170,3 +181,68 @@ aria-hidden="true">
     include('includes/scripts.php');
     include('includes/footer.php');
     ?>
+
+<script>
+    var ascending = true;
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("dataTable");
+        switching = true;
+        var icon = document.getElementById("sortIcon");
+        if (ascending) {
+            icon.classList.remove("fa-sort");
+            icon.classList.add("fa-sort-up");
+        } else {
+            icon.classList.remove("fa-sort-up");
+            icon.classList.add("fa-sort-down");
+        }
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+                if (ascending) {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+        ascending = !ascending;
+    }
+</script>
+        <!-- DataTables JavaScript -->
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "pageLength": 10, // Display 10 entries per page
+            "searching": true,
+            "ordering": false, // Disable ordering/sorting
+            "info": true,
+            "autoWidth": false,
+            "language": {
+                "paginate": {
+                    "previous": "<i class='fas fa-arrow-left'></i>", // Use arrow-left icon for previous button
+                    "next": "<i class='fas fa-arrow-right'></i>" // Use arrow-right icon for next button
+                }
+            },
+            "pagingType": "simple" // Set the pagination type to simple
+        });
+    });
+</script>
