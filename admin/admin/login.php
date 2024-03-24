@@ -147,16 +147,6 @@ session_start();
                                     </div>
                                 </div>
 
-                                <div class="form-group custom-width-usertype text-center"> <!-- Updated class for centering -->
-                                    <div class="input-group">
-                                        <select name="usertype" class="form-control" placeholder="Select User" required>
-                                            <option value="" disabled selected>Select User</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="pharmacy_assistant">Pharmacy Assistant</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div class="form-group d-flex align-items-center">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="rememberMe">
@@ -164,6 +154,7 @@ session_start();
                                     </div>
                                     <a href="forgot-password.php" class="ml-auto" style="color: black;">Forgot Password?</a>
                                 </div>
+
 
                                 <button type="submit" name="login_btn" class="btn btn-primary btn-user btn-block"> Log-In</button>
                                 <!-- Add the necessary Font Awesome CDN for the eye icon -->

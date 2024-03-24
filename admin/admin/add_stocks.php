@@ -272,23 +272,22 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             <td> <?php echo $row['date_added']; ?></td>
                             <td>
                                 <form action="edit_stock_product.php" method="post">
-                                        <input type="hidden" name=edit_id value="<?php echo $row['id']; ?>">
+                                    <input type="hidden" name=edit_id value="<?php echo $row['id']; ?>">
                                     <button type="submit" name="edit_btn" class="btn btn-action editBtn">
                                         <i class="fas fa-edit" style="color: #44A6F1;"></i>
                                     </button>
                                     <span class="action-divider">|</span>
-                                    
                             
-                                <form action="code.php" method="POST" style="display: inline-block;">
-                                    <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
-                                    <button type="submit" name="move_to_archive_btn" class="btn btn-action" style="border: none; background: none;">
-                            <i class="fas fa-archive" style="color: #FF0000;"></i>
-                        </button>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php
-                        }
+                                    <form action="code.php" method="POST" style="display: inline-block;">
+                                        <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" name="move_to_archive_btn" class="btn btn-action" style="border: none; background: none;">
+                                            <i class="fas fa-archive" style="color: #FF0000;"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php
+                            }
                     } else{
                         echo "No record Found";
                     }
