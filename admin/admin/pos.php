@@ -169,6 +169,30 @@ include 'includes/navbar_pos.php';
                         </div>
                     </div>
                 </div>
+                <script>
+                    $(document).ready(function() {
+    // Store the original total amount
+    var originalTotal = parseFloat($('#total').val());
+
+    $('#discountSelect').change(function() {
+        // Get the selected discount value
+        var discountValue = parseFloat($(this).val());
+
+        // If a valid discount value is selected
+        if (!isNaN(discountValue)) {
+            // Calculate the discounted total
+            var discountedTotal = originalTotal - (originalTotal * (discountValue / 100));
+
+            // Update the total input field with the discounted total
+            $('#total').val(discountedTotal.toFixed(2));
+        } else {
+            // If no discount is selected, revert back to the original total
+            $('#total').val(originalTotal.toFixed(2));
+        }
+    });
+});
+
+                </script>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
                 
                 <script>
