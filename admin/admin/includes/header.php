@@ -1,4 +1,12 @@
-<?php include_once('notification_logic2.php'); ?>
+<?php 
+include_once('notification_logic2.php');
+
+$user_info = $_SESSION['user_info'] ?? null; 
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -235,6 +243,12 @@
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
+                        <?php
+                            $sel = "SELECT * FROM register";
+                            $query = mysqli_query($connection,$sel);
+                            $result = mysqli_fetch_assoc($query)
+                        
+                        ?>
 
 
                     <!-- Nav Item - User Information -->
@@ -243,8 +257,18 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="img-profile rounded-circle"
                                 src="img/undraw_profile.svg">
-                                <span class="mr-2 d-none ml-3 d-lg-inline text-600 small" style="color: #44A6F1; font-weight: bold;">Douglas McGee<br><span style="color: #59B568; font-weight: normal; margin-left: 15px;">Admin</span></span>
-
+                                <span class="mr-2 d-none ml-3 d-lg-inline text-600 small" style="color: #44A6F1; font-weight: bold;">
+                                <?php 
+            // Check if user_info is set and not empty
+            if($user_info && !empty($user_info)) {
+                echo $user_info['first_name'] . ' ' . $user_info['mid_name'] . ' ' . $user_info['last_name'];
+            } else {
+                // Default message if user_info is not set
+                echo "Guest";
+            }
+            ?>
+                                <br><span style="color: #59B568; font-weight: normal; margin-left: 15px;">Admin</span></span>
+                                </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">

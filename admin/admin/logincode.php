@@ -14,15 +14,21 @@ if (isset($_POST['login_btn'])) {
     if ($user) {
         $_SESSION['username'] = $email_login;
         $_SESSION['usertype'] = $user['usertype']; // Set the usertype in the session
+        
+        // Get the user's information from the database based on the email
+        $query_user_info = "SELECT * FROM register WHERE email='$email_login'";
+        $query_user_info_run = mysqli_query($connection, $query_user_info);
+        $user_info = mysqli_fetch_assoc($query_user_info_run);
+        
+        // Store user information in session
+        $_SESSION['user_info'] = $user_info;
     
         if ($user['usertype'] == "admin") {
             header('Location: index.php');
         } elseif ($user['usertype'] == "pharmacy_assistant") {
             header('Location: pos.php');
         }
-    } else {
-        $_SESSION['status'] = 'Email or password is invalid';
-        header('Location: login.php');
     }
+    
 }
 ?>
