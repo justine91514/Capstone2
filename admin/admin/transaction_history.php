@@ -74,9 +74,8 @@ date_default_timezone_set('Asia/Manila');
                     </thead>
                     <tbody>
                         <?php
-                        if(mysqli_num_rows($query_run) > 0)
+                        if (mysqli_num_rows($query_run) > 0)
                         {
-                           
                             $previous_date = ''; // Initialize variable to store the previous date
                             $count = 1; // Initialize a counter for sequential transaction numbers
                             while($row = mysqli_fetch_assoc($query_run))

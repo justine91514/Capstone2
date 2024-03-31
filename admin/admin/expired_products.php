@@ -89,7 +89,7 @@ include('notification_logic2.php');
                         <th>Product Name <button class="btn btn-link btn-sm" onclick="sortTable(1)"><i id="sortIcon" class="fas fa-sort" style="color: white;"></i></button></th>
                         <th>Description</th>
                         <th>Quantity</th>
-                        <th>Stocks Available</th>
+                        
                         <th>Price</th>
                         <th>Expiry Date</th>
                         <th>Permanently Delete</th>
@@ -111,7 +111,7 @@ include('notification_logic2.php');
                                 </td>
                                 <td><?php echo $row['descript']; ?></td>
                                 <td><?php echo $row['quantity']; ?></td>
-                                <td><?php echo $row['stocks_available']; ?></td>
+                                
                                 <td><?php echo $row['price']; ?></td>
                                 <td style='color: <?php echo getStatusColor($row['product_stock_name'], $row['expiry_date']); ?>;'> 
     <?php 

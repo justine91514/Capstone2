@@ -4,9 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="need.css">
 </head>
 </html>
+<style>
+        /* Modal styles */
+        .modal-content {
+        background-color: #f8f9fc; /* Background color */
+        border-radius: 10px; /* Rounded corners */
+    }
 
+    .modal-header {
+        border-bottom: none; /* Remove border at the bottom of the header */
+        padding: 15px 20px; /* Add padding */
+        background-color: #EB3223; /* Header background color */
+        color: #fff; /* Header text color */
+        border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
+    }
+
+    .modal-body {
+        padding: 20px; /* Add padding */
+    }
+
+    .modal-footer {
+        border-top: none; /* Remove border at the top of the footer */
+        padding: 15px 20px; /* Add padding */
+        background-color: #f8f9fc; /* Footer background color */
+        border-radius: 0 0 10px 10px; /* Rounded corners only at the bottom */
+    }
+
+    /* Close button style */
+    .modal-header .close {
+        display: none;
+    }
+
+    .modal-body label {
+        color: #304B1B;
+        font-weight: bold;
+    }
+    
+    </style>
 <?php
 function getStatusColor($expiryDate)
 {

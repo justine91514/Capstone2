@@ -6,6 +6,7 @@
     <title>Stocks</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="ack.css">
+    <link rel="stylesheet" href="need.css">
     <script>
         function changeTableFormat() {
             var selectedBranch = document.getElementById("branch").value;
@@ -14,11 +15,78 @@
     </script>
 </head>
 <style>
+
+.container-fluid {
+        margin-top: 50px; /* Adjust the value as needed */
+    }
     .dataTables_wrapper {
     margin-top: 10px !important; /* Adjust the value as needed */
 }
+
+
+    /* Modal styles */
+    .modal-content {
+        background-color: #f8f9fc; /* Background color */
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    .modal-header {
+        border-bottom: none; /* Remove border at the bottom of the header */
+        padding: 15px 20px; /* Add padding */
+        background-color: #304B1B; /* Header background color */
+        color: #fff; /* Header text color */
+        border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
+    }
+
+    .modal-body {
+        padding: 20px; /* Add padding */
+    }
+
+    .modal-footer {
+        border-top: none; /* Remove border at the top of the footer */
+        padding: 15px 20px; /* Add padding */
+        background-color: #f8f9fc; /* Footer background color */
+        border-radius: 0 0 10px 10px; /* Rounded corners only at the bottom */
+    }
+
+    /* Close button style */
+    .modal-header .close {
+        display: none;
+    }
+
+    .modal-body label {
+        color: #304B1B;
+        font-weight: bold;
+    }
+
+    
+
     </style>
 <body>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmArchiveModal" tabindex="-1" role="dialog" aria-labelledby="confirmArchiveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmArchiveModalLabel">Archive Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to archive this item?
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary modal-btn mr-2" style="border-radius: 5px; padding: 10px 20px; background-color: #EB3223; border: none;  box-shadow: none; " data-dismiss="modal">Cancel</button>
+<button type="submit" class="btn btn-primary modal-btn" class="btn btn-danger" id="confirmArchiveBtn" style="border-radius: 5px; padding: 10px 20px; background-color: #304B1B; border: none;  box-shadow: none; ">Archive</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <?php
 session_start();
@@ -230,6 +298,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead style="background-color: #304B1B; color: white;">
                         <th> ID </th>
+                        <th> Batch # </th>
                         <th> SKU </th>
                    <!-- <th> Purchase Price </th> -->
                         <th> Product Name </th>
@@ -249,6 +318,8 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     ?>
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
+                            <td> <?php echo $row['batch_number']; ?></td>
+
                             <td> <?php echo $row['sku']; ?></td>
                             
                             <td> <?php echo $row['product_stock_name']; ?> - <span style='font-size: 80%;'><?php echo $row['measurement']; ?></span></td>
@@ -271,20 +342,20 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             </td>
                             <td> <?php echo $row['date_added']; ?></td>
                             <td>
-    <form action="edit_stock_product.php" method="post" style="display: inline-block;">
-        <input type="hidden" name="edit_id" value="<?php echo $row['id']; ?>">
-        <button type="submit" name="edit_btn" class="btn btn-action editBtn">
-            <i class="fas fa-edit" style="color: #44A6F1;"></i>
-        </button>
-    </form>
-    <span class="action-divider">|</span>
-    <form action="code.php" method="POST" style="display: inline-block;">
-        <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
-        <button type="submit" name="move_to_archive_btn" class="btn btn-action" style="border: none; background: none;">
-            <i class="fas fa-archive" style="color: #FF0000;"></i>
-        </button>
-    </form>
-</td>
+                                <form action="edit_stock_product.php" method="post" style="display: inline-block;">
+                                    <input type="hidden" name="edit_id" value="<?php echo $row['id']; ?>">
+                                    <button type="submit" name="edit_btn" class="btn btn-action editBtn">
+                                        <i class="fas fa-edit" style="color: #44A6F1;"></i>
+                                    </button>
+                                </form>
+                                <span class="action-divider">|</span>
+                                <form action="code.php" method="POST" style="display: inline-block;">
+                                    <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
+                                    <button type="button" name="move_to_archive_btn" class="btn btn-action"  data-toggle="modal" data-target="#confirmArchiveModal" style="border: none; background: none;">
+                                        <i class="fas fa-archive" style="color: #FF0000;"></i>
+                                    </button>
+                                </form>
+                            </td>
 
                             </tr>
                             <?php
@@ -321,7 +392,9 @@ aria-hidden="true">
         include('includes/scripts.php');
         include('includes/footer.php');
         ?>
-    </body>
+    
+</body>
+
 <script>
     document.getElementById('sku_input').addEventListener('change', function() {
     var sku = this.value;

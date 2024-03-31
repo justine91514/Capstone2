@@ -1,6 +1,6 @@
 <?php
 include('dbconfig.php');
-date_default_timezone_set('Asia/Manila');
+
 $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
 
 if(isset($_POST['registerbtn']))
@@ -446,49 +446,18 @@ if (isset($_POST['add_prod_btn'])) {
 }
 
 if (isset($_POST['add_stock_btn'])) {
-    // Get data from the form
     $sku = $_POST['sku'];
     $product_name = $_POST['product_stock_name'];
-    $description = $_POST['descript'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
     $branch = $_POST['branch'];
+    $batch = $_POST['batch_no'];
     $expiry_date = $_POST['expiry_date'];
-    $date_added = date('Y-m-d'); // Current date only
-
-
-    // Get last batch number from the database for the current date
-    $current_date = date('Y-m-d');
-    $last_batch_number_query = "SELECT MAX(batch_number) AS last_batch_number FROM add_stock_list WHERE DATE(date_added) = '$current_date'";
-    $last_batch_number_result = mysqli_query($connection, $last_batch_number_query);
-    $last_batch_number_row = mysqli_fetch_assoc($last_batch_number_result);
-    $last_batch_number = $last_batch_number_row['last_batch_number'];
-
-    // Determine the new batch number
-    if ($last_batch_number) {
-        // Extract the count part from the last batch number
-        $last_batch_count = (int)substr($last_batch_number, -3);
-        if ($last_batch_count >= 999) {
-            // If count reaches 999, reset to '001'
-            $new_batch_count = 1;
-        } else {
-            // Increment the count
-            $new_batch_count = $last_batch_count + 1;
-        }
-    } else {
-        // No previous batch number for the current date, start from '001'
-        $new_batch_count = 1;
-    }
-
-    // Format the count part to have leading zeros
-    $new_batch_count_padded = str_pad($new_batch_count, 3, '0', STR_PAD_LEFT);
-
-    // Construct the new batch number
-    $batch_number = date('ymd') . $new_batch_count_padded;
+    $date_added = date('Y-m-d H:i:s'); // Current date and time
 
     // Execute query to add stock
-    $add_stock_query = "INSERT INTO add_stock_list (sku, product_stock_name, descript, quantity, price, branch, expiry_date, date_added, batch_number)
-                        VALUES ('$sku', '$product_name', '$description', '$quantity', '$price', '$branch', '$expiry_date', '$date_added', '$batch_number')";
+    $add_stock_query = "INSERT INTO add_stock_list (sku, product_stock_name, quantity, price, branch, batch_no, expiry_date, date_added)
+                        VALUES ('$sku', '$product_name','$quantity', '$price', '$branch', '$batch', '$expiry_date', '$date_added')";
     $add_stock_result = mysqli_query($connection, $add_stock_query);
 
     if ($add_stock_result) {
@@ -505,6 +474,7 @@ if (isset($_POST['add_stock_btn'])) {
         header('Location: add_stocks.php');
     }
 }
+
 
 
 
