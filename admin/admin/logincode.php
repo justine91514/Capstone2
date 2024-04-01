@@ -24,11 +24,15 @@ if (isset($_POST['login_btn'])) {
         $_SESSION['user_info'] = $user_info;
     
         if ($user['usertype'] == "admin") {
-            header('Location: index.php');
+            header('Location: dashboard.php');
         } elseif ($user['usertype'] == "pharmacy_assistant") {
             header('Location: pos.php');
         }
+    } else {
+        $_SESSION['status'] = 'Email or password is invalid';
+        header('Location: index.php');
     }
+    
     
 }
 ?>

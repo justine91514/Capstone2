@@ -125,14 +125,19 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
                             <td> <?php echo $row['id']; ?></td>
                             <td> <?php echo $row['type_name']; ?></td>
                             
-                            <td> 
-                            <button type="button" class="btn btn-action editBtn" data-toggle="modal" data-target="#editTypeModal" data-id="<?php echo $row['id']; ?>" data-name="<?php echo $row['type_name']; ?>">
-    <i class="fas fa-edit" style="color: #44A6F1;"></i>
-</button>
+                            <td>
+    <form action="edit_type.php" method="post" style="display: inline-block;">
+        <input type="hidden" name="edit_id" value="<?php echo $row['id']; ?>">
+        <button type="submit" name="edit_btn" class="btn btn-action editBtn" value="<?php echo $row['id']; ?>">
+            <i class="fas fa-edit" style="color: #44A6F1;"></i>
+        </button>
+    </form>
+
     <span class="action-divider">|</span>
+
     <form action="code.php" method="POST" style="display: inline-block;">
-        <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-        <button type="submit" name="delete_category_btn" class="btn btn-action" style="border: none; background: none;">
+        <input type="hidden" name="delete_id" value="<?php echo $row['id']; ?>">
+        <button type="submit" name="delete_product_type" class="btn btn-action" style="border: none; background: none;">
             <i class="fas fa-trash-alt" style="color: #FF0000;"></i>
         </button>
     </form>
@@ -164,7 +169,7 @@ aria-hidden="true">
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.php">Logout</a>
+            <a class="btn btn-primary" href="index.php">Logout</a>
         </div>
     </div>
 </div>

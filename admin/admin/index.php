@@ -1,166 +1,200 @@
 <?php
 session_start();
-include('includes/header.php');
-include('includes/navbar2.php');
 ?>
 
-<!-- Content Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- Main Content -->
-    <div id="content">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login</title>
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-            <!-- Page Heading -->
-            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-            </div>
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
-            <!-- Content Row -->
-            <div class="row">
+    <style>
+        body {
+            background-image: url(img/pharmacy2.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            /* Apply blur effect */
+            -webkit-backdrop-filter: blur(10px);
+            /* Safari */
+            backdrop-filter: blur(5px);
+            /* Standard */
+        }
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total Registered Admin</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <?php
-                                                    require 'dbconfig.php';
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
 
-                                                    $query = "SELECT id FROM register ORDER BY id";
-                                                    $query_run =mysqli_query($connection, $query);
+        .login-container {
+            background: #FFF;
+            border-radius: 20px;
+            box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.25);
+            padding: 25px;
+            max-width: 420px;
+            padding-bottom: 30px;
+        }
 
-                                                    $row = mysqli_num_rows($query_run);
+        .brand-text {
+            font-size: 2em;
+        }
 
-                                                    echo '<h1> Total Admin: ' .$row. '</h1>';
-                                                ?>
-                                                
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+        .slogan-text {
+            margin-top: 20px;
+            color: #FFF;
+            text-align: center;
+            font-family: Tapestry;
+            font-size: 35px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 35px;
+        }
+
+        .btn-primary {
+            width: 50%;
+            border-radius: 15px;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+            display: block;
+            margin: 0 auto;
+            /* Set left and right margin to auto */
+        }
+
+        /* Change button color */
+        .btn-primary {
+            background-color: #0C96D4;
+            /* Change the color code to your desired color */
+            border-color: #0C96D4;
+            /* Change the border color if needed */
+        }
+
+        /* Change button color on hover */
+        .btn-primary:hover {
+            background-color: #D9D9D9;
+            /* Change the hover color code */
+            border-color: #D9D9D9;
+            /* Change the hover border color if needed */
+            color: #000000;
+        }
+
+        /* Style for the eye icon */
+        .input-group-text {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-auto mt-auto">
+            <div class="login-container">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center">
+                                <img src="img/3.Gmed.png" alt="Logo" class="mb-4" style="width: 200px; height: auto;">
+                                <h1 class="h1 mb-4" style="color: black; font-weight: bold;">Welcome Back!</h1>
+                                <p style="color: black;">Input credentials to access your account</p>
+                                <hr class="my-4">
+                                <?php
+                                if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
+                                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Error:</strong> ' . $_SESSION['status'] . '
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>';
+                                    unset($_SESSION['status']);
+                                }
+                                ?>                             
+                            </div>
+                            <form class="user" action="logincode.php" method="POST">
+
+                                <div class="form-group custom-width">
+                                    <div class="input-group">
+                                        <input type="email" name="email" class="form-control" placeholder="Enter Email Address..." required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group custom-width">
+                                    <div class="input-group">
+                                        <input type="password" name="password" class="form-control" id="exampleInputPassword" placeholder="Password" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="togglePassword" onclick="togglePasswordVisibility()">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
+                                <div class="form-group d-flex align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe" style="color: black;">Remember Me</label>
                                     </div>
+                                    <a href="forgot-password.php" class="ml-auto" style="color: black;">Forgot Password?</a>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                                            </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                <button type="submit" name="login_btn" class="btn btn-primary btn-user btn-block"> Log-In</button>
+                                <!-- Add the necessary Font Awesome CDN for the eye icon -->
+                                <script src="https://kit.fontawesome.com/your-font-awesome-kit-id.js" crossorigin="anonymous"></script>
+                                <script>
+                                    function togglePasswordVisibility()
+                                    {
+                                        var passwordInput = document.getElementById("exampleInputPassword");
+                                        var eyeIcon = document.querySelector("#togglePassword i");
+
+                                        var type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                                        passwordInput.setAttribute("type", type);
+
+                                        // Toggle eye icon based on password visibility
+                                        eyeIcon.classList.toggle("fa-eye-slash", type === "password");
+                                    }
+                                </script>
+                            </form>
                         </div>
                     </div>
-
-                    <!-- Content Row -->
-  
-                        </div>
-                    </div>
-
                 </div>
-                <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-
-    <!-- Scroll to Top Button-->
- <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-
-    <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-            </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.php">Logout</a>
         </div>
     </div>
 </div>
-</div>
-<?php
-    include('includes/scripts.php');
-    ?>
-    
 
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+<script>
+    var passwordInput = document.getElementById("password");
+    var togglePasswordButton = document.getElementById("togglePassword");
+
+    togglePasswordButton.addEventListener("click", function () {
+        var type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);

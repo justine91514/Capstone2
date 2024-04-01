@@ -58,7 +58,7 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item" id="dashboard-tab">
-        <a class="nav-link" href="index.php" onclick="toggleTab('dashboard-tab')">
+        <a class="nav-link" href="dashboard.php" onclick="toggleTab('dashboard-tab')">
             <i class="fas fa-home" style="color: black;"></i>
             <span style="color: black;">Dashboard</span>
         </a>
