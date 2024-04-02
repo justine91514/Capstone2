@@ -298,7 +298,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead style="background-color: #304B1B; color: white;">
                         <th> ID </th>
-                        <th> Batch # </th>
+                        
                         <th> SKU </th>
                    <!-- <th> Purchase Price </th> -->
                         <th> Product Name </th>
@@ -306,6 +306,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                         <th> Quantity </th>
                         <th> Price </th>
                         <th> Branch </th>
+                        <th> Batch # </th>
                         <th> Expiry Date </th>
                         <th> Date Added </th>
                         <th> Edit </th>
@@ -318,7 +319,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                     ?>
                         <tr>
                             <td> <?php echo $row['id']; ?></td>
-                            <td> <?php echo $row['batch_number']; ?></td>
+                           
 
                             <td> <?php echo $row['sku']; ?></td>
                             
@@ -327,6 +328,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                             <td> <?php echo $row['quantity']; ?></td>
                             <td> <?php echo $row['price']; ?></td>
                             <td> <?php echo $row['branch']; ?></td>
+                            <td> <?php echo $row['batch_number']; ?></td>
                             <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'>
                                 <?php
                                     echo $row['expiry_date'];

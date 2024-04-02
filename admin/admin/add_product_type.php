@@ -28,11 +28,11 @@ include('includes/navbar2.php');
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="modal-label" style="color: #259E9E;">Type Name</label>
-                        <input type="text" name="category_name" class="form-control modal-input" placeholder="Enter Type" required style="border-radius: 5px; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <input type="text" name="type_name" class="form-control modal-input" placeholder="Enter Type" required style="border-radius: 5px; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                     </div>
                 </div>
                 <div class="modal-footer" style="border-top: none;">
-                    <button type="submit" name="categorybtn" class="btn btn-primary modal-btn" style="border-radius: 5px; padding: 10px 20px; background-color: #259E9E; border: none; position: absolute; bottom: 10px; right: 10px;">Save</button>
+                    <button type="submit" name="typebtn" class="btn btn-primary modal-btn" style="border-radius: 5px; padding: 10px 20px; background-color: #259E9E; border: none; position: absolute; bottom: 10px; right: 10px;">Save</button>
                 </div>
             </form>
         </div>

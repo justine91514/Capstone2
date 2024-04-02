@@ -12,7 +12,6 @@
         top: 0;
         left: 0;
         height: 100%; /* Set the height to fill the viewport */
-        overflow-y: auto; /* Enable vertical scrolling if necessary */
         z-index: 1000;
         width: 250px;
         border-right: 1px solid #ccc;
@@ -21,6 +20,7 @@
 
     #content {
             padding-left: 250px; /* Ensure the content is not hidden behind the sidebar */
+            padding-bottom: 50px; /* Adjust this value based on the height of your footer */
         }
 
     .nav-item.active {
@@ -82,12 +82,38 @@
 
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item" id="sales-report-tab">
-        <a class="nav-link" href="sales_report.php" onclick="toggleTab('sales-report-tab')">
-            <i class="fas fa-fw fa-chart-area" style="color: black;"></i>
-            <span style="color: black;">Sales Report</span>
+
+
+    <li class="nav-item" id="report-tab">
+    <a class="nav-link collapsed" href="#collapseReports" data-toggle="collapse" onclick="toggleTab('report-tab')">
+        <i class="fas fa-file-alt" style="color: black;"></i> <!-- Change the icon class to a report icon -->
+        <span style="color: black;">Reports</span>
+
         </a>
+        <div id="collapseReports" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="sales_report.php" onclick="toggleTab('report-tab')">Sales Report</a>
+                <a class="collapse-item" href="print_inventory_report.php" onclick="toggleTab('report-tab')">Inventory Report</a>
+                <a class="collapse-item" href="category_report.php" onclick="toggleTab('report-tab')">Category</a>
+                <a class="collapse-item" href="type_report.php" onclick="toggleTab('report-tab')">Type</a>
+                <a class="collapse-item" href="unit_report.php" onclick="toggleTab('report-tab')">Unit</a>
+                <a class="collapse-item" href="product_report.php" onclick="toggleTab('report-tab')">Product</a>
+                <a class="collapse-item" href="discount_report.php" onclick="toggleTab('report-tab')">Discount</a>
+                <a class="collapse-item" href="#" onclick="toggleTab('report-tab')">Supplier List</a>
+                <a class="collapse-item" href="user_management_report_print.php" onclick="toggleTab('report-tab')">User Management</a>
+            </div>
+        </div>
     </li>
+
+
+    
+
+
+
+
+
+
+
 
     <hr class="sidebar-divider my-0">
 

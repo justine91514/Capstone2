@@ -364,6 +364,9 @@ if(isset($_POST['typebtn']))
         }
     }
 }
+
+
+
 if(isset($_POST['unitbtn']))
 {
     $unit_name = $_POST['unit_name'];
