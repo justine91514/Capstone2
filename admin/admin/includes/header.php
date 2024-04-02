@@ -1,12 +1,7 @@
 <?php 
 include_once('notification_logic2.php');
-
 $user_info = $_SESSION['user_info'] ?? null; 
-
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,19 +20,15 @@ $user_info = $_SESSION['user_info'] ?? null;
     <style>
 /* Adjust the size of the box in the topbar */
 .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 70px; /* Adjust height according to your header */
-            width: 1690px;
-            background-color: #ffffff; /* Set your header background color */
-            z-index: 999; /* Ensure the header appears below the sidebar */
-            margin-left: 224px;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-        }
-
-
+    position: fixed;
+    top: 0;
+    margin-left: 224px; /* Adjust the left position according to your sidebar width */
+    width: calc(100% - 224px); /* Adjust width to fit the remaining space */
+    height: 70px;
+    background-color: #ffffff;
+    z-index: 999;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
 </style>
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -272,18 +263,6 @@ $user_info = $_SESSION['user_info'] ?? null;
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="login.php" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
