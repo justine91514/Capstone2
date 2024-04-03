@@ -100,7 +100,7 @@
                 <a class="collapse-item" href="print_product_report.php" onclick="toggleTab('report-tab')">Product</a>
                 <a class="collapse-item" href="print_discount_report.php" onclick="toggleTab('report-tab')">Discount</a>
                 <a class="collapse-item" href="#" onclick="toggleTab('report-tab')">Supplier List</a>
-                <a class="collapse-item" href="user_management_report_print.php" onclick="toggleTab('report-tab')">User Management</a>
+                <a class="collapse-item" href="print_user_report.php" onclick="toggleTab('report-tab')">User Management</a>
             </div>
         </div>
     </li>
