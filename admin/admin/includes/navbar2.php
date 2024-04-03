@@ -95,7 +95,7 @@
                 <a class="collapse-item" href="sales_report.php" onclick="toggleTab('report-tab')">Sales Report</a>
                 <a class="collapse-item" href="print_inventory_report.php" onclick="toggleTab('report-tab')">Inventory Report</a>
                 <a class="collapse-item" href="print_category_report.php" onclick="toggleTab('report-tab')">Category</a>
-                <a class="collapse-item" href="type_report.php" onclick="toggleTab('report-tab')">Type</a>
+                <a class="collapse-item" href="print_type_report.php" onclick="toggleTab('report-tab')">Type</a>
                 <a class="collapse-item" href="unit_report.php" onclick="toggleTab('report-tab')">Unit</a>
                 <a class="collapse-item" href="product_report.php" onclick="toggleTab('report-tab')">Product</a>
                 <a class="collapse-item" href="discount_report.php" onclick="toggleTab('report-tab')">Discount</a>
