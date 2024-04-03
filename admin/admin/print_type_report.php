@@ -129,12 +129,12 @@ if(isset($_SESSION['status']) && $_SESSION['status'] !='')
         "order": [[0, "desc"]] // Sort by the first column (ID) in descending order
         });
     });
-</script>
 
-<script>
+
     function generatePrintableReport() {
-        // Redirect to the printable report page without any branch filter
         window.location.href = 'printable_type_report.php';
     }
 </script>
 
+</body>
+</html>
