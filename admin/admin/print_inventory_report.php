@@ -391,7 +391,7 @@ aria-hidden="true">
 <script>
 function generatePrintableReport(selectedBranch) {
     // Redirect to the printable report page with the selected branch
-    window.location.href = 'printable_report.php?branch=' + selectedBranch;
+    window.location.href = 'printable_inventory_report.php?branch=' + selectedBranch;
 }
 </script>
 
