@@ -1,6 +1,7 @@
 <?php 
 include_once('notification_logic2.php');
 $user_info = $_SESSION['user_info'] ?? null; 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

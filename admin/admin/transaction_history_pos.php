@@ -21,13 +21,28 @@ function generateTransactionNo($date, $count) {
     // Generate the transaction number with padded count
     return $year . $month . $day . str_pad($count, 3, '0', STR_PAD_LEFT); // Format: YYMMDDXXX
 }
+
+
 session_start();
 include('includes/header_pos.php');
 include('includes/navbar_pos.php');
 date_default_timezone_set('Asia/Manila');
+
+// Check if form is submitted and get the selected cashier name
+if (isset($_POST['filter'])) {
+    $selected_cashier = $_POST['cashier'];
+    $sql_filter = ($selected_cashier != '') ? "WHERE cashier_name = '$selected_cashier'" : "";
+} else {
+    // If no filter is applied, default to the current cashier's name
+    $cashier_name = $user_info['first_name'] . ' ' . $user_info['mid_name'] . ' ' . $user_info['last_name'];
+    $sql_filter = "WHERE cashier_name = '$cashier_name'";
+}
+
+// Modify your SQL query to include the filter
+$query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, transaction_no, mode_of_payment, ref_no, list_of_items, sub_total, total_amount, cashier_name FROM transaction_list $sql_filter";
+$query_run = mysqli_query($connection, $query);
 ?>
 
-</html>
 <div class="container-fluid">
     <div class="card shadow nb-4">
         <div class="card-header py-3">
@@ -37,11 +52,6 @@ date_default_timezone_set('Asia/Manila');
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <?php
-                $connection = mysqli_connect("localhost","root","","dbpharmacy");
-                $query = "SELECT transaction_id, date, CONCAT(DATE_FORMAT(time, '%h:%i:%s'), DATE_FORMAT(NOW(), '%p')) AS time_with_am_pm, transaction_no, mode_of_payment, ref_no, list_of_items, sub_total, total_amount FROM transaction_list";
-                $query_run = mysqli_query($connection, $query);
-                ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <th> Transaction no. </th>
@@ -52,39 +62,26 @@ date_default_timezone_set('Asia/Manila');
                         <th> List of Items </th>
                         <th> Sub Total </th>
                         <th> Grand Total </th>
-                        <th> Reissue of Reciept </th>
-
+                        <th> Cashier Name </th>
+                        <th> Reissue of Receipt </th>
                     </thead>
                     <tbody>
                         <?php
                         if(mysqli_num_rows($query_run) > 0)
                         {
-                            $previous_date = ''; // Initialize variable to store the previous date
-                            $count = 1; // Initialize a counter for sequential transaction numbers
                             while($row = mysqli_fetch_assoc($query_run))
                             {
-                                $current_date = date('ymd'); // Current date in YYMMDD format
-                                $transaction_no = ''; // Initialize transaction number
-                                
-                                if ($current_date != $previous_date) {
-                                    $count = 1; // Reset the counter for the new date
-                                }
-                                
-                                // Format the transaction number: YYMMDDXXX
-                                $transaction_no = date('ymd') . str_pad($count, 3, '0', STR_PAD_LEFT);
-                                
-                                $previous_date = $current_date; // Update previous date for the next iteration
-
                                 ?>    
                                 <tr>
-                                <td> <?php echo $row['transaction_no']; ?></td>
+                                    <td> <?php echo $row['transaction_no']; ?></td>
                                     <td> <?php echo $row['date']; ?></td>
                                     <td><?php echo $row['time_with_am_pm']; ?></td>
                                     <td> <?php echo $row['mode_of_payment']; ?></td>
                                     <td> <?php echo $row['ref_no']; ?></td>
                                     <td> <?php echo $row['list_of_items']; ?></td>   
                                     <td> <?php echo $row['sub_total']; ?></td>   
-                                    <td> <?php echo number_format($row['total_amount'], 2); ?></td>   
+                                    <td> <?php echo number_format($row['total_amount'], 2); ?></td> 
+                                    <td> <?php echo $row['cashier_name']; ?></td> 
                                     <td> 
                                         <form action="print_product.php" method="post">
                                             <input type="hidden" name= print_id>
@@ -93,7 +90,6 @@ date_default_timezone_set('Asia/Manila');
                                     </td>
                                 </tr>
                                 <?php
-                                $count++; // Increment the counter for the next transaction
                             }
                         }
                         else{
@@ -105,9 +101,9 @@ date_default_timezone_set('Asia/Manila');
             </div>
         </div>
     </div>
+</div>
 
 <!-- Rest of the code -->
-
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -123,12 +119,11 @@ aria-hidden="true">
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.php">Logout</a>
+            <a class="btn btn-primary" href="index.php">Logout</a>
         </div>
     </div>
 </div>
 </div>
-
 
 <?php
 include('includes/scripts.php');
