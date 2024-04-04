@@ -121,7 +121,7 @@ include('includes/navbar2.php');
                         <th>Product Name</th>
                         <th>Description</th>
                         <th>Quantity</th>
-                        <th>Stocks Available</th>
+                        
                         <th>Price</th>
                         <th>Branch</th>
                         <th>Expiry Date</th>
@@ -144,7 +144,7 @@ include('includes/navbar2.php');
                                     </td>
                                     <td><?php echo $row['descript']; ?></td>
                                     <td><?php echo $row['quantity']; ?></td>
-                                    <td><?php echo $row['stocks_available']; ?></td>
+                                    
                                     <td><?php echo $row['price']; ?></td>
                                     <td><?php echo $row['branch']; ?></td>
                                     <td style='color: <?php echo getStatusColor($row['expiry_date']); ?>;'> 

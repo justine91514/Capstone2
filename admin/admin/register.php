@@ -235,20 +235,21 @@ include('includes/navbar2.php');
                             <td> <?php echo $row['usertype']; ?></td>
                             
                             <td> 
-                                <form action="register_edit.php" method="post">
-                                <input type="hidden" name= edit_id value="<?php echo $row['id']; ?>">
-                                <button type="submit" name="edit_btn" class="btn btn-action editBtn">
-                                    <i class="fas fa-edit" style="color: #44A6F1;"></i>
-                                </button>
-                                <span class="action-divider">|</span>
+    <form action="register_edit.php" method="post" style="display: inline-block;">
+        <input type="hidden" name="edit_id" value="<?php echo $row['id']; ?>">
+        <button type="submit" name="edit_btn" class="btn btn-action editBtn">
+            <i class="fas fa-edit" style="color: #44A6F1;"></i>
+        </button>
+    </form>
+    <span class="action-divider">|</span>
+    <form action="code.php" method="POST" style="display: inline-block;">
+        <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
+        <button type="submit" name="delete_id" class="btn btn-action" style="border: none; background: none;">
+            <i class="fas fa-trash-alt" style="color: #FF0000;"></i>
+        </button>
+    </form>
+</td>
 
-                                <form action="code.php" method="POST" style="display: inline-block;">
-                                    <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
-                                    <button type="submit" name="delete_category_btn" class="btn btn-action" style="border: none; background: none;">
-                                        <i class="fas fa-trash-alt" style="color: #FF0000;"></i>
-                                    </button>
-                                </form>
-                            </td>
                         </tr>
                         <?php
                         }

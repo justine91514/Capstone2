@@ -61,6 +61,28 @@ if(isset($_GET['start_date']) && isset($_GET['end_date'])) {
                 <input type="date" id="end_date" name="end_date">
                 <input type="submit" value="Compute">
             </form>
+
+            <!-- Selector for Pharmacy Assistants -->
+            <?php
+            // Establish connection to the database
+            $connection = mysqli_connect("localhost", "root", "", "dbpharmacy");
+
+            // Query to fetch pharmacy assistants' names
+            $query = "SELECT CONCAT(first_name, ' ', mid_name, ' ', last_name) AS full_name FROM register WHERE usertype = 'pharmacy_assistant'";
+            $result = mysqli_query($connection, $query);
+            ?>
+
+            <form method="GET">
+                <label for="pharmacy_assistant">Select Pharmacy Assistant:</label>
+                <select name="pharmacy_assistant" id="pharmacy_assistant">
+                    <?php
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<option value='" . $row['full_name'] . "'>" . $row['full_name'] . "</option>";
+                    }
+                    ?>
+                </select>
+                <input type="submit" value="Filter">
+            </form>
             
             <!-- Display total earnings and earnings by date in a table format -->
             <?php if(isset($total_earnings)) { ?>

@@ -775,8 +775,8 @@ if (isset($_POST['move_to_archive_btn'])) {
         $row = mysqli_fetch_assoc($get_info_result);
 
         // Move the data to the archive_list table
-        $move_query = "INSERT INTO archive_list (sku, product_name, descript, quantity, stocks_available, price, branch, expiry_date)
-               VALUES ('{$row['sku']}', '{$row['product_stock_name']}', '{$row['descript']}', {$row['quantity']}, {$row['stocks_available']}, {$row['price']}, '{$row['branch']}', '{$row['expiry_date']}')";
+        $move_query = "INSERT INTO archive_list (sku, product_name, descript, quantity, stocks_available, price, branch, batch_number, date_added, expiry_date)
+               VALUES ('{$row['sku']}', '{$row['product_stock_name']}', '{$row['descript']}', {$row['quantity']}, {$row['stocks_available']}, {$row['price']}, '{$row['branch']}', '{$row['expiry_date']}', '{$row['']}')";
 
         mysqli_query($connection, $move_query);
 
@@ -796,7 +796,7 @@ if (isset($_POST['move_to_archive_btn'])) {
     }
 }
 
-
+/*
 if (isset($_POST['move_buffer_to_archive_btn'])) {
     $move_id = $_POST['move_id'];
 
@@ -828,7 +828,7 @@ if (isset($_POST['move_buffer_to_archive_btn'])) {
         header('Location: buffer_stock.php');
     }
 }
-
+*/
 
 
 // DELETE BUTTONS
@@ -892,7 +892,7 @@ if (isset($_POST['move_stock_btn'])) {
 // Move Buffer Stock Button
 // Move Buffer Stock Button
 // Move Buffer Stock Button
-if (isset($_POST['move_buffer_stock_btn'])) {
+/*if (isset($_POST['move_buffer_stock_btn'])) {
     $move_id = $_POST['move_id'];
 
     // Retrieve the row to be moved
@@ -949,7 +949,7 @@ if (isset($_POST['move_buffer_stock_btn'])) {
         header('Location: buffer_stock.php');
     }
 }
-
+*/
 // MOVE BUTTONS
 // ####################################################################
 
@@ -960,7 +960,9 @@ if (isset($_POST['move_buffer_stock_btn'])) {
 
 
 
-date_default_timezone_set('Asia/Manila');
+
+
+    date_default_timezone_set('Asia/Manila');
 
 // Get the current date and time in the Philippines timezone
 $current_time = new DateTime('now', new DateTimeZone('Asia/Manila'));
@@ -971,6 +973,7 @@ $time = $current_time->format('h:i:s A');
 $am_pm = $current_time->format('A');
 $ref_no = $_POST['ref_no'];
 $sub_total = $_POST['sub_total'];
+$cashier_name = $_POST['full_name'];
 // Function to generate transaction number
 function generateTransactionNo($date, $count) {
     return $date . str_pad($count, 3, '0', STR_PAD_LEFT); // Format: YYMMDDXXX
@@ -982,7 +985,6 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     // Get the total amount
     $total_amount = $_POST['total'];
     
-
     // Retrieve the list of items from the hidden input field
     $list_of_items = $_POST['list_of_items'];
 
@@ -1008,8 +1010,8 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
     $transaction_no = generateTransactionNo(date('ymd'), $count);
 
     // Insert the transaction details into the transaction_list table
-    $insert_query = "INSERT INTO transaction_list (transaction_no, date, time, am_pm, mode_of_payment, total_amount, sub_total, list_of_items, ref_no) 
-                     VALUES ('$transaction_no', '$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$sub_total,', '$listOfItems', '$ref_no')";
+    $insert_query = "INSERT INTO transaction_list (transaction_no, date, time, am_pm, mode_of_payment, total_amount, sub_total, list_of_items, ref_no, cashier_name) 
+                     VALUES ('$transaction_no', '$date', '$time', '$am_pm', '$mode_of_payment', '$total_amount', '$sub_total,', '$listOfItems', '$ref_no', '$cashier_name')";
 
     // Execute the query
     $result = mysqli_query($connection, $insert_query);
@@ -1026,6 +1028,8 @@ if (isset($_POST['mode_of_payment']) && isset($_POST['charge_btn'])) {
         exit();
     }
 }
+
+
 
 if (isset($_POST['charge_btn'])) {
     // Handle charging logic here

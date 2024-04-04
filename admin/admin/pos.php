@@ -103,22 +103,17 @@ include 'includes/navbar_pos.php';
                             <form action="code.php" method="POST"
                                 <div class="modal-body">
                                     <div class="form-group">
-
                                     <label class="input-skulabel" for="sub_total">Sub Total:</label>
-                                <input type="text" class="form-control" name="sub_total" id="sub_total" autocomplete="off" readonly>
-
+                                    <input type="text" class="form-control" name="sub_total" id="sub_total" autocomplete="off" readonly>
                                     <label>Discounts</label>
                                         <select id="discountSelect" name="discount" class="form-control">
-
                                             <option value="">No Discount</option> <!-- Empty option -->
                                             <?php
                                                 // Include the database connection file
                                                 include 'dbconfig.php';
-
                                                 // Fetch discount options from the database
                                                 $query = "SELECT * FROM discount_list";
                                                 $result = mysqli_query($connection, $query);
-
                                                 // Loop through the results and display each discount option
                                                 while ($row = mysqli_fetch_assoc($result)) {
                                                     echo "<option value='{$row['value']}'>{$row['discount_name']} - {$row['value']}%</option>";
@@ -126,9 +121,6 @@ include 'includes/navbar_pos.php';
                                             ?>
                                         </select>
                                 </div>
-                                
-                                
-
                                 <label class="input-skulabel" for="total">Grand Total:</label>
                                 <input type="text" class="form-control" name="total" id="total" autocomplete="off" readonly>
 
@@ -159,7 +151,12 @@ include 'includes/navbar_pos.php';
 
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" name="charge_btn" class="btn btn-primary" id="chargeButton" disabled>Charge</button>
+                                <form action="transaction_history.php" method="POST">
+                                    <!-- Existing form fields -->
+                                    <input type="text" name="full_name" value="<?php echo $user_info['first_name'] . ' ' . $user_info['mid_name'] . ' ' . $user_info['last_name']; ?>">
+
+                                    <button type="submit" name="charge_btn" class="btn btn-primary" id="chargeButton" disabled>Charge</button>
+                                </form>
 
                             </div>
                             </div>

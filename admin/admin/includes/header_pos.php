@@ -1,11 +1,9 @@
 <?php 
 include_once('notification_logic2.php');
 $user_info = $_SESSION['user_info'] ?? null; 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,33 +11,25 @@ $user_info = $_SESSION['user_info'] ?? null;
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Cashier</title>
-
     <!-- Custom fonts -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
         <!-- Main Content -->
         <div id="content">
-
             <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                 <!-- Sidebar Toggle (Topbar) -->
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
-
-                
                 <!-- Topbar Right Section -->
             <ul class="navbar-nav ml-auto">
-                   
                         <!-- Add these links if not included -->
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
                         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 
                         <!-- Nav Item - Calendar -->
                         <li class="nav-item dropdown no-arrow mx-1">
@@ -63,9 +53,67 @@ $user_info = $_SESSION['user_info'] ?? null;
                             <div id="anotherCalendar" class="text-center" style="max-width: 380px; margin: 0 auto;"></div>
                         </div>
                         </li>
-
                         <!-- Initialize flatpickr and Another Calendar -->
-                        <script>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <?php
+                            $sel = "SELECT * FROM register";
+                            $query = mysqli_query($connection,$sel);
+                            $result = mysqli_fetch_assoc($query)
+                        ?>
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="img-profile rounded-circle"
+                                src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none ml-3 d-lg-inline text-600 small" style="color: #44A6F1; font-weight: bold;">
+                                <?php 
+                                // Check if user_info is set and not empty
+                                if($user_info && !empty($user_info)) {
+                                    echo $user_info['first_name'] . ' ' . $user_info['mid_name'] . ' ' . $user_info['last_name'];
+                                } else {
+                                    // Default message if user_info is not set
+                                    echo "Guest";
+                                }
+                                ?>
+                                <br><span style="color: #59B568; font-weight: normal; margin-left: 15px;">Pharmacy Assistant</span></span>
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="userDropdown">
+                                    
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="index.php" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                    </nav>
+                    <!-- End of Topbar -->
+
+<!-- JavaScript Functions -->
+<script>
+function userFunction() {
+    // User section logic goes here
+    console.log('User section clicked');
+}
+
+function notificationFunction() {
+    // Notification section logic goes here
+    console.log('Notification section clicked');
+}
+
+function dateFunction() {
+    // Date section logic goes here
+    console.log('Date section clicked');
+}
+</script>
+
+<script>
                         document.addEventListener('DOMContentLoaded', function () {
                             // Initialize flatpickr
                             const datepicker = flatpickr("#datepicker", {
@@ -113,79 +161,6 @@ $user_info = $_SESSION['user_info'] ?? null;
                             }
                         });
                         </script>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <?php
-                            $sel = "SELECT * FROM register";
-                            $query = mysqli_query($connection,$sel);
-                            $result = mysqli_fetch_assoc($query)
-                        
-                        ?>
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="img-profile rounded-circle"
-                                src="img/undraw_profile.svg">
-                                <span class="mr-2 d-none ml-3 d-lg-inline text-600 small" style="color: #44A6F1; font-weight: bold;">
-                                <?php 
-            // Check if user_info is set and not empty
-            if($user_info && !empty($user_info)) {
-                echo $user_info['first_name'] . ' ' . $user_info['mid_name'] . ' ' . $user_info['last_name'];
-            } else {
-                // Default message if user_info is not set
-                echo "Guest";
-            }
-            ?>
-                                <br><span style="color: #59B568; font-weight: normal; margin-left: 15px;">Pharmacy Assistant</span></span>
-                                </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="index.php" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
-            <!-- End of Topbar -->
-
-<!-- JavaScript Functions -->
-<script>
-function userFunction() {
-    // User section logic goes here
-    console.log('User section clicked');
-}
-
-function notificationFunction() {
-    // Notification section logic goes here
-    console.log('Notification section clicked');
-}
-
-function dateFunction() {
-    // Date section logic goes here
-    console.log('Date section clicked');
-}
-</script>
 <?php include('notification_logic2.php'); ?>
 </head>
 

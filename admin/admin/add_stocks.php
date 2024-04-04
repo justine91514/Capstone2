@@ -64,27 +64,7 @@
     </style>
 <body>
 
-<!-- Modal -->
-<div class="modal fade" id="confirmArchiveModal" tabindex="-1" role="dialog" aria-labelledby="confirmArchiveModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmArchiveModalLabel">Archive Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to archive this item?
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-primary modal-btn mr-2" style="border-radius: 5px; padding: 10px 20px; background-color: #EB3223; border: none;  box-shadow: none; " data-dismiss="modal">Cancel</button>
-<button type="submit" class="btn btn-primary modal-btn" class="btn btn-danger" id="confirmArchiveBtn" style="border-radius: 5px; padding: 10px 20px; background-color: #304B1B; border: none;  box-shadow: none; ">Archive</button>
 
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -352,8 +332,7 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
                                 </form>
                                 <span class="action-divider">|</span>
                                 <form action="code.php" method="POST" style="display: inline-block;">
-                                    <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
-                                    <button type="button" name="move_to_archive_btn" class="btn btn-action"  data-toggle="modal" data-target="#confirmArchiveModal" style="border: none; background: none;">
+                                    <button type="button" class="btn btn-action"  data-toggle="modal" data-target="#confirmArchiveModal" style="border: none; background: none;">
                                         <i class="fas fa-archive" style="color: #FF0000;"></i>
                                     </button>
                                 </form>
@@ -371,6 +350,37 @@ $selectedBranch = isset($_GET['branch']) ? $_GET['branch'] : 'All';
             </div>
         </div>
     </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="confirmArchiveModal" tabindex="-1" role="dialog" aria-labelledby="confirmArchiveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmArchiveModalLabel">Archive Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to archive this item?
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary modal-btn mr-2" style="border-radius: 5px; padding: 10px 20px; background-color: #EB3223; border: none;  box-shadow: none; " data-dismiss="modal">Cancel</button>
+            <form action="code.php" method="POST" style="display: inline-block;">
+                <input type="hidden" name="move_id" value="<?php echo $row['id']; ?>">
+                <button type="submit" name="move_stock_btn" class="btn btn-primary modal-btn" class="btn btn-danger" id="confirmArchiveBtn" style="border-radius: 5px; padding: 10px 20px; background-color: #304B1B; border: none;  box-shadow: none; ">Archive</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
         <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 aria-hidden="true">
